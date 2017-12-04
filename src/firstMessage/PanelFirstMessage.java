@@ -1,6 +1,6 @@
 package firstMessage;
 
-import interfaceUtilisateur.MenuFrame;
+import interfaceUtilisateur.MenuBarInterface;
 
 import java.awt.Window;
 
@@ -8,7 +8,13 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
+import utilisateur.FilDeDiscussion;
+import utilisateur.Groupe;
 
 @SuppressWarnings("serial")
 public class PanelFirstMessage extends JPanel{
@@ -16,7 +22,9 @@ public class PanelFirstMessage extends JPanel{
 	private JTextField textFieldFirstMessage = new javax.swing.JTextField("Ecrivez votre message...");
 	private JButton buttonEnvoyer = new javax.swing.JButton("Envoyer");
 	private JButton buttonAnnuler = new javax.swing.JButton("Annuler");
-	private MenuFrame parent;
+	private MenuBarInterface parent;
+	private JTree panelFilDeDiscussion;
+	private JTextField textFieldTitre;
 	
 	//Constructor
     public PanelFirstMessage(){
@@ -74,17 +82,18 @@ public class PanelFirstMessage extends JPanel{
 	
 	//Events
     private void buttonAnnulerActionPerformed(java.awt.event.ActionEvent evt) {                                              
-    	JComponent comp = (JComponent) evt.getSource();
-    	Window win = SwingUtilities.getWindowAncestor(comp);
-    	win.dispose();
-    	parent.setFrameFirstMessageOpened(false);
+    	closeWindow(evt);
     }                                             
 
-    private void buttonEnvoyerActionPerformed(java.awt.event.ActionEvent evt) {                                              
-    	JComponent comp = (JComponent) evt.getSource();
-    	Window win = SwingUtilities.getWindowAncestor(comp);
-    	win.dispose();
-    	parent.setFrameFirstMessageOpened(false);
+    private void buttonEnvoyerActionPerformed(java.awt.event.ActionEvent evt) {     
+    	FilDeDiscussion nouveauFil = new FilDeDiscussion(textFieldTitre.getText(), new Groupe());
+    	DefaultTreeModel model = (DefaultTreeModel) panelFilDeDiscussion.getModel();
+    	DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+    	DefaultMutableTreeNode newGroupe = new DefaultMutableTreeNode(nouveauFil.getGroupe().getNomGroupe());
+    	newGroupe.add(new DefaultMutableTreeNode(nouveauFil.getTitre()));
+    	root.add(newGroupe);
+    	model.reload(root);
+    	closeWindow(evt);
     }   
     
     private void textFieldFirstMessageMouseClicked(java.awt.event.MouseEvent evt) {                                              
@@ -98,8 +107,22 @@ public class PanelFirstMessage extends JPanel{
    }    
    
    //Others
-
-   public void setParent(MenuFrame parent){
+   private void closeWindow(java.awt.event.ActionEvent evt){
+	   	JComponent comp = (JComponent) evt.getSource();
+   		Window win = SwingUtilities.getWindowAncestor(comp);
+   		win.dispose();
+   		parent.setFrameFirstMessageOpened(false);
+   }
+   
+   public void setPanelFilDeDiscussion (JTree jt){
+	   panelFilDeDiscussion = jt;
+   }
+   
+   public void setParent(MenuBarInterface parent){
 	   this.parent = parent;
+   }
+   
+   public void setTextFieldTitre(JTextField jtf){
+	   textFieldTitre = jtf;
    }
 }

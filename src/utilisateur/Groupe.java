@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Groupe {
-	
+	private String nomGroupe;
 	private List<Utilisateur> listUtilisateur = new ArrayList<>();
 	
 	public Groupe(){
@@ -26,6 +26,10 @@ public class Groupe {
 	
 	public void addGroup(Utilisateur user){
 		this.listUtilisateur.add(user);
+	}
+
+	public String getNomGroupe() {
+		return nomGroupe;
 	}
 	
 }

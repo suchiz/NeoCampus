@@ -4,27 +4,30 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 
 import loginScreen.FrameLogin;
 import firstMessage.FrameFirstMessage;
 
 @SuppressWarnings("serial")
-public class MenuFrame extends JMenuBar{
+public class MenuBarInterface extends JMenuBar{
 	//Attributs
     private JMenu fichierMenu = new JMenu("Fichier");
     private JMenuItem connexionItem = new JMenuItem("Connexion");
     private JMenuItem deconnexionItem = new JMenuItem("Déconnexion");
     private JMenuItem quitterItem = new JMenuItem("Quitter");
     private JMenuItem refreshItem = new JMenuItem("Rafraichir");
-    private JMenuItem nouveauItem = new JMenuItem("Nouveau fichier");
+    private JMenuItem nouveauItem = new JMenuItem("Nouveau message");
     private JPopupMenu.Separator separator = new JPopupMenu.Separator();
     private FrameLogin frameLogin;
     private boolean frameLoginOpened = false;
-    FrameFirstMessage frameFirstMessage;
+    private FrameFirstMessage frameFirstMessage;
     private boolean frameFirstMessageOpened = false;
+    private JTree panelFilDeDiscussion;
     
     //Constructor
-	public MenuFrame (){
+	public MenuBarInterface (JTree jt){
+		panelFilDeDiscussion = jt;
 		initcomponent();
 	}
 	
@@ -98,7 +101,7 @@ public class MenuFrame extends JMenuBar{
 			frameFirstMessage.toFront();
 			frameFirstMessage.repaint();
 		} else {
-	    	frameFirstMessage = new FrameFirstMessage(this);
+	    	frameFirstMessage = new FrameFirstMessage(this, panelFilDeDiscussion);
 	    	frameFirstMessage.setVisible(true);
 	    	frameFirstMessageOpened = true;
 		}

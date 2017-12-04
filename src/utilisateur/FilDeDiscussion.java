@@ -4,22 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilDeDiscussion {
-	private List<Groupe> groupe = new ArrayList<>();
+	private Groupe groupe = new Groupe();
 	private List<Message> convo = new ArrayList<>();
 	private String titre;
 	
-	public FilDeDiscussion(String titre) {
+	public FilDeDiscussion(String titre, Groupe groupe) {
 		this.titre = titre;
-	}
-	
-	public String afficherMessages(){
-		String chaine = "";
-		
-		for (Message temp: this.convo){
-			chaine += temp.getMsg() + ",";
-		}
-		
-		return chaine;
+		this.groupe = groupe;
 	}
 	
 	@Override
@@ -27,7 +18,7 @@ public class FilDeDiscussion {
 		return  titre;
 	}
 
-	public List<Groupe> getGroupe() {
+	public Groupe getGroupe() {
 		return groupe;
 	}
 	
