@@ -1,6 +1,6 @@
 package loginScreen;
 
-import interfaceUtilisateur.MenuBarInterface;
+import interfaceUtilisateur.MenuFrame;
 
 import java.awt.Window;
 
@@ -20,7 +20,7 @@ public class PanelLogin extends JPanel{
 	private JTextField textFieldUser = new javax.swing.JTextField();
 	private JTextField textFieldPassword = new javax.swing.JTextField();
 	private JButton loginButton = new javax.swing.JButton("Login");
-	private MenuBarInterface parent;
+	private MenuFrame parent;
 	
 	//Constructor
 	public PanelLogin(){
@@ -86,7 +86,7 @@ public class PanelLogin extends JPanel{
     }     
     
     //Others
-    public void setParent(MenuBarInterface parent){
+    public void setParent(MenuFrame parent){
 		this.parent = parent;
     
     }

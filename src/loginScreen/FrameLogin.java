@@ -1,6 +1,6 @@
 package loginScreen;
 
-import interfaceUtilisateur.MenuBarInterface;
+import interfaceUtilisateur.MenuFrame;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,10 +11,10 @@ public class FrameLogin extends JFrame{
 	private JPanel mainPanel = new javax.swing.JPanel();
 	private PanelPhoto panelPhoto = new PanelPhoto();
 	private PanelLogin panelLogin = new PanelLogin();
-	private MenuBarInterface parent;
+	private MenuFrame parent;
 	
 	//Constructor
-	public FrameLogin(MenuBarInterface parent){
+	public FrameLogin(MenuFrame parent){
 		this.parent = parent;
 		initcomponent();
 	}

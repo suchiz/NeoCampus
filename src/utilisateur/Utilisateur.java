@@ -20,11 +20,6 @@ public abstract class Utilisateur {
 		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return nom + " "+ prenom;
-	}
-
 	public String getNom() {
 		return nom;
 	}

@@ -8,10 +8,10 @@ import javax.swing.JPanel;
 public class FrameInterface extends JFrame{
 	//Attributs
 	private JPanel mainPanel = new JPanel();
-	private PanelFilDeDiscussion panelFil = new PanelFilDeDiscussion(this);
+	private PanelFilDeDiscussion panelFil = new PanelFilDeDiscussion();
 	private PanelTextFieldSend panelText = new PanelTextFieldSend();
 	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
-	private MenuBarInterface menuBar = new MenuBarInterface();
+	private MenuFrame menuBar = new MenuFrame();
 	
 	//Constructor
 	public FrameInterface(){
@@ -55,7 +55,7 @@ public class FrameInterface extends JFrame{
 	//Events
 		
 	//Others
-	public MenuBarInterface getMenuFrame(){
+	public MenuFrame getMenuFrame(){
 		return menuBar;
 	}
 }

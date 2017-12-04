@@ -1,6 +1,6 @@
 package firstMessage;
 
-import interfaceUtilisateur.MenuBarInterface;
+import interfaceUtilisateur.MenuFrame;
 
 import java.awt.Dimension;
 
@@ -17,10 +17,10 @@ public class FrameFirstMessage extends JFrame{
     private PanelFirstMessage panelFirstMessage = new PanelFirstMessage();
     private JTextField textFieldTitre = new javax.swing.JTextField();
     private JLabel labelTitre = new javax.swing.JLabel("Titre:");
-    private MenuBarInterface parent;
+    private MenuFrame parent;
     
     //Constructor
-    public FrameFirstMessage(MenuBarInterface parent){
+    public FrameFirstMessage(MenuFrame parent){
 		this.parent = parent;
 		initcomponent();
     }

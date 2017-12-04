@@ -1,11 +1,8 @@
 package interfaceUtilisateur;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 @SuppressWarnings("serial")
@@ -13,12 +10,10 @@ public class PanelFilDeDiscussion extends JPanel{
 	//Attributs
 	private JTree filsArbre;
 	private JScrollPane treePane;
-	private JFrame parent;
 	
 	//Constructor
-	public PanelFilDeDiscussion(JFrame parent){
+	public PanelFilDeDiscussion(){
 		initcomponent();
-		this.parent = parent;
 	}
 	
 	public void initcomponent(){
@@ -26,12 +21,6 @@ public class PanelFilDeDiscussion extends JPanel{
 		buildTree();
 		
 		//Events
-		filsArbre.addTreeSelectionListener(new TreeSelectionListener() {
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				setTitle();
-			}
-		});
 	
 		//Layout
         javax.swing.GroupLayout panelFilLayout = new javax.swing.GroupLayout(this);
@@ -55,14 +44,6 @@ public class PanelFilDeDiscussion extends JPanel{
 	//Events
 	
 	//Others
-	private void setTitle (){
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-                filsArbre.getLastSelectedPathComponent();
-		if(node == null)
-			return;
-		parent.setTitle(node.toString());
-	}
-	
 	public void buildTree(){
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Tickets");
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Groupe 1");
