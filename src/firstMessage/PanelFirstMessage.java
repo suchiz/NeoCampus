@@ -1,6 +1,6 @@
 package firstMessage;
 
-import interfaceUtilisateur.MenuFrame;
+import interfaceUtilisateur.MenuBarInterface;
 
 import java.awt.Window;
 
@@ -16,7 +16,7 @@ public class PanelFirstMessage extends JPanel{
 	private JTextField textFieldFirstMessage = new javax.swing.JTextField("Ecrivez votre message...");
 	private JButton buttonEnvoyer = new javax.swing.JButton("Envoyer");
 	private JButton buttonAnnuler = new javax.swing.JButton("Annuler");
-	private MenuFrame parent;
+	private MenuBarInterface parent;
 	
 	//Constructor
     public PanelFirstMessage(){
@@ -99,7 +99,7 @@ public class PanelFirstMessage extends JPanel{
    
    //Others
 
-   public void setParent(MenuFrame parent){
+   public void setParent(MenuBarInterface parent){
 	   this.parent = parent;
    }
 }

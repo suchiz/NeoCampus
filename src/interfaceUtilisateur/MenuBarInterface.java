@@ -9,7 +9,7 @@ import loginScreen.FrameLogin;
 import firstMessage.FrameFirstMessage;
 
 @SuppressWarnings("serial")
-public class MenuFrame extends JMenuBar{
+public class MenuBarInterface extends JMenuBar{
 	//Attributs
     private JMenu fichierMenu = new JMenu("Fichier");
     private JMenuItem connexionItem = new JMenuItem("Connexion");
@@ -24,7 +24,7 @@ public class MenuFrame extends JMenuBar{
     private boolean frameFirstMessageOpened = false;
     
     //Constructor
-	public MenuFrame (){
+	public MenuBarInterface (){
 		initcomponent();
 	}
 	
