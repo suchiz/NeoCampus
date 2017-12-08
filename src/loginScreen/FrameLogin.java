@@ -11,18 +11,18 @@ public class FrameLogin extends JFrame{
 	private JPanel mainPanel = new javax.swing.JPanel();
 	private PanelPhoto panelPhoto = new PanelPhoto();
 	private PanelLogin panelLogin = new PanelLogin();
-	private MenuBarInterface parent;
+	private MenuBarInterface frameInterface;
 	
 	//Constructor
-	public FrameLogin(MenuBarInterface parent){
-		this.parent = parent;
+	public FrameLogin(MenuBarInterface frameInterface){
+		this.frameInterface = frameInterface;
 		initcomponent();
 	}
 	
 	
 	public void initcomponent(){
 		//Inits
-		panelLogin.setParent(parent);
+		panelLogin.setParent(frameInterface);
         mainPanel.setBackground(new java.awt.Color(182, 182, 182));
         setResizable(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -31,7 +31,7 @@ public class FrameLogin extends JFrame{
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-               parent.setFrameLoginOpened(false);
+               frameInterface.setFrameLoginOpened(false);
                dispose();
             }
         });

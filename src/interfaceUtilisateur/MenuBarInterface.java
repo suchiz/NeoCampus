@@ -23,11 +23,10 @@ public class MenuBarInterface extends JMenuBar{
     private boolean frameLoginOpened = false;
     private FrameFirstMessage frameFirstMessage;
     private boolean frameFirstMessageOpened = false;
-    private JTree panelFilDeDiscussion;
+    private JTree arbreFilDeDiscussion;
     
     //Constructor
-	public MenuBarInterface (JTree jt){
-		panelFilDeDiscussion = jt;
+	public MenuBarInterface (){
 		initcomponent();
 	}
 	
@@ -101,7 +100,7 @@ public class MenuBarInterface extends JMenuBar{
 			frameFirstMessage.toFront();
 			frameFirstMessage.repaint();
 		} else {
-	    	frameFirstMessage = new FrameFirstMessage(this, panelFilDeDiscussion);
+	    	frameFirstMessage = new FrameFirstMessage(this, arbreFilDeDiscussion);
 	    	frameFirstMessage.setVisible(true);
 	    	frameFirstMessageOpened = true;
 		}
@@ -124,7 +123,11 @@ public class MenuBarInterface extends JMenuBar{
 			frameLogin = new FrameLogin(this);
 			frameLogin.setVisible(true);
 			frameLoginOpened = true;
-    }                                             
+    }
+
+	public void setArbreFilDeDiscussion(JTree arbreFilDeDiscussion) {
+		this.arbreFilDeDiscussion = arbreFilDeDiscussion;
+	}                                             
 
 
 }

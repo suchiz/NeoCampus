@@ -1,5 +1,6 @@
 package firstMessage;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -24,7 +25,7 @@ public class PanelSelectionGroupes extends JPanel{
 	public void initcomponent(){
 		//Inits
 		scrollPanelGroupes.setViewportView(listGroupes);
-		
+		test();
 		//Events
         buttonRechercher.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -62,4 +63,20 @@ public class PanelSelectionGroupes extends JPanel{
     }    
 	//Others
     
+    public void test (){
+    	DefaultListModel<Groupe> listModel = new DefaultListModel<>();
+    	listModel.addElement(new Groupe("TAD 3.1"));
+    	listModel.addElement(new Groupe("TAD 3.2"));
+    	listModel.addElement(new Groupe("TAD 4.1"));
+    	listModel.addElement(new Groupe("TAD 4.2"));
+    	listGroupes.setModel(listModel);
+    }
+
+	public JList<Groupe> getListGroupes() {
+		return listGroupes;
+	}
+	
+    public Groupe getGroupeSelected(){
+    	return listGroupes.getSelectedValue();
+    }
 }

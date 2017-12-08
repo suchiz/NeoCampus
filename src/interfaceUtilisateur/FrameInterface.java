@@ -11,7 +11,7 @@ public class FrameInterface extends JFrame{
 	private PanelFilDeDiscussion panelFil = new PanelFilDeDiscussion(this);
 	private PanelTextFieldSend panelText = new PanelTextFieldSend();
 	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
-	private MenuBarInterface menuBar = new MenuBarInterface(panelFil.getFilsArbre());
+	private MenuBarInterface menuBar = new MenuBarInterface();
 	
 	//Constructor
 	public FrameInterface(){
@@ -22,7 +22,12 @@ public class FrameInterface extends JFrame{
 		//Inits
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
-        setMinimumSize(new Dimension(500,300));
+        setMinimumSize(new Dimension(500,400));
+        setPreferredSize(new Dimension(1000,700));
+        menuBar.setArbreFilDeDiscussion(panelFil.getFilsArbre());
+        panelText.setArbreFilDeDiscussion(panelFil.getFilsArbre());
+        panelText.setPanelMessageDisplay(panelMsg);
+        panelFil.setPanelMessageDisplay(panelMsg);
         
         //Events
         
@@ -55,7 +60,7 @@ public class FrameInterface extends JFrame{
 	//Events
 		
 	//Others
-	public MenuBarInterface getMenuFrame(){
+	public MenuBarInterface getMenuBarInterface(){
 		return menuBar;
 	}
 }
