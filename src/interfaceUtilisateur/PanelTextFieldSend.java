@@ -1,14 +1,26 @@
 package interfaceUtilisateur;
 
+import java.awt.event.KeyEvent;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import utilisateur.Etudiant;
+import utilisateur.FilDeDiscussion;
+import utilisateur.Message;
 
 @SuppressWarnings("serial")
 public class PanelTextFieldSend extends JPanel{	
 	//Attributs
-	private JTextField messageTextField = new javax.swing.JTextField("Ecrivez votre message...");
+	private JTextArea messageTextField = new javax.swing.JTextArea("Ecrivez votre message...");
 	private JButton sendButton = new javax.swing.JButton("Envoyer");
+	private JScrollPane scrollPanelText = new JScrollPane();
+	private JTree arbreFilDeDiscussion;
+	private PanelMessageDisplay panelMessageDisplay;
 	
 	//Constructor
 	public PanelTextFieldSend(){
@@ -17,6 +29,9 @@ public class PanelTextFieldSend extends JPanel{
 	
 	public void initcomponent(){
         //Inits
+		messageTextField.setColumns(20);
+        messageTextField.setRows(5);
+        scrollPanelText.setViewportView(messageTextField);
         
         
         //Events
@@ -28,16 +43,25 @@ public class PanelTextFieldSend extends JPanel{
                 messageTextFieldMouseExited(evt);
             }
         });
-        
+        messageTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                messageTextFieldKeyPressed(evt);
+            }
+        });
+        sendButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendButtonActionPerformed(evt);
+            }
+        });
+
         //Layout
         javax.swing.GroupLayout panelTextLayout = new javax.swing.GroupLayout(this);
         setLayout(panelTextLayout);
         panelTextLayout.setHorizontalGroup(
             panelTextLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTextLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(messageTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scrollPanelText)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sendButton)
                 .addGap(16, 16, 16))
         );
@@ -47,7 +71,7 @@ public class PanelTextFieldSend extends JPanel{
                 .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(panelTextLayout.createSequentialGroup()
-                .addComponent(messageTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                .addComponent(scrollPanelText)
                 .addContainerGap())
         );
 	}
@@ -62,6 +86,37 @@ public class PanelTextFieldSend extends JPanel{
     	  if (messageTextField.getText().equals(""))
           	messageTextField.setText("Ecrivez votre message...");
     }       
+    
+    private void messageTextFieldKeyPressed(java.awt.event.KeyEvent evt) {                                            
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+        	envoyerMessage();
+        }
+        
+    }
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        envoyerMessage();
+    } 
 
     //Others
+    public void envoyerMessage(){
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                arbreFilDeDiscussion.getLastSelectedPathComponent();
+		if(node == null)
+			return;
+		if (node.getUserObject() instanceof FilDeDiscussion){
+			FilDeDiscussion f = (FilDeDiscussion) node.getUserObject();
+			f.getConversation().add(new Message(new Etudiant("Fablyat", "Mofolyat"), messageTextField.getText()));
+			panelMessageDisplay.displayMessage(f);
+			messageTextField.setText("");
+		}
+		
+    }
+    
+    public void setArbreFilDeDiscussion(JTree arbreFilDeDiscussion) {
+		this.arbreFilDeDiscussion = arbreFilDeDiscussion;
+	} 
+    
+	public void setPanelMessageDisplay(PanelMessageDisplay panelMessageDisplay) {
+		this.panelMessageDisplay = panelMessageDisplay;
+	}
 }

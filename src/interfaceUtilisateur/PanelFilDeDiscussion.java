@@ -7,18 +7,21 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import utilisateur.FilDeDiscussion;
+import utilisateur.Groupe;
 
 @SuppressWarnings("serial")
 public class PanelFilDeDiscussion extends JPanel{
 	//Attributs
-	private JTree filsArbre;
+	private JTree arbreFilDeDiscussion;
 	private JScrollPane treePane;
-	private JFrame parent;
+	private JFrame frameInterface;
+	private PanelMessageDisplay panelMessageDisplay;
 	
 	//Constructor
 	public PanelFilDeDiscussion(JFrame parent){
 		initcomponent();
-		this.parent = parent;
+		this.frameInterface = parent;
 	}
 	
 	public void initcomponent(){
@@ -26,10 +29,11 @@ public class PanelFilDeDiscussion extends JPanel{
 		buildTree();
 		
 		//Events
-		filsArbre.addTreeSelectionListener(new TreeSelectionListener() {
+		arbreFilDeDiscussion.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				setTitle();
+				displayFilDeDiscussion();
 			}
 		});
 	
@@ -57,19 +61,33 @@ public class PanelFilDeDiscussion extends JPanel{
 	//Others
 	private void setTitle (){
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-                filsArbre.getLastSelectedPathComponent();
+                arbreFilDeDiscussion.getLastSelectedPathComponent();
 		if(node == null)
 			return;
-		parent.setTitle(node.toString());
+		frameInterface.setTitle(node.toString());
+	}
+	
+	private void displayFilDeDiscussion(){
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                arbreFilDeDiscussion.getLastSelectedPathComponent();
+		if(node == null)
+			return;
+		if (node.getUserObject() instanceof FilDeDiscussion){
+			FilDeDiscussion fdd = (FilDeDiscussion) node.getUserObject();
+			panelMessageDisplay.displayMessage(fdd);
+		}
 	}
 	
 	public void buildTree(){
+		Groupe g1 = new Groupe("Groupe 1");
+		Groupe g2 = new Groupe("Groupe 2");
+		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Tickets");
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Groupe 1");
-		DefaultMutableTreeNode node1 = new DefaultMutableTreeNode("Groupe 2");
-		DefaultMutableTreeNode node2 = new DefaultMutableTreeNode("Discussion 1");
-		DefaultMutableTreeNode node3 = new DefaultMutableTreeNode("Discussion 2");
-		DefaultMutableTreeNode node4 = new DefaultMutableTreeNode("Discussion 3");
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(g1);
+		DefaultMutableTreeNode node1 = new DefaultMutableTreeNode(g2);
+		DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new FilDeDiscussion("Discussion 1", g1));
+		DefaultMutableTreeNode node3 = new DefaultMutableTreeNode(new FilDeDiscussion("Discussion 2", g1));
+		DefaultMutableTreeNode node4 = new DefaultMutableTreeNode(new FilDeDiscussion("Discussion 3", g1));
 		
 		node.add(node2);
 		node1.add(node3);
@@ -77,12 +95,20 @@ public class PanelFilDeDiscussion extends JPanel{
 		root.add(node);
 		root.add(node1);
 		
-		filsArbre = new JTree(root);
-		treePane = new JScrollPane(filsArbre);
+		arbreFilDeDiscussion = new JTree(root);
+		arbreFilDeDiscussion.setRootVisible(false);
+		arbreFilDeDiscussion.setCellRenderer(new RenduJTree());
+		treePane = new JScrollPane(arbreFilDeDiscussion);
 		add(treePane);
 	}
 	
 	public JTree getFilsArbre(){
-		return filsArbre;
+		return arbreFilDeDiscussion;
 	}
+
+	public void setPanelMessageDisplay(PanelMessageDisplay panelMessageDisplay) {
+		this.panelMessageDisplay = panelMessageDisplay;
+	}
+	
+	
 }

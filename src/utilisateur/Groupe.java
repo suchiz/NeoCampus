@@ -7,18 +7,18 @@ public class Groupe {
 	private String nomGroupe;
 	private List<Utilisateur> listUtilisateur = new ArrayList<>();
 	
-	public Groupe(){
-		
+	public Groupe(String nomGroupe){
+		this.nomGroupe = nomGroupe;
 	}
 	
-	public Groupe(Utilisateur... grpUtil){
-		for (Utilisateur temp: grpUtil)
-			listUtilisateur.add(temp);
-	}
 	
-	public Groupe(List<Utilisateur> listUtilisateur) {
-		this.listUtilisateur = listUtilisateur;
+	
+	@Override
+	public String toString() {
+		return nomGroupe;
 	}
+
+
 
 	public List<Utilisateur> getListUtilisateur() {
 		return listUtilisateur;

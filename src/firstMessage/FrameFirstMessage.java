@@ -18,19 +18,22 @@ public class FrameFirstMessage extends JFrame{
     private PanelFirstMessage panelFirstMessage = new PanelFirstMessage();
     private JTextField textFieldTitre = new javax.swing.JTextField();
     private JLabel labelTitre = new javax.swing.JLabel("Titre:");
-    private MenuBarInterface parent;
-    
+    private MenuBarInterface frameInterface;
+    private JTree arbreFilDeDiscussion;
+
     //Constructor
-    public FrameFirstMessage(MenuBarInterface parent, JTree jt){
-    	panelFirstMessage.setPanelFilDeDiscussion(jt);
-    	panelFirstMessage.setTextFieldTitre(textFieldTitre);
-		this.parent = parent;
+    public FrameFirstMessage(MenuBarInterface frameInterface, JTree arbreFilDeDiscussion){
+    	this.frameInterface = frameInterface;
+    	this.arbreFilDeDiscussion = arbreFilDeDiscussion;
 		initcomponent();
     }
     
 	public void initcomponent(){
 		//Inits
-		panelFirstMessage.setParent(parent);
+		panelFirstMessage.setParent(frameInterface);
+    	panelFirstMessage.setArbreFilDeDiscussion(arbreFilDeDiscussion);
+    	panelFirstMessage.setTextFieldTitre(textFieldTitre);
+    	panelFirstMessage.setPanelSelectionGroupes(panelSelectionGroupe);
 		setMinimumSize(new Dimension(450, 250));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
@@ -38,7 +41,7 @@ public class FrameFirstMessage extends JFrame{
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-               parent.setFrameFirstMessageOpened(false);
+               frameInterface.setFrameFirstMessageOpened(false);
                dispose();
             }
         });
@@ -85,8 +88,19 @@ public class FrameFirstMessage extends JFrame{
 
         pack();
 	}
+
+
+
+	
 	
 	//Events
 	
 	//Others
+    public void setFrameInterface(MenuBarInterface frameInterface) {
+		this.frameInterface = frameInterface;
+	}
+	
+	public void setArbreFilDiscussion(JTree arbreFilDiscussion) {
+		this.arbreFilDeDiscussion = arbreFilDiscussion;
+	}
 }
