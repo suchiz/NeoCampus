@@ -37,7 +37,7 @@ public class FilDeDiscussion {
 		    /* Ici, nous placerons nos requ�tes vers la BDD */
 			Statement statement = connexion.createStatement();
 			
-			int statut = statement.executeUpdate("INSERT INTO FilDeDiscussion (ID_FilDeDiscussion,Titre) VALUES ('"+this.idFil+"','"+this.titre+"';");
+			statement.executeUpdate("INSERT INTO FilDeDiscussion (ID_FilDeDiscussion,Titre) VALUES ('"+this.idFil+"','"+this.titre+"';");
 
 		} catch ( SQLException e ) {
 		    /* G�rer les �ventuelles erreurs ici */
