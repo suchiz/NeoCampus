@@ -135,4 +135,48 @@ public abstract class Utilisateur implements Serializable {
 		}
 
 	}
+	
+	// -------------------------------------------------------------------------------
+	public void removeUserFromBDD()
+	{
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			
+			//DISPARITION DE L'UTILISATEUR DE TOUT LES GROUPES DONT IL ETAIT MEMBRE
+			statement.executeUpdate("DELETE ID_UTILISATEUR FROM APPARTENIR (ID_Utilisateur,ID_Groupe) WHERE (ID_Utilisateur ='"
+							+ this.idUser+"';");
+			
+			//REMOVAL DE LA TABLE USER
+			statement.executeUpdate("DELETE ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE (ID_Utilisateur ='"
+							+ this.idUser+"';");
+			
+
+
+		} catch (SQLException e) {
+			/* G�rer les �ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de
+					 * l'ignorer.
+					 */
+				}
+		}
+	}
 }
+
+
+
+

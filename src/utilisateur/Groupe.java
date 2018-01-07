@@ -249,7 +249,58 @@ public class Groupe {
 	
 	
 	
+// -------------------------------------------------------------------------------
+	//REMOVE UN GROUPE DE LA BDD
+	public void removeGroupFromBDD()
+	{
+		/* Connexion ï¿½ la base de donnï¿½es */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// RECUPERATION DES FILS DE DISCUSSIONS D'UN GROUPE AFIN DE LES SUPPRIMER
+			ResultSet resultat = statement.executeQuery("SELECT ID_FIL_DE_DISCUSSION FROM DESTINE (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE ='"+this.idGroupe+"';");
+			
+			while(resultat.next())
+			{
+				//DELETE LES FDD DU GROUPE CIBLE
+				statement.executeUpdate("DELETE ID_FIL_DE_DISCUSSION FROM FilDeDiscussion(ID_Fil_DE_DISCUSSION,Titre) WHERE ID_FIL_DE_DISCUSSION='"+resultat.getInt("ID_FIL_DE_DISCUSSION")+"';");
+			}
+			
+			//DELETE LE GROUPE DE LA TABLE DESTINE
+			statement.executeUpdate("DELETE ID_GROUPE  FROM DESTINE (ID_Fil_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE)WHERE ID_GROUPE='"+this.idGroupe+"';");
+			
+			//DELETE LE GROUPE DE LA TABLE GROUPE
+			statement
+			.executeUpdate("DELETE FROM GROUPE (ID_Utilisateur,ID_Groupe) WHERE (ID_Groupe ='"
+					+ this.idGroupe + "';");
+			
+
+		} catch (SQLException e) {
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de
+					 * l'ignorer.
+					 */
+				}
+		}
+	}
 	
+	
+		
+		
 // -------------------------------------------------------------------------------
 	public String getNomGroupe() {
 		return nomGroupe;
