@@ -7,8 +7,6 @@ import java.net.Socket;
 
 public class Tube implements Runnable {
 	private Socket socket;
-	private ObjectInputStream inputFromServer;
-	private ObjectOutputStream outputToServer;
 
 	public Tube(Socket socket) throws IOException {
 		this.socket = socket;
@@ -30,26 +28,20 @@ public class Tube implements Runnable {
 	}
 
 	public void receive() throws ClassNotFoundException, IOException {
-		inputFromServer = new ObjectInputStream(socket.getInputStream());
-
+		ObjectInputStream inputFromServer = new ObjectInputStream(socket.getInputStream());
 		Message message = (Message) inputFromServer.readObject();
 		if (message != null)
 			System.out.println(message.getMsg());
-		
 	}
 
 	public void send(Message message) throws IOException {
-		outputToServer = new ObjectOutputStream(socket.getOutputStream());
+		ObjectOutputStream outputToServer = new ObjectOutputStream(socket.getOutputStream());
 		outputToServer.writeObject(message);
 		outputToServer.flush();
 		
 	}
 	
 	public void disconnect() throws IOException{
-		if (inputFromServer != null)
-			inputFromServer.close();
-		if (outputToServer != null)
-			outputToServer.close();
 		//socket.close();
 	}
 }

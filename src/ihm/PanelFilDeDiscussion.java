@@ -105,6 +105,10 @@ public class PanelFilDeDiscussion extends JPanel{
 	}
 	
 	public void buildTree(){
+		setArbreEmpty();
+	}
+	
+	public void setArbreEmpty(){
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Tickets");
 		arbreFilDeDiscussion = new JTree(root);
 		arbreFilDeDiscussion.setRootVisible(false);

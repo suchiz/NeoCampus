@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 
@@ -69,8 +70,7 @@ public class MenuBarInterface extends JMenuBar {
 				try {
 					deconnexionItemActionPerformed(evt);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(frameInterface, "Disconnected !");
 				}
 			}
 		});
@@ -100,9 +100,9 @@ public class MenuBarInterface extends JMenuBar {
 	}
 
 	private void deconnexionItemActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
-		arbreFilDeDiscussion.removeAll();
-		arbreFilDeDiscussion.getParent().repaint();
-		frameInterface.getTube().disconnect();
+		frameInterface.getPanelFil().setArbreEmpty();
+		if(frameInterface.getTube() != null)
+			frameInterface.getTube().disconnect();
 		setDisconnected();
 	}
 

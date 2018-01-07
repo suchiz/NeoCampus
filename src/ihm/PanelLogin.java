@@ -162,12 +162,10 @@ public class PanelLogin extends JPanel {
 	private void initUser() throws UnknownHostException, IOException {
 		Etudiant temp = new Etudiant("Julien", "Hongsavanh");
 		frameInterface.setUser(temp);
-		Socket sock = new Socket("127.0.0.1", 7777);
-		Tube tube = new Tube(sock);
+		Tube tube = new Tube(new Socket("127.0.0.1", 7777));
 		frameInterface.setTube(tube);
 		Thread t = new Thread(tube);
 		t.start();
-
 	}
 
 }

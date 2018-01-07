@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import utilisateur.Tube;
@@ -45,9 +46,9 @@ public class FrameInterface extends JFrame{
             		if (tube != null)
             			tube.disconnect();
 				} catch (IOException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(menuBar, "Disconnected !");
 				}finally{
-					dispose();
+					System.exit(0);
 				}
             }
         });
