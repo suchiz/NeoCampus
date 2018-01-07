@@ -1,5 +1,7 @@
 package ihm;
 
+import java.io.IOException;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -64,7 +66,12 @@ public class MenuBarInterface extends JMenuBar {
 		});
 		deconnexionItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				deconnexionItemActionPerformed(evt);
+				try {
+					deconnexionItemActionPerformed(evt);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		connexionItem.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +99,8 @@ public class MenuBarInterface extends JMenuBar {
 		}
 	}
 
-	private void deconnexionItemActionPerformed(java.awt.event.ActionEvent evt) {
+	private void deconnexionItemActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
+		frameInterface.getSocket().close();
 		setDisconnected();
 	}
 

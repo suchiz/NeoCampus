@@ -1,6 +1,8 @@
 package ihm;
 
 import java.awt.Dimension;
+import java.io.IOException;
+import java.net.Socket;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,6 +20,7 @@ public class FrameInterface extends JFrame{
 	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
 	private MenuBarInterface menuBar = new MenuBarInterface(this);
 	private Tube tube;
+	private Socket sock;
 	
 	//Constructor
 	public FrameInterface(){
@@ -26,7 +29,6 @@ public class FrameInterface extends JFrame{
 	
 	public void initcomponent(){
 		//Inits
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
         setMinimumSize(new Dimension(500,400));
         setPreferredSize(new Dimension(1000,700));
@@ -34,8 +36,22 @@ public class FrameInterface extends JFrame{
         panelText.setArbreFilDeDiscussion(panelFil.getFilsArbre());
         panelText.setPanelMessageDisplay(panelMsg);
         panelFil.setPanelMessageDisplay(panelMsg);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
         //Events
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            	try {
+					sock.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}finally{
+               dispose();
+				}
+            }
+        });
         
         //Layout
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -98,6 +114,12 @@ public class FrameInterface extends JFrame{
 		this.tube = tube;
 	}
 	
+	public Socket getSocket(){
+		return sock;
+	}
 	
+	public void setSocket(Socket sock){
+		this.sock = sock;
+	}
 	
 }
