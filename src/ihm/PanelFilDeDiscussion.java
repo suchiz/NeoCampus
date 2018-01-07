@@ -79,6 +79,7 @@ public class PanelFilDeDiscussion extends JPanel{
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void test (){
 		Groupe g1 = new Groupe("Groupe 1");
 		Groupe g2 = new Groupe("Groupe 2");
