@@ -11,10 +11,21 @@ public abstract class Utilisateur implements Serializable{
 	private String login;
 	private String mdp;
 	private int idUser;
+	private TypeUtilisateur type;
 
 	public Utilisateur(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
+	}
+	
+	public Utilisateur(String nom, String prenom, String login, String mdp, int idUser, TypeUtilisateur type){
+		this.nom=nom;
+		this.prenom=prenom;
+		this.login=login;
+		this.mdp=mdp;
+		this.idUser=idUser;
+		this.type=type;
+		
 	}
 
 	@Override

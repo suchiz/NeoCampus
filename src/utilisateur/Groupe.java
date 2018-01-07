@@ -2,6 +2,7 @@ package utilisateur;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,6 +16,12 @@ public class Groupe {
 // -------------------------------------------------------------------------------
 	public Groupe(String nomGroupe) {
 		this.nomGroupe = nomGroupe;
+	}
+	
+	public Groupe(String nomGroupe , int id)
+	{
+		this.nomGroupe=nomGroupe;
+		this.idGroupe=id;
 	}
 
 // -------------------------------------------------------------------------------
@@ -47,7 +54,7 @@ public class Groupe {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
-			/* Ici, nous placerons nos requ�tes vers la BDD */
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
 			statement
@@ -55,7 +62,7 @@ public class Groupe {
 							+ user.getIdUser() + "'and'" + this.idGroupe + "';");
 
 		} catch (SQLException e) {
-			/* G�rer les �ventuelles erreurs ici */
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
 		} finally {
 			if (connexion != null)
 				try {
@@ -95,7 +102,7 @@ public class Groupe {
 
 // -------------------------------------------------------------------------------
 	public void stockageGrpBDD(Groupe groupe) {
-		/* Connexion � la base de donn�es */
+		/* Connexion ï¿½ la base de donnï¿½es */
 		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 		String username = "root";
 		String mdp = "root";
@@ -103,15 +110,16 @@ public class Groupe {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
-			/* Ici, nous placerons nos requ�tes vers la BDD */
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
 			statement
 					.executeUpdate("INSERT INTO Groupe (ID_Groupe,NomGroupe) VALUES ('"
 							+ this.idGroupe + "'," + this.idGroupe + "';");
+			
 
 		} catch (SQLException e) {
-			/* G�rer les �ventuelles erreurs ici */
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
 		} finally {
 			if (connexion != null)
 				try {
@@ -125,7 +133,124 @@ public class Groupe {
 				}
 		}
 	}
+	
+// -------------------------------------------------------------------------------	
+	public List <Groupe> retrieveAllGroups () {
+		
+		List <Groupe> listeGroupe = new ArrayList<Groupe>();
+		String nomgroupe;
+		int idgroupe;
+		
+		
+		/* Connexion � la base de donn�es */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+		    connexion = DriverManager.getConnection( url,username,mdp);
 
+		    /* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+			
+			ResultSet resultat = statement.executeQuery("SELECT (ID_GROUPE) , (Nom_Groupe) FROM Groupe ;");
+			while(resultat.next())
+			{
+				idgroupe = resultat.getInt("ID_GROUPE");
+				nomgroupe=resultat.getString("Nom_Groupe");
+				Groupe groupetest = new Groupe(nomgroupe,idgroupe);
+				listeGroupe.add(groupetest);
+			}
+
+		} catch ( SQLException e ) {
+		    /* G�rer les �ventuelles erreurs ici */
+		} finally {
+		    if ( connexion != null )
+		        try {
+		            /* Fermeture de la connexion */
+		            connexion.close();
+		        } catch ( SQLException ignore ) {
+		            /* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+		        }
+		}
+		return listeGroupe;
+	}
+
+	
+// -------------------------------------------------------------------------------
+	//RENVOIE LA LISTE DES PERSONNES  FESANT PARTIE DUN GROUPE
+		public List <Utilisateur> retriveUsersFromGroupe() {
+			
+			List <Utilisateur> listeUser = new ArrayList();
+			 String nom ;
+			 String prenom;
+			 int IdUser;
+			 String login;
+			 String mdp;
+			 TypeUtilisateur typeutilisateur;
+			 Service service;
+			
+			
+			/* Connexion � la base de donn�es */
+			String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+			String username = "root";
+			String mdp1 = "root";
+			Connection connexion = null;
+			try {
+			    connexion = DriverManager.getConnection( url,username,mdp1);
+
+			    /* Ici, nous placerons nos requ�tes vers la BDD */
+				Statement statement = connexion.createStatement();
+				
+				ResultSet resultat = statement.executeQuery("SELECT * FROM utilisateur as U WHERE U.ID_UTILISATEUR IN (SELECT ID_UTILISATEUR FROM appartenir WHERE ID_GROUPE ='"+this.idGroupe+"';");
+				
+				while(resultat.next())
+				{
+					nom = resultat.getString("Nom_Utilisateur");
+					prenom = resultat.getString("Prenom_Utilisateur");
+					IdUser = resultat.getInt("ID_Utilisateur");
+					login = resultat.getString("Identifiant");
+					mdp = resultat.getString("Mot_De_Passe");
+					typeutilisateur = (TypeUtilisateur) resultat.getObject("TypeUtilisateur");
+					service = (Service) resultat.getObject("Service");
+					
+					if(typeutilisateur == TypeUtilisateur.ETUDIANT)
+					{
+						Etudiant etudiant = new Etudiant(nom, prenom, mdp, login, IdUser,TypeUtilisateur.ETUDIANT);
+						listeUser.add(etudiant);
+					}
+					else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT)
+					{
+						Enseignant enseignant = new Enseignant(nom, prenom, mdp, login, IdUser,TypeUtilisateur.ENSEIGNANT);
+						listeUser.add(enseignant);
+					}
+					else
+					{
+						Agent agent = new Agent(nom, prenom, mdp, login, IdUser,TypeUtilisateur.AGENT,service);
+						listeUser.add(agent);
+					}
+			
+				}
+			
+
+			} catch ( SQLException e ) {
+			    /* G�rer les �ventuelles erreurs ici */
+			} finally {
+			    if ( connexion != null )
+			        try {
+			            /* Fermeture de la connexion */
+			            connexion.close();
+			        } catch ( SQLException ignore ) {
+			            /* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+			        }
+			}
+			
+			return listeUser;
+		}
+	
+	
+	
+	
 // -------------------------------------------------------------------------------
 	public String getNomGroupe() {
 		return nomGroupe;

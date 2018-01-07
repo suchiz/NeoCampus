@@ -7,5 +7,10 @@ public class Enseignant extends Utilisateur{
 		super(nom, prenom);
 
 	}
+	
+	public Enseignant(String nom, String prenom, String login , String mdp , int IdUser,TypeUtilisateur type)
+	{
+		super(nom, prenom, login, mdp, IdUser, TypeUtilisateur.ENSEIGNANT);
+	}
 
 }

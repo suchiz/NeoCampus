@@ -8,6 +8,13 @@ public class Agent extends Utilisateur{
 		super(nom, prenom);
 		this.service = service;
 	}
+	
+	public Agent(String nom, String prenom, String login , String mdp , int IdUser, TypeUtilisateur type, Service service)
+	{
+		super(nom, prenom, login, mdp, IdUser,TypeUtilisateur.AGENT);
+		this.service=service;
+		
+	}
 
 	public Service getService() {
 		return service;
