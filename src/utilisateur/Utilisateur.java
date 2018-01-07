@@ -1,36 +1,49 @@
 package utilisateur;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-
-public abstract class Utilisateur implements Serializable{
+public abstract class Utilisateur implements Serializable {
 
 	private static final long serialVersionUID = -3928219126348549952L;
 	private String nom;
 	private String prenom;
 	private String login;
 	private String mdp;
-	private int idUser;
+	private int idUser = 0;
 	private TypeUtilisateur type;
 
 	public Utilisateur(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
 	}
-	
-	public Utilisateur(String nom, String prenom, String login, String mdp, int idUser, TypeUtilisateur type){
-		this.nom=nom;
-		this.prenom=prenom;
-		this.login=login;
-		this.mdp=mdp;
-		this.idUser=idUser;
-		this.type=type;
-		
+
+	public Utilisateur(String nom, String prenom, String login, String mdp, int idUser, TypeUtilisateur type) {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.login = login;
+		this.mdp = mdp;
+		this.idUser = idUser;
+		this.type = type;
+
+	}
+
+	public Utilisateur(String nom, String prenom, String login, String mdp, TypeUtilisateur type) {
+		this.nom = nom;
+		this.prenom = prenom;
+		this.login = login;
+		this.mdp = mdp;
+		this.type = type;
+
 	}
 
 	@Override
 	public String toString() {
-		return nom + " "+ prenom;
+		return nom + " " + prenom;
 	}
 
 	public String getNom() {
@@ -73,5 +86,53 @@ public abstract class Utilisateur implements Serializable{
 		this.idUser = idUser;
 	}
 
-	
+	public void stockageUserBDD() {
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Driver O.K.");
+			/* Connexion à la base de données */
+			String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+			String username = "root";
+			String mdp = "root";
+
+			Connection connexion = null;
+			try {
+				connexion = DriverManager.getConnection(url, username, mdp);
+				System.out.println("SQL : "
+						+ "INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
+						+ this.login + "','" + this.mdp + "','" + this.nom + "','" + this.prenom + "','" + this.type
+						+ "');");
+				/* Ici, nous placerons nos requêtes vers la BDD */
+				Statement statement = connexion.createStatement();
+
+				int statut = statement.executeUpdate(
+						"INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
+								+ this.login + "','" + this.mdp + "','" + this.nom + "','" + this.prenom + "','"
+								+ this.type + "');");
+
+				ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
+
+				if (indicedanslabasededonnee.next()) {
+					int res = indicedanslabasededonnee.getInt("ID");
+					this.idUser = res;
+					System.out.println(res);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (connexion != null)
+					try {
+						/* Fermeture de la connexion */
+						connexion.close();
+					} catch (SQLException ignore) {
+						/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+					}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 }

@@ -4,6 +4,7 @@ public enum TypeUtilisateur {
 	
 	ENSEIGNANT,
 	ETUDIANT,
-	AGENT
+	ADMINISTRATIF,
+	TECHNIQUE
 
 }

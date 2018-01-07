@@ -9,11 +9,9 @@ public class Agent extends Utilisateur{
 		this.service = service;
 	}
 	
-	public Agent(String nom, String prenom, String login , String mdp , int IdUser, TypeUtilisateur type, Service service)
+	public Agent(String nom, String prenom, String login , String mdp , int IdUser, TypeUtilisateur type)
 	{
-		super(nom, prenom, login, mdp, IdUser,TypeUtilisateur.AGENT);
-		this.service=service;
-		
+		super(nom, prenom, login, mdp, IdUser,type);		
 	}
 
 	public Service getService() {

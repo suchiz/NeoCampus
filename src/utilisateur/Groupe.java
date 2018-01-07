@@ -101,7 +101,7 @@ public class Groupe {
 	}
 
 // -------------------------------------------------------------------------------
-	public void stockageGrpBDD(Groupe groupe) {
+	public void stockageGrpBDD() {
 		/* Connexion ï¿½ la base de donnï¿½es */
 		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 		String username = "root";
@@ -212,11 +212,10 @@ public class Groupe {
 					login = resultat.getString("Identifiant");
 					mdp = resultat.getString("Mot_De_Passe");
 					typeutilisateur = (TypeUtilisateur) resultat.getObject("TypeUtilisateur");
-					service = (Service) resultat.getObject("Service");
 					
 					if(typeutilisateur == TypeUtilisateur.ETUDIANT)
 					{
-						Etudiant etudiant = new Etudiant(nom, prenom, mdp, login, IdUser,TypeUtilisateur.ETUDIANT);
+						Etudiant etudiant = new Etudiant(nom, prenom, mdp, login, IdUser);
 						listeUser.add(etudiant);
 					}
 					else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT)
@@ -226,7 +225,7 @@ public class Groupe {
 					}
 					else
 					{
-						Agent agent = new Agent(nom, prenom, mdp, login, IdUser,TypeUtilisateur.AGENT,service);
+						Agent agent = new Agent(nom, prenom, mdp, login, IdUser,typeutilisateur);
 						listeUser.add(agent);
 					}
 			
