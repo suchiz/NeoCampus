@@ -20,7 +20,6 @@ public class FrameInterface extends JFrame{
 	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
 	private MenuBarInterface menuBar = new MenuBarInterface(this);
 	private Tube tube;
-	private Socket sock;
 	
 	//Constructor
 	public FrameInterface(){
@@ -43,12 +42,12 @@ public class FrameInterface extends JFrame{
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
             	try {
-					sock.close();
+            		if (tube != null)
+            			tube.disconnect();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}finally{
-               dispose();
+					dispose();
 				}
             }
         });
@@ -112,14 +111,6 @@ public class FrameInterface extends JFrame{
 
 	public void setTube(Tube tube) {
 		this.tube = tube;
-	}
-	
-	public Socket getSocket(){
-		return sock;
-	}
-	
-	public void setSocket(Socket sock){
-		this.sock = sock;
 	}
 	
 }

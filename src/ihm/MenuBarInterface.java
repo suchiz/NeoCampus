@@ -100,7 +100,9 @@ public class MenuBarInterface extends JMenuBar {
 	}
 
 	private void deconnexionItemActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
-		frameInterface.getSocket().close();
+		arbreFilDeDiscussion.removeAll();
+		arbreFilDeDiscussion.getParent().repaint();
+		frameInterface.getTube().disconnect();
 		setDisconnected();
 	}
 
