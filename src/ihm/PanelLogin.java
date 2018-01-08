@@ -167,8 +167,10 @@ public class PanelLogin extends JPanel {
 
 	private void initUser() throws UnknownHostException, IOException {
 		DB database = new DB();
+		System.out.println("ID : " + textFieldUser.getText().trim() + "PASSWORD : " + textFieldPassword.getText());
+		@SuppressWarnings("deprecation")
 		Utilisateur temp = database.login(textFieldUser.getText().trim(),
-				textFieldPassword.getPassword());
+				textFieldPassword.getText());
 		if (temp == null) {
 			JOptionPane.showMessageDialog(frameInterface, "Données invalide");
 		} else {
@@ -181,6 +183,7 @@ public class PanelLogin extends JPanel {
 	}
 
 	private boolean checkFields() {
+		System.out.println();
 		if (textFieldPassword.getPassword().equals("")
 				|| textFieldUser.getText().equals("")) {
 			JOptionPane.showMessageDialog(frameInterface, "Données invalide");

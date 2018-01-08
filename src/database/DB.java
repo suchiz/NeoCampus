@@ -60,16 +60,26 @@ public class DB {
 
 			Statement statement = connexion.createStatement();
 			ResultSet utilisateurBD = statement
-					.executeQuery("SELECT * FROM UTILISATEUR WHERE ID_UTILISATEUR = " + idUtilisateur + ")");
+					.executeQuery("SELECT * FROM UTILISATEUR WHERE ID_UTILISATEUR = " + idUtilisateur);
 
-			int id_utilisateur = utilisateurBD.getInt("ID_UTILISATEUR");
-			String identifiant = utilisateurBD.getString("IDENTIFIANT");
+			int id_utilisateur = 0;
+			String identifiant = null;
 
-			String mdp2 = utilisateurBD.getString("MOT_DE_PASSE");
+			String mdp2 = null;
 
-			String nom = utilisateurBD.getString("NOM_UTILISATEUR");
-			String prenom = utilisateurBD.getString("PRENOM_UTILISATEUR");
-			String type = utilisateurBD.getString("TYPE_UTILISATEUR");
+			String nom = null;
+			String prenom = null;
+			String type = null;
+			if (utilisateurBD.next()) {
+				id_utilisateur = utilisateurBD.getInt("ID_UTILISATEUR");
+				identifiant = utilisateurBD.getString("IDENTIFIANT");
+
+				mdp2 = utilisateurBD.getString("MOT_DE_PASSE");
+
+				nom = utilisateurBD.getString("NOM_UTILISATEUR");
+				prenom = utilisateurBD.getString("PRENOM_UTILISATEUR");
+				type = utilisateurBD.getString("TYPE_UTILISATEUR");
+			}
 
 			switch (type) {
 			case "ETUDIANT":
@@ -163,8 +173,8 @@ public class DB {
 			return g;
 		}
 	}
-	
-	public Utilisateur login(String login, char[] motdepasse) {
+
+	public Utilisateur login(String login, String string) {
 
 		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 		String username = "root";
@@ -182,16 +192,20 @@ public class DB {
 			Statement statement = connexion.createStatement();
 
 			// RECUPERATION LOGIN VIA LA BDD
-			ResultSet resultat1 = statement.executeQuery(
-					"SELECT IDENTIFIANT,MOT_DE_PASSE,ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE IDENTIFIANT='"
-							+ login + "';");
+			String req = "SELECT IDENTIFIANT,MOT_DE_PASSE,ID_UTILISATEUR FROM UTILISATEUR WHERE IDENTIFIANT='" + login
+					+ "';";
+			System.out.println(req);
+			ResultSet resultat1 = statement.executeQuery(req);
 			if (resultat1.next()) {
 				logintomatch = resultat1.getString("IDENTIFIANT");
 				motdepasstomatch = resultat1.getString("MOT_DE_PASSE");
 				idUser = resultat1.getInt("ID_UTILISATEUR");
+
+				System.out.println("IDENTIFIANT:" + logintomatch + ";MOT_DE_PASSE:" + motdepasstomatch
+						+ ";ID_UTILISATEUR:" + idUser);
 			}
 			// COMPARAISON
-			if (login.equals(logintomatch) && motdepasse.equals(motdepasstomatch) && ! motdepasse.equals(""))
+			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals(""))
 				u = DB.UtilisateurFromID(idUser);
 
 		} catch (SQLException e) {
