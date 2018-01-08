@@ -14,8 +14,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import utilisateur.Etudiant;
 import utilisateur.Tube;
+import database.DB;
 
 @SuppressWarnings("serial")
 public class PanelLogin extends JPanel {
@@ -163,8 +163,9 @@ public class PanelLogin extends JPanel {
 	}
 
 	private void initUser() throws UnknownHostException, IOException {
-		Etudiant temp = new Etudiant("Julien", "Hongsavanh");
-		frameInterface.setUser(temp);
+		DB database = new DB();
+		
+		frameInterface.setUser(database.login(textFieldUser.getText().trim(), textFieldPassword.getPassword()));
 		Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
 		frameInterface.setTube(tube);
 		Thread t = new Thread(tube);

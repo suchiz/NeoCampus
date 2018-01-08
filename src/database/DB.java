@@ -163,5 +163,52 @@ public class DB {
 			return g;
 		}
 	}
+	
+	public Utilisateur login(String login, char[] motdepasse) {
+
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		String logintomatch = null;
+		String motdepasstomatch = null;
+		Utilisateur u = null;
+		int idUser = 0;
+
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// RECUPERATION LOGIN VIA LA BDD
+			ResultSet resultat1 = statement.executeQuery(
+					"SELECT IDENTIFIANT,MOT_DE_PASSE,ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE IDENTIFIANT='"
+							+ login + "';");
+			if (resultat1.next()) {
+				logintomatch = resultat1.getString("IDENTIFIANT");
+				motdepasstomatch = resultat1.getString("MOT_DE_PASSE");
+				idUser = resultat1.getInt("ID_UTILISATEUR");
+			}
+			// COMPARAISON
+			if (login.equals(logintomatch) && motdepasse.equals(motdepasstomatch) && ! motdepasse.equals(""))
+				u = DB.UtilisateurFromID(idUser);
+
+		} catch (SQLException e) {
+			/* G�rer les �ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+
+		return u;
+	}
 
 }
