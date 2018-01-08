@@ -2,11 +2,17 @@ package ihm;
 
 import java.awt.Dimension;
 import java.io.IOException;
-import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import utilisateur.Groupe;
 import utilisateur.Tube;
 import utilisateur.Utilisateur;
 
@@ -21,6 +27,8 @@ public class FrameInterface extends JFrame{
 	private MenuBarInterface menuBar = new MenuBarInterface(this);
 	private Tube tube;
 	
+	private ArrayList<Groupe> tousLesGroupes = new ArrayList<>();
+	
 	//Constructor
 	public FrameInterface(){
 		initcomponent();
@@ -28,6 +36,7 @@ public class FrameInterface extends JFrame{
 	
 	public void initcomponent(){
 		//Inits
+		initTousLesgroupes();
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
         setMinimumSize(new Dimension(500,400));
         setPreferredSize(new Dimension(1000,700));
@@ -111,6 +120,42 @@ public class FrameInterface extends JFrame{
 
 	public void setTube(Tube tube) {
 		this.tube = tube;
+	}
+	
+	private void initTousLesgroupes() {
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			//RECUPERATION LOGIN VIA LA BDD
+			ResultSet resultat1 = statement.executeQuery("SELECT * FROM GROUPE;");
+			
+			
+			while (resultat1.next())	{
+				int numGroupe = resultat1.getInt("ID_GROUPE");
+				String nomGroupe = resultat1.getString("NOM_GROUPE");
+				Groupe g = new Groupe(nomGroupe,numGroupe);
+				tousLesGroupes.add(g);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					ignore.printStackTrace();
+				}
+		}
 	}
 	
 }
