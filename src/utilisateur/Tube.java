@@ -1,5 +1,7 @@
 package utilisateur;
 
+import ihm.FrameInterface;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,10 +12,12 @@ import javax.swing.JOptionPane;
 
 public class Tube implements Runnable {
 	private Socket socket;
-	ObjectInputStream inputFromServer;
-	ObjectOutputStream outputToServer;
+	private ObjectInputStream inputFromServer;
+	private ObjectOutputStream outputToServer;
+	private FrameInterface frameInterface;
 
-	public Tube(Socket socket) throws IOException {
+	public Tube(FrameInterface frameInterface, Socket socket) throws IOException {
+		this.frameInterface = frameInterface;
 		this.socket = socket;
 	}
 
@@ -23,6 +27,7 @@ public class Tube implements Runnable {
 			listening();
 		} catch (ClassNotFoundException | IOException e) {
 			JOptionPane.showMessageDialog(new JFrame(), "Déconnecté !");
+			frameInterface.getMenuBarInterface().setDisconnected();
 		}
 	}
 

@@ -10,6 +10,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -22,7 +23,7 @@ public class PanelLogin extends JPanel {
 	private JLabel usernameLabel = new javax.swing.JLabel("Username:");
 	private JLabel passwordLabel = new javax.swing.JLabel("Password:");
 	private JTextField textFieldUser = new javax.swing.JTextField();
-	private JTextField textFieldPassword = new javax.swing.JTextField();
+	private JPasswordField textFieldPassword = new javax.swing.JPasswordField();
 	private JButton loginButton = new javax.swing.JButton("Login");
 	private FrameInterface frameInterface;
 
@@ -145,9 +146,11 @@ public class PanelLogin extends JPanel {
 
 	// Events
 	private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) throws UnknownHostException, IOException {
-		frameInterface.getMenuBarInterface().setConnected();
-		initUser();
-		closeWindow(evt);
+		if(checkFields()){
+			frameInterface.getMenuBarInterface().setConnected();
+			initUser();
+			closeWindow(evt);
+		}
 	}
 
 	// Others
@@ -162,10 +165,18 @@ public class PanelLogin extends JPanel {
 	private void initUser() throws UnknownHostException, IOException {
 		Etudiant temp = new Etudiant("Julien", "Hongsavanh");
 		frameInterface.setUser(temp);
-		Tube tube = new Tube(new Socket("127.0.0.1", 7777));
+		Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
 		frameInterface.setTube(tube);
 		Thread t = new Thread(tube);
 		t.start();
+	}
+	
+	private boolean checkFields(){
+		if (textFieldPassword.getPassword().equals("") || textFieldUser.getText().equals("")){
+			JOptionPane.showMessageDialog(frameInterface, "Données invalide");
+			return false;
+		}
+		return true;
 	}
 
 }

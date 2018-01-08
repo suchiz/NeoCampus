@@ -93,17 +93,10 @@ public class PanelFirstMessage extends JPanel{
     }                                             
 
     private void buttonEnvoyerActionPerformed(java.awt.event.ActionEvent evt) throws IOException {     
-    	FilDeDiscussion nouveauFil = new FilDeDiscussion(textFieldTitre.getText(), panelSelectionGroupes.getGroupeSelected(), frameInterface.getUser());
-    	Message temp = new Message(frameInterface.getUser(), textFieldFirstMessage.getText());
-    	frameInterface.getTube().send(temp);
-    	nouveauFil.getConversation().add(temp);
-    	DefaultTreeModel model = (DefaultTreeModel) arbreFilDeDiscussion.getModel();
-    	DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-    	DefaultMutableTreeNode newGroupe = new DefaultMutableTreeNode(nouveauFil.getGroupe());
-    	newGroupe.add(new DefaultMutableTreeNode(nouveauFil));
-    	root.add(newGroupe);
-    	model.reload(root);
-    	closeWindow(evt);
+    	if(checkFields()){
+    		envoieMessage();
+    		closeWindow(evt);
+    	}
     }   
     
     private void textFieldFirstMessageMouseClicked(java.awt.event.MouseEvent evt) {                                              
@@ -117,6 +110,23 @@ public class PanelFirstMessage extends JPanel{
    }    
    
    //Others
+   private void envoieMessage() throws IOException{
+   	FilDeDiscussion nouveauFil = new FilDeDiscussion(textFieldTitre.getText(), panelSelectionGroupes.getGroupeSelected(), frameInterface.getUser());
+   	Message temp = new Message(frameInterface.getUser(), textFieldFirstMessage.getText());
+   	frameInterface.getTube().send(temp);
+   	nouveauFil.getConversation().add(temp);
+   	frameInterface.getPanelFil().ajouterFilDeDisussion(nouveauFil);
+   }
+   
+   private boolean checkFields(){
+	   if (panelSelectionGroupes.getGroupeSelected() == null || textFieldFirstMessage.getText().equals("")
+			   || textFieldFirstMessage.getText().equals("Ecrivez votre message...") || textFieldTitre.getText().equals("")){
+		   JOptionPane.showMessageDialog(frameInterface, "Remplissez tout les champs");
+		   return false;
+	   }
+			   return true;
+   }
+   
    private void closeWindow(java.awt.event.ActionEvent evt){
 	   	JComponent comp = (JComponent) evt.getSource();
    		Window win = SwingUtilities.getWindowAncestor(comp);

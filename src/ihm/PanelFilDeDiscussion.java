@@ -6,6 +6,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 import utilisateur.Etudiant;
 import utilisateur.FilDeDiscussion;
@@ -71,8 +72,7 @@ public class PanelFilDeDiscussion extends JPanel{
 	private void displayFilDeDiscussion(){
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                 arbreFilDeDiscussion.getLastSelectedPathComponent();
-		if(node == null)
-			return;
+
 		if (node.getUserObject() instanceof FilDeDiscussion){
 			FilDeDiscussion fdd = (FilDeDiscussion) node.getUserObject();
 			panelMessageDisplay.displayMessage(fdd);
@@ -106,6 +106,15 @@ public class PanelFilDeDiscussion extends JPanel{
 	
 	public void buildTree(){
 		setArbreEmpty();
+	}
+	
+	public void ajouterFilDeDisussion(FilDeDiscussion fdd){
+	   	DefaultTreeModel model = (DefaultTreeModel) arbreFilDeDiscussion.getModel();
+	   	DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+	   	DefaultMutableTreeNode newGroupe = new DefaultMutableTreeNode(fdd.getGroupe());
+	   	newGroupe.add(new DefaultMutableTreeNode(fdd));
+	   	root.add(newGroupe);
+	   	model.reload(root);
 	}
 	
 	public void setArbreEmpty(){
