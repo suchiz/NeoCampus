@@ -1,6 +1,5 @@
 package main;
 
-import database.DB;
 import ihm.FrameInterface;
 
 public class MainProg {

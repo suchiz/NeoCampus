@@ -94,7 +94,6 @@ public class FrameInterface extends JFrame {
 		String username = "root";
 		String mdp = "root";
 		Connection connexion = null;
-		
 
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
@@ -121,7 +120,7 @@ public class FrameInterface extends JFrame {
 				}
 		}
 	}
-	
+
 	public MenuBarInterface getMenuBarInterface() {
 		return menuBar;
 	}
@@ -157,8 +156,5 @@ public class FrameInterface extends JFrame {
 	public ArrayList<Groupe> getTousLesGroupes() {
 		return tousLesGroupes;
 	}
-	
-	
-
 
 }
