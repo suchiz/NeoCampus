@@ -5,8 +5,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 public class Tube implements Runnable {
 	private Socket socket;
+	ObjectInputStream inputFromServer;
+	ObjectOutputStream outputToServer;
 
 	public Tube(Socket socket) throws IOException {
 		this.socket = socket;
@@ -17,7 +22,7 @@ public class Tube implements Runnable {
 		try {
 			listening();
 		} catch (ClassNotFoundException | IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(new JFrame(), "Déconnecté !");
 		}
 	}
 
@@ -28,20 +33,22 @@ public class Tube implements Runnable {
 	}
 
 	public void receive() throws ClassNotFoundException, IOException {
-		ObjectInputStream inputFromServer = new ObjectInputStream(socket.getInputStream());
+		inputFromServer = new ObjectInputStream(socket.getInputStream());
 		Message message = (Message) inputFromServer.readObject();
 		if (message != null)
-			System.out.println(message.getMsg());
+			System.out.println("De serveur: " + message.getMsg());
 	}
 
 	public void send(Message message) throws IOException {
-		ObjectOutputStream outputToServer = new ObjectOutputStream(socket.getOutputStream());
+		outputToServer = new ObjectOutputStream(socket.getOutputStream());
 		outputToServer.writeObject(message);
 		outputToServer.flush();
 		
 	}
 	
 	public void disconnect() throws IOException{
-		//socket.close();
+		if (outputToServer != null)
+			outputToServer.flush();
+		socket.close();
 	}
 }

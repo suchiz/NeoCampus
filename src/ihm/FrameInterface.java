@@ -58,7 +58,6 @@ public class FrameInterface extends JFrame {
 					JOptionPane.showMessageDialog(menuBar, "Disconnected !");
 				}finally{
 					System.exit(0);
-					e.printStackTrace();
 				} 
 			}
 		});
