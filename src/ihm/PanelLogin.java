@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import utilisateur.Tube;
+import utilisateur.Utilisateur;
 import database.DB;
 
 @SuppressWarnings("serial")
@@ -43,7 +44,8 @@ public class PanelLogin extends JPanel {
 				try {
 					loginButtonActionPerformed(evt);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(frameInterface, "Unable to reach server");
+					JOptionPane.showMessageDialog(frameInterface,
+							"Unable to reach server");
 					frameInterface.getMenuBarInterface().setDisconnected();
 				}
 			}
@@ -145,8 +147,9 @@ public class PanelLogin extends JPanel {
 	}
 
 	// Events
-	private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) throws UnknownHostException, IOException {
-		if(checkFields()){
+	private void loginButtonActionPerformed(java.awt.event.ActionEvent evt)
+			throws UnknownHostException, IOException {
+		if (checkFields()) {
 			frameInterface.getMenuBarInterface().setConnected();
 			initUser();
 			closeWindow(evt);
@@ -164,16 +167,22 @@ public class PanelLogin extends JPanel {
 
 	private void initUser() throws UnknownHostException, IOException {
 		DB database = new DB();
-		
-		frameInterface.setUser(database.login(textFieldUser.getText().trim(), textFieldPassword.getPassword()));
-		Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
-		frameInterface.setTube(tube);
-		Thread t = new Thread(tube);
-		t.start();
+		Utilisateur temp = database.login(textFieldUser.getText().trim(),
+				textFieldPassword.getPassword());
+		if (temp == null) {
+			JOptionPane.showMessageDialog(frameInterface, "Données invalide");
+		} else {
+			frameInterface.setUser(temp);
+			Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
+			frameInterface.setTube(tube);
+			Thread t = new Thread(tube);
+			t.start();
+		}
 	}
-	
-	private boolean checkFields(){
-		if (textFieldPassword.getPassword().equals("") || textFieldUser.getText().equals("")){
+
+	private boolean checkFields() {
+		if (textFieldPassword.getPassword().equals("")
+				|| textFieldUser.getText().equals("")) {
 			JOptionPane.showMessageDialog(frameInterface, "Données invalide");
 			return false;
 		}
