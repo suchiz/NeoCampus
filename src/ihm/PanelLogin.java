@@ -164,7 +164,6 @@ public class PanelLogin extends JPanel {
 		frameInterface.setUser(temp);
 		Socket sock = new Socket("127.0.0.1", 7777);
 		Tube tube = new Tube(sock);
-		frameInterface.setSocket(sock);
 		frameInterface.setTube(tube);
 		Thread t = new Thread(tube);
 		t.start();

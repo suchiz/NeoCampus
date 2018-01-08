@@ -35,12 +35,21 @@ public class Tube implements Runnable {
 		Message message = (Message) inputFromServer.readObject();
 		if (message != null)
 			System.out.println(message.getMsg());
+		
 	}
 
 	public void send(Message message) throws IOException {
 		outputToServer = new ObjectOutputStream(socket.getOutputStream());
 		outputToServer.writeObject(message);
 		outputToServer.flush();
-
+		
+	}
+	
+	public void disconnect() throws IOException{
+		if (inputFromServer != null)
+			inputFromServer.close();
+		if (outputToServer != null)
+			outputToServer.close();
+		//socket.close();
 	}
 }
