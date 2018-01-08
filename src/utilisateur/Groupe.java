@@ -107,7 +107,7 @@ public class Groupe {
 
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
-			
+
 			System.out.println();
 
 			statement.executeUpdate("INSERT INTO Groupe (NOM_GROUPE) VALUES ('" + this.nomGroupe + "');");
@@ -212,7 +212,7 @@ public class Groupe {
 					Etudiant etudiant = new Etudiant(nom, prenom, mdp, login, IdUser);
 					listeUser.add(etudiant);
 				} else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT) {
-					Enseignant enseignant = new Enseignant(nom, prenom, mdp, login, IdUser, TypeUtilisateur.ENSEIGNANT);
+					Enseignant enseignant = new Enseignant(nom, prenom, mdp, login, IdUser);
 					listeUser.add(enseignant);
 				} else {
 					Agent agent = new Agent(nom, prenom, mdp, login, IdUser, typeutilisateur);

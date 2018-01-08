@@ -3,11 +3,23 @@ package database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import utilisateur.Agent;
+import utilisateur.Enseignant;
+import utilisateur.Etudiant;
+import utilisateur.Groupe;
+import utilisateur.Service;
+import utilisateur.TypeUtilisateur;
+import utilisateur.Utilisateur;
 
 public class DB {
-	
-	public void creation_bd()	{
+
+	public void creation_bd() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			System.out.println("Driver O.K.");
@@ -34,4 +46,122 @@ public class DB {
 			System.out.println(e);
 		}
 	}
+
+	public Utilisateur UtilisateurFromID(int idUtilisateur) {
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+
+		Utilisateur u = null;
+
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			Statement statement = connexion.createStatement();
+			ResultSet utilisateurBD = statement
+					.executeQuery("SELECT * FROM UTILISATEUR WHERE ID_UTILISATEUR = " + idUtilisateur + ")");
+
+			int id_utilisateur = utilisateurBD.getInt("ID_UTILISATEUR");
+			String identifiant = utilisateurBD.getString("IDENTIFIANT");
+
+			String mdp2 = utilisateurBD.getString("MOT_DE_PASSE");
+
+			String nom = utilisateurBD.getString("NOM_UTILISATEUR");
+			String prenom = utilisateurBD.getString("PRENOM_UTILISATEUR");
+			String type = utilisateurBD.getString("TYPE_UTILISATEUR");
+
+			switch (type) {
+			case "ETUDIANT":
+				u = new Etudiant(nom, prenom, mdp2, identifiant, id_utilisateur);
+				break;
+			case "ENSEIGNANT":
+				u = new Enseignant(nom, prenom, identifiant, mdp2, id_utilisateur);
+				break;
+			case "ADMINISTRATIF":
+				u = new Agent(nom, prenom, identifiant, mdp2, id_utilisateur, TypeUtilisateur.ADMINISTRATIF);
+				break;
+			case "TECHNIQUE":
+				u = new Agent(nom, prenom, identifiant, mdp2, id_utilisateur, TypeUtilisateur.TECHNIQUE);
+				break;
+
+			default:
+				break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return u;
+	}
+
+	public Groupe groupeFromId(int idGroup) {
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+
+		Groupe g = null;
+
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			Statement statement = connexion.createStatement();
+			ResultSet gorupeBD = statement.executeQuery("SELECT * FROM GROUPE WHERE ID_GROUPE = " + idGroup + ")");
+
+			String nomGroupe = gorupeBD.getString("NOM_GROUPE");
+
+			List<Utilisateur> listeUser = new ArrayList();
+			String nom;
+			String prenom;
+			int IdUser;
+			String login;
+			String mdp2;
+			TypeUtilisateur typeutilisateur;
+			Service service;
+
+			ResultSet resultat = statement.executeQuery(
+					"SELECT * FROM utilisateur as U WHERE U.ID_UTILISATEUR IN (SELECT ID_UTILISATEUR FROM appartenir WHERE ID_GROUPE ='"
+							+ idGroup + "';");
+
+			while (resultat.next()) {
+				nom = resultat.getString("Nom_Utilisateur");
+				prenom = resultat.getString("Prenom_Utilisateur");
+				IdUser = resultat.getInt("ID_Utilisateur");
+				login = resultat.getString("Identifiant");
+				mdp = resultat.getString("Mot_De_Passe");
+				typeutilisateur = (TypeUtilisateur) resultat.getObject("TypeUtilisateur");
+
+				if (typeutilisateur == TypeUtilisateur.ETUDIANT) {
+					Etudiant etudiant = new Etudiant(nom, prenom, mdp, login, IdUser);
+					listeUser.add(etudiant);
+				} else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT) {
+					Enseignant enseignant = new Enseignant(nom, prenom, mdp, login, IdUser);
+					listeUser.add(enseignant);
+				} else {
+					Agent agent = new Agent(nom, prenom, mdp, login, IdUser, typeutilisateur);
+					listeUser.add(agent);
+				}
+
+			}
+			g.setListeUtilisateur(listeUser);
+
+		} catch (SQLException e) {
+			/* G�rer les �ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			return g;
+		}
+	}
+
 }

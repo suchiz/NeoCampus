@@ -8,7 +8,7 @@ public class Enseignant extends Utilisateur{
 
 	}
 	
-	public Enseignant(String nom, String prenom, String login , String mdp , int IdUser,TypeUtilisateur type)
+	public Enseignant(String nom, String prenom, String login , String mdp , int IdUser)
 	{
 		super(nom, prenom, login, mdp, IdUser, TypeUtilisateur.ENSEIGNANT);
 	}
