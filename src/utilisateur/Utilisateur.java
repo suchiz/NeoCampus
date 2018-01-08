@@ -175,6 +175,57 @@ public abstract class Utilisateur implements Serializable {
 				}
 		}
 	}
+	
+	// -------------------------------------------------------------------------------
+	public boolean login (String login,String motdepasse)
+	{
+		
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		boolean pass = false;
+		String logintomatch = null;
+		String motdepasstomatch = null;
+		
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			//RECUPERATION LOGIN VIA LA BDD
+			ResultSet resultat1 = statement.executeQuery("SELECT IDENTIFIANT FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE ID_UTILISATEUR='"+this.idUser+"';");
+			if(resultat1.next())
+				logintomatch = resultat1.getString("IDENTIFIANT");
+			
+			//RECUPERATION MDP VIA LA BDD
+			ResultSet resultat2 = statement.executeQuery("SELECT MOT_DE_PASSE FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE ID_UTILISATEUR='"+this.idUser+"';");
+			if(resultat2.next())
+				motdepasstomatch=resultat2.getString("MOT_DE_PASSE");
+			
+			//COMPARAISON
+			if(login.equals(logintomatch)&&motdepasse.equals(motdepasstomatch))
+				pass=true;
+
+		} catch (SQLException e) {
+			/* G�rer les �ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de
+					 * l'ignorer.
+					 */
+				}
+		}
+		
+		return pass;
+	}
+	
 }
 
 
