@@ -12,7 +12,7 @@ import javax.swing.JTree;
 public class FrameFirstMessage extends JFrame{
 	//Attributs
     private JPanel mainPanel = new javax.swing.JPanel();
-    private PanelSelectionGroupes panelSelectionGroupe = new PanelSelectionGroupes();
+    private PanelSelectionGroupes panelSelectionGroupe;
     private PanelFirstMessage panelFirstMessage = new PanelFirstMessage();
     private JTextField textFieldTitre = new javax.swing.JTextField();
     private JLabel labelTitre = new javax.swing.JLabel("Titre:");
@@ -28,6 +28,7 @@ public class FrameFirstMessage extends JFrame{
     
 	public void initcomponent(){
 		//Inits
+		panelSelectionGroupe = new PanelSelectionGroupes(frameInterface);
 		panelFirstMessage.setParent(frameInterface);
     	panelFirstMessage.setArbreFilDeDiscussion(arbreFilDeDiscussion);
     	panelFirstMessage.setTextFieldTitre(textFieldTitre);

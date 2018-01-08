@@ -19,18 +19,18 @@ public class PanelSelectionGroupes extends JPanel{
 	private JTextField textFieldRechercher = new javax.swing.JTextField();
 	private JButton buttonRechercher = new javax.swing.JButton("Rechercher");
 	private DefaultListModel<Groupe> lmRef = new DefaultListModel<>();
+	private FrameInterface frameInterface;
     
 	//Constructor
-    public PanelSelectionGroupes(){
+    public PanelSelectionGroupes(FrameInterface frameInterface){
+    	this.frameInterface = frameInterface;
     	initcomponent();
     }
     
 	public void initcomponent(){
 		//Inits
-	
-			
+		initModel();
 		scrollPanelGroupes.setViewportView(listGroupes);
-		test();
 		//Events
         textFieldRechercher.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -90,12 +90,9 @@ public class PanelSelectionGroupes extends JPanel{
     }
     
     
-    public void test (){
-    	
-    	lmRef.addElement(new Groupe("TAD 3.1"));
-    	lmRef.addElement(new Groupe("TAD 3.2"));
-    	lmRef.addElement(new Groupe("TAD 4.1"));
-    	lmRef.addElement(new Groupe("TAD 4.2"));
+    public void initModel (){
+    	for (Groupe g : frameInterface.getTousLesGroupes())
+    		lmRef.addElement(g);
     	listGroupes.setModel(lmRef);
     	listGroupes.setSelectedIndex(0);
     }
