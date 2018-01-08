@@ -47,7 +47,7 @@ public class DB {
 		}
 	}
 
-	public Utilisateur UtilisateurFromID(int idUtilisateur) {
+	public static Utilisateur UtilisateurFromID(int idUtilisateur) {
 		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 		String username = "root";
 		String mdp = "root";
