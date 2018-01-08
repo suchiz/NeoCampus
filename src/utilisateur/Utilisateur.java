@@ -94,7 +94,7 @@ public abstract class Utilisateur implements Serializable {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			System.out.println("Driver O.K.");
-			/* Connexion à la base de données */
+			/* Connexion ï¿½ la base de donnï¿½es */
 			String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 			String username = "root";
 			String mdp = "root";
@@ -106,7 +106,7 @@ public abstract class Utilisateur implements Serializable {
 						+ "INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
 						+ this.login + "','" + this.mdp + "','" + this.nom + "','" + this.prenom + "','" + this.type
 						+ "');");
-				/* Ici, nous placerons nos requêtes vers la BDD */
+				/* Ici, nous placerons nos requï¿½tes vers la BDD */
 				Statement statement = connexion.createStatement();
 
 				int statut = statement.executeUpdate(
@@ -177,50 +177,6 @@ public abstract class Utilisateur implements Serializable {
 	}
 
 	// -------------------------------------------------------------------------------
-	public Utilisateur login(String login, String motdepasse) {
 
-		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
-		String username = "root";
-		String mdp = "root";
-		Connection connexion = null;
-		String logintomatch = null;
-		String motdepasstomatch = null;
-		Utilisateur u = null;
-
-		try {
-			connexion = DriverManager.getConnection(url, username, mdp);
-
-			/* Ici, nous placerons nos requï¿½tes vers la BDD */
-			Statement statement = connexion.createStatement();
-
-			// RECUPERATION LOGIN VIA LA BDD
-			ResultSet resultat1 = statement.executeQuery(
-					"SELECT IDENTIFIANT,MOT_DE_PASSE,ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE IDENTIFIANT='"
-							+ login + "';");
-			if (resultat1.next()) {
-				logintomatch = resultat1.getString("IDENTIFIANT");
-				motdepasstomatch = resultat1.getString("MOT_DE_PASSE");
-				this.idUser = resultat1.getInt("ID_UTILISATEUR");
-			}
-			// COMPARAISON
-			if (login.equals(logintomatch) && motdepasse.equals(motdepasstomatch) && ! motdepasse.equals(""))
-				u = DB.UtilisateurFromID(this.idUser);
-
-		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
-		} finally {
-			if (connexion != null)
-				try {
-					/* Fermeture de la connexion */
-					connexion.close();
-				} catch (SQLException ignore) {
-					/*
-					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
-					 */
-				}
-		}
-
-		return u;
-	}
 
 }
