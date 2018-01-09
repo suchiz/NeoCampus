@@ -121,7 +121,7 @@ public class PanelFirstMessage extends JPanel{
    private boolean checkFields(){
 	   if (panelSelectionGroupes.getGroupeSelected() == null || textFieldFirstMessage.getText().equals("")
 			   || textFieldFirstMessage.getText().equals("Ecrivez votre message...") || textFieldTitre.getText().equals("")){
-		   JOptionPane.showMessageDialog(frameInterface, "Remplissez tout les champs");
+		   JOptionPane.showMessageDialog(frameInterface, "Remplissez tous les champs");
 		   return false;
 	   }
 			   return true;
