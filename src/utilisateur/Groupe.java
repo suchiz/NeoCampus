@@ -26,14 +26,17 @@ public class Groupe {
 	}
 
 	// -------------------------------------------------------------------------------
-	public void addMembers(List<Utilisateur> l){
-		for(Utilisateur u : l)
-			this.listeUtilisateur.add(u);
+	public void addMembers(List<Utilisateur> l) {
+		for (Utilisateur u : l)
+			addMember(u);
 	}
+
 	// -------------------------------------------------------------------------------
 	public void addMember(Utilisateur user) {
-		this.listeUtilisateur.add(user);
-		db.addUserToGroup(user.getIdUser(), idGroupe);
+		if (!listeUtilisateur.contains(user)) {
+			this.listeUtilisateur.add(user);
+			db.addUserToGroup(user.getIdUser(), idGroupe);
+		}
 
 	}
 
