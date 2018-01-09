@@ -2,11 +2,11 @@ package utilisateur;
 
 public class Agent extends Utilisateur{
 	private static final long serialVersionUID = 6347866291761750368L;
-	private Service service;
+	private TypeUtilisateur type;
 
-	public Agent(String nom, String prenom, Service service) {
+	public Agent(String nom, String prenom, TypeUtilisateur type) {
 		super(nom, prenom);
-		this.service = service;
+		this.type = type;
 	}
 	
 	public Agent(String nom, String prenom, String login , String mdp , int IdUser, TypeUtilisateur type)
@@ -14,7 +14,7 @@ public class Agent extends Utilisateur{
 		super(nom, prenom, login, mdp, IdUser,type);		
 	}
 
-	public Service getService() {
-		return service;
+	public TypeUtilisateur getService() {
+		return type;
 	}
 }

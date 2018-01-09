@@ -1,13 +1,6 @@
 package utilisateur;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FilDeDiscussion {
@@ -15,6 +8,8 @@ public class FilDeDiscussion {
 	private Utilisateur createur;
 	private Groupe groupe;
 	private int idFil;
+
+	private DB db = new DB();
 
 	public int getIdFil() {
 		return idFil;
@@ -32,11 +27,21 @@ public class FilDeDiscussion {
 		this.groupe = groupe;
 		this.setCreateur(createur);
 	}
+	public FilDeDiscussion(String titre, Groupe groupe, Utilisateur createur,List<Message> messages) {
+		this.titre = titre;
+		this.groupe = groupe;
+		this.setCreateur(createur);
+		this.conversation=messages;
+	}
 
 	// ---------------------------------------------------------------------------
 	public void addMessage(Message msg) {
-		// TODO LA AUSSI IL FAUT APPELER LE SERVEUR POUR AJOUTER LE MESSAGE DANS LA BD
-		conversation.add(msg);
+		try {
+			db.addMessageToFil(this.idFil, msg);
+			conversation.add(msg);
+		} catch (DataBaseException e) {
+			System.out.println("PROBLEME BASE DE DONNEES");
+		}
 	}
 
 	// ---------------------------------------------------------------------------

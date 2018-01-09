@@ -1,10 +1,5 @@
 package utilisateur;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +7,7 @@ public class Groupe {
 	private String nomGroupe;
 	private List<Utilisateur> listeUtilisateur = new ArrayList<>();
 	private int idGroupe;
+	private DB db = new DB();
 
 	// -------------------------------------------------------------------------------
 	public Groupe(String nomGroupe) {
@@ -34,8 +30,8 @@ public class Groupe {
 	// -------------------------------------------------------------------------------
 	public void addMember(Utilisateur user) {
 		this.listeUtilisateur.add(user);
-		// TODO FAUT COMMUNIQUER AVEC LE SERVEUR
-		// addMemberBDD(user);
+		db.addUserToGroup(user.getIdUser(), idGroupe);
+
 	}
 
 	// -------------------------------------------------------------------------------

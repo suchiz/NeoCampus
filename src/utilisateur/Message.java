@@ -18,6 +18,21 @@ public class Message implements Serializable{
 		this.auteur = auteur;
 	}
 	
+	public Message(Utilisateur auteur, String msg,int idMsg) {
+		this.date = new Date();
+		this.msg = msg;
+		this.auteur = auteur;
+		this.idMsg = idMsg;
+	}
+	
+	public Message(Utilisateur auteur, String msg,int idMsg,Date date) {
+		this.date = new Date();
+		this.msg = msg;
+		this.auteur = auteur;
+		this.idMsg = idMsg;
+		this.date=date;
+	}
+	
 	public Message (String msg){
 		this.date = new Date();
 		this.msg = msg;
