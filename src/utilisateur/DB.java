@@ -1,5 +1,5 @@
 
-package database;
+package utilisateur;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,14 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import utilisateur.Agent;
-import utilisateur.Enseignant;
-import utilisateur.Etudiant;
-import utilisateur.Groupe;
-import utilisateur.Service;
-import utilisateur.TypeUtilisateur;
-import utilisateur.Utilisateur;
 
 public class DB {
 

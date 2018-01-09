@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import database.DB;
-
 public abstract class Utilisateur implements Serializable {
 
 	private static final long serialVersionUID = -3928219126348549952L;

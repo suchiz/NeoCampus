@@ -1,6 +1,5 @@
 package utilisateur;
 
-import database.DB;
 
 public class Test {
 
@@ -10,16 +9,16 @@ public class Test {
 		d.creation_bd();
 
 		try {
-			Etudiant e = new Etudiant("a", "a", "a", "a");
+			Etudiant e = new Etudiant("Fablyat", "Mofolyat", "a", "a");
 			e.stockageUserBDD();
 
-			Etudiant e2 = new Etudiant("b", "b", "b", "b");
+			Etudiant e2 = new Etudiant("Qiu", "Jr", "b", "b");
 			e2.stockageUserBDD();
 
-			Etudiant e3 = new Etudiant("C", "C", "C", "C");
+			Etudiant e3 = new Etudiant("Suchiz", "Kyuu", "C", "C");
 			e3.stockageUserBDD();
 
-			Etudiant e4 = new Etudiant("d", "d", "d", "d");
+			Etudiant e4 = new Etudiant("Ruben", "Le connard", "d", "d");
 			e4.stockageUserBDD();
 
 			Groupe g = new Groupe("TDA1");
@@ -42,7 +41,7 @@ public class Test {
 
 			for (int i = 0; i < 5; i++) {
 				System.out.println("i : " + i);
-				Message m = new Message(e,"VOILA LE MESSAGE n° " + i);
+				Message m = new Message(e,"VOILA LE MESSAGE nï¿½ " + i);
 				f.addMessage(m);
 			}
 
@@ -51,7 +50,7 @@ public class Test {
 
 			for (int i = 0; i < 5; i++) {
 				System.out.println("i : " + i);
-				Message m = new Message(e2,"VOILA LE MESSAGE n° " + i + " MAIS C''EST PAS LE MEME FIL DAKOR");
+				Message m = new Message(e2,"VOILA LE MESSAGE nï¿½ " + i + " MAIS C''EST PAS LE MEME FIL DAKOR");
 				f2.addMessage(m);
 			}
 
