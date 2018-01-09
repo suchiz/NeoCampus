@@ -1,6 +1,6 @@
 package utilisateur;
 
-public class Agent extends Utilisateur{
+public class Agent extends Utilisateur {
 	private static final long serialVersionUID = 6347866291761750368L;
 	private TypeUtilisateur type;
 
@@ -8,15 +8,15 @@ public class Agent extends Utilisateur{
 		super(nom, prenom);
 		this.type = type;
 	}
-	
-	public Agent(String nom, String prenom, String login , String mdp , int IdUser, TypeUtilisateur type)
-	{
-		super(nom, prenom, login, mdp, IdUser,type);		
+
+	public Agent(String nom, String prenom, String login, String mdp, int IdUser, TypeUtilisateur type) {
+		super(nom, prenom, login, mdp, IdUser, type);
+		this.type = type;
 	}
 
-	public Agent(String nom, String prenom, String login , String mdp ,  TypeUtilisateur type)
-	{
-		super(nom, prenom, login, mdp,type);		
+	public Agent(String nom, String prenom, String login, String mdp, TypeUtilisateur type) {
+		super(nom, prenom, login, mdp, type);
+		this.type = type;
 	}
 
 	public TypeUtilisateur getService() {
