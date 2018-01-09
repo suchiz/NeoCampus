@@ -14,6 +14,11 @@ public class Agent extends Utilisateur{
 		super(nom, prenom, login, mdp, IdUser,type);		
 	}
 
+	public Agent(String nom, String prenom, String login , String mdp ,  TypeUtilisateur type)
+	{
+		super(nom, prenom, login, mdp,type);		
+	}
+
 	public TypeUtilisateur getService() {
 		return type;
 	}
