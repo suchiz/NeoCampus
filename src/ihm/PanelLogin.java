@@ -14,9 +14,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import utilisateur.DB;
 import utilisateur.Tube;
 import utilisateur.Utilisateur;
-import database.DB;
 
 @SuppressWarnings("serial")
 public class PanelLogin extends JPanel {

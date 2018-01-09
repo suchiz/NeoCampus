@@ -6,7 +6,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DB {
@@ -217,4 +219,474 @@ public class DB {
 		return u;
 	}
 
+	public void removeUserBD(Utilisateur u) throws DataBaseException {
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// DISPARITION DE L'UTILISATEUR DE TOUT LES GROUPES DONT IL ETAIT MEMBRE
+			statement.executeUpdate(
+					"DELETE ID_UTILISATEUR FROM APPARTENIR (ID_Utilisateur,ID_Groupe) WHERE (ID_Utilisateur ='"
+							+ u.getIdUser() + "';");
+
+			// REMOVAL DE LA TABLE USER
+			statement.executeUpdate(
+					"DELETE ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE (ID_Utilisateur ='"
+							+ u.getIdUser() + "';");
+
+		} catch (SQLException e) {
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+	}
+
+	public void addUserBD(Utilisateur u) {
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			System.out.println("Driver O.K.");
+			/* Connexion ï¿½ la base de donnï¿½es */
+			String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+			String username = "root";
+			String mdp = "root";
+
+			String login = u.getLogin();
+			String mdpU = u.getMdp();
+			String nomU = u.getNom();
+			String prenomU = u.getPrenom();
+			String typeU = null;
+
+			if (u instanceof Etudiant) {
+				typeU = "ETUDIANT";
+			} else if (u instanceof Enseignant) {
+				typeU = "ENSEIGNANT";
+			} else if (u instanceof Agent) {
+				Agent a = (Agent) u;
+				if (a.getService().toString() == TypeUtilisateur.ADMINISTRATIF.toString()) {
+					typeU = "ADMINISTRATIF";
+				} else {
+					typeU = "TECHNIQUE";
+				}
+			}
+
+			Connection connexion = null;
+			try {
+				connexion = DriverManager.getConnection(url, username, mdp);
+				System.out.println("SQL : "
+						+ "INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
+						+ login + "','" + mdpU + "','" + nomU + "','" + prenomU + "','" + typeU + "');");
+				/* Ici, nous placerons nos requï¿½tes vers la BDD */
+				Statement statement = connexion.createStatement();
+
+				int statut = statement.executeUpdate(
+						"INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
+								+ login + "','" + mdpU + "','" + nomU + "','" + prenomU + "','" + typeU + "');");
+
+				ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
+
+				if (indicedanslabasededonnee.next()) {
+					int res = indicedanslabasededonnee.getInt("ID");
+					u.setIdUser(res);
+					System.out.println(res);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if (connexion != null)
+					try {
+						/* Fermeture de la connexion */
+						connexion.close();
+					} catch (SQLException ignore) {
+						/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+					}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void removeGroupBD(int idGroup) {
+		/* Connexion ï¿½ la base de donnï¿½es */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// RECUPERATION DES FILS DE DISCUSSIONS D'UN GROUPE AFIN DE LES SUPPRIMER
+			ResultSet resultat = statement.executeQuery(
+					"SELECT ID_FIL_DE_DISCUSSION FROM DESTINE (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE ='"
+							+ idGroup + "';");
+
+			while (resultat.next()) {
+				// DELETE LES FDD DU GROUPE CIBLE
+				statement.executeUpdate(
+						"DELETE ID_FIL_DE_DISCUSSION FROM FilDeDiscussion(ID_Fil_DE_DISCUSSION,Titre) WHERE ID_FIL_DE_DISCUSSION='"
+								+ resultat.getInt("ID_FIL_DE_DISCUSSION") + "';");
+			}
+
+			// DELETE LE GROUPE DE LA TABLE DESTINE
+			statement.executeUpdate(
+					"DELETE ID_GROUPE  FROM DESTINE (ID_Fil_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE)WHERE ID_GROUPE='"
+							+ idGroup + "';");
+
+			// DELETE LE GROUPE DE LA TABLE GROUPE
+			statement.executeUpdate(
+					"DELETE FROM GROUPE (ID_Utilisateur,ID_Groupe) WHERE (ID_Groupe ='" + idGroup + "';");
+
+		} catch (SQLException e) {
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+	}
+
+	public void addGroupBD(Groupe g) {
+		/* Connexion ï¿½ la base de donnï¿½es */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			System.out.println();
+
+			statement.executeUpdate("INSERT INTO Groupe (NOM_GROUPE) VALUES ('" + g.getNomGroupe() + "');");
+			ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
+
+			if (indicedanslabasededonnee.next()) {
+				g.setIdGroupe(indicedanslabasededonnee.getInt("ID"));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+
+	}
+
+	public void addUserToGroup(int idUser, int idGroup) {
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+			Statement statement = connexion.createStatement();
+			statement.executeUpdate(
+					"INSERT INTO APPARTENIR (ID_Utilisateur,ID_Groupe) VALUES ('" + idUser + "','" + idGroup + "');");
+
+		} catch (SQLException e) {
+		} finally {
+			if (connexion != null)
+				try {
+					connexion.close();
+				} catch (SQLException ignore) {
+				}
+		}
+	}
+
+	public void removeUserFromGroup(int idUser, int idGroup) {
+
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			statement.executeUpdate("DELETE FROM APPARTENIR (ID_Utilisateur,ID_Groupe) WHERE (ID_Utilisateur ='"
+					+ idUser + "'and'" + idGroup + "';");
+
+		} catch (SQLException e) {
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+	}
+
+	public List<Groupe> getAllGroupsBD() {
+		List<Groupe> listeGroupe = new ArrayList<Groupe>();
+		String nomgroupe;
+		int idgroupe;
+
+		/* Connexion � la base de donn�es */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			ResultSet resultat = statement.executeQuery("SELECT (ID_GROUPE) , (Nom_Groupe) FROM Groupe ;");
+			while (resultat.next()) {
+				idgroupe = resultat.getInt("ID_GROUPE");
+				nomgroupe = resultat.getString("Nom_Groupe");
+				Groupe groupetest = new Groupe(nomgroupe, idgroupe);
+				listeGroupe.add(groupetest);
+			}
+
+		} catch (SQLException e) {
+			/* G�rer les �ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+				}
+		}
+		return listeGroupe;
+	}
+
+	public List<Utilisateur> getUsersFromGroup(int idGroup) {
+		List<Utilisateur> listeUser = new ArrayList();
+		String nom;
+		String prenom;
+		int IdUser;
+		String login;
+		String mdp;
+		TypeUtilisateur typeutilisateur;
+		Service service;
+
+		/* Connexion � la base de donn�es */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp1 = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp1);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			ResultSet resultat = statement.executeQuery(
+					"SELECT * FROM utilisateur as U WHERE U.ID_UTILISATEUR IN (SELECT ID_UTILISATEUR FROM appartenir WHERE ID_GROUPE ='"
+							+ idGroup + "';");
+
+			while (resultat.next()) {
+				nom = resultat.getString("Nom_Utilisateur");
+				prenom = resultat.getString("Prenom_Utilisateur");
+				IdUser = resultat.getInt("ID_Utilisateur");
+				login = resultat.getString("Identifiant");
+				mdp = resultat.getString("Mot_De_Passe");
+				typeutilisateur = (TypeUtilisateur) resultat.getObject("TypeUtilisateur");
+
+				if (typeutilisateur == TypeUtilisateur.ETUDIANT) {
+					Etudiant etudiant = new Etudiant(nom, prenom, mdp, login, IdUser);
+					listeUser.add(etudiant);
+				} else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT) {
+					Enseignant enseignant = new Enseignant(nom, prenom, mdp, login, IdUser);
+					listeUser.add(enseignant);
+				} else {
+					Agent agent = new Agent(nom, prenom, mdp, login, IdUser, typeutilisateur);
+					listeUser.add(agent);
+				}
+
+			}
+
+		} catch (SQLException e) {
+			/* G�rer les �ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+				}
+		}
+
+		return listeUser;
+	}
+
+	public void addFilDeDiscussion(FilDeDiscussion f, int idUser, int idGroup) {
+		/* Connexion à la base de données */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requêtes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			int statut = statement.executeUpdate(
+					"INSERT INTO Fil_De_Discussion (TITRE_FIL_DE_DISCUSSION) VALUES ('" + f.getTitre() + "');");
+
+			ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
+
+			while (indicedanslabasededonnee.next()) {
+				int idFilDediscussion = indicedanslabasededonnee.getInt("ID");
+				f.setIdFil(idFilDediscussion);
+				System.out.println(idFilDediscussion);
+			}
+
+			int a = statement.executeUpdate("INSERT INTO Creer (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR) VALUES ("
+					+ f.getIdFil() + "," + idUser + ");");
+
+			int b = statement
+					.executeUpdate("INSERT INTO destine (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) VALUES ("
+							+ f.getIdFil() + "," + idUser + "," + idGroup + ");");
+
+		} catch (SQLException e) {
+			/* Gérer les éventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+				}
+		}
+	}
+
+	public void addMessageToFil(int idFil, Message msg) {
+		System.out.println("MESSAGE : +" + msg.getMsg());
+		/* Connexion à la base de données */
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		int idmessage = 0;
+
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requêtes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			int a = statement.executeUpdate("INSERT INTO MESSAGE (CONTENU_MESSAGE) VALUES ('" + msg.getMsg() + "');");
+
+			ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
+
+			if (indicedanslabasededonnee.next()) {
+				idmessage = indicedanslabasededonnee.getInt("ID");
+			}
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			Date now = new Date();
+			try {
+				System.out.println(msg.getIdMsg());
+				System.out.println(msg.getAuteur());
+				System.out.println("VOILA :" + msg.getAuteur().getIdUser());
+				System.out.println(idmessage);
+				System.out.println(dateFormat.format(now));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			int b = statement
+					.executeUpdate("INSERT INTO envoyer_message (ID_UTILISATEUR,ID_MESSAGE,DATE_ENVOI_MESSAGE) VALUES ("
+							+ msg.getAuteur().getIdUser() + "," + idmessage + ",'" + dateFormat.format(now) + "');");
+
+			int statut = statement.executeUpdate(
+					"INSERT INTO CONTIENT (ID_FIL_DE_DISCUSSION,ID_MESSAGE) VALUES (" + idFil + "," + idmessage + ");");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+				}
+		}
+	}
+
+	public void removeFilBD(int idFil) {
+		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
+		String username = "root";
+		String mdp = "root";
+		Connection connexion = null;
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// DISPARITION DE L'UTILISATEUR DE TOUT LES GROUPES DONT IL ETAIT MEMBRE
+			statement.executeUpdate(
+					"DELETE ID_FIL_DE_DISCUSSION FROM DESTINE (ID_FIL_DE_DISCUSSION,ID_Utilisateur,ID_Groupe) WHERE (ID_FIL_DE_DISCUSSION ='"
+							+ idFil + "';");
+
+			// REMOVAL DE LA TABLE FIL DE DISCUSSION
+			statement.executeUpdate(
+					"DELETE ID_FIL_DE_DISCUSSION FROM FILDEDISCUSSION (ID_FIL_DE_DISCUSSION,TITRE) WHERE (ID_FIL_DE_DISCUSSION ='"
+							+ idFil + "';");
+
+		} catch (SQLException e) {
+			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+	}
 }
