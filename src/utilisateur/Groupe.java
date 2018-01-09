@@ -26,7 +26,10 @@ public class Groupe {
 	}
 
 	// -------------------------------------------------------------------------------
-
+	public void addMembers(List<Utilisateur> l){
+		for(Utilisateur u : l)
+			this.listeUtilisateur.add(u);
+	}
 	// -------------------------------------------------------------------------------
 	public void addMember(Utilisateur user) {
 		this.listeUtilisateur.add(user);

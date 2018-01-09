@@ -15,7 +15,7 @@ public class MenuBarInterface extends JMenuBar {
 	private FrameInterface frameInterface;
 	private JMenu fichierMenu = new JMenu("Fichier");
 	private JMenuItem connexionItem = new JMenuItem("Connexion");
-	private JMenuItem deconnexionItem = new JMenuItem("Déconnexion");
+	private JMenuItem deconnexionItem = new JMenuItem("Deconnexion");
 	private JMenuItem quitterItem = new JMenuItem("Quitter");
 	private JMenuItem nouveauItem = new JMenuItem("Nouveau message");
 	private JPopupMenu.Separator separator = new JPopupMenu.Separator();

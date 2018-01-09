@@ -172,7 +172,7 @@ public class PanelLogin extends JPanel {
 		Utilisateur temp = database.login(textFieldUser.getText().trim(),
 				textFieldPassword.getText());
 		if (temp == null) {
-			JOptionPane.showMessageDialog(frameInterface, "Données invalide");
+			JOptionPane.showMessageDialog(frameInterface, "Donnees invalides");
 		} else {
 			frameInterface.setUser(temp);
 			Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
@@ -186,7 +186,7 @@ public class PanelLogin extends JPanel {
 		System.out.println();
 		if (textFieldPassword.getPassword().equals("")
 				|| textFieldUser.getText().equals("")) {
-			JOptionPane.showMessageDialog(frameInterface, "Données invalide");
+			JOptionPane.showMessageDialog(frameInterface, "Donnees invalides");
 			return false;
 		}
 		return true;
