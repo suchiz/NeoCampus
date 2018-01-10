@@ -32,12 +32,27 @@ public class Groupe {
 	}
 
 	// -------------------------------------------------------------------------------
-	public void addMember(Utilisateur user) {
-		if (!listeUtilisateur.contains(user)) {
-			this.listeUtilisateur.add(user);
-			db.addUserToGroup(user.getIdUser(), idGroupe);
-		}
+	public void initMembers(List<Utilisateur> l) {
+		try {
 
+			for (Utilisateur u : l)
+				if (!listeUtilisateur.contains(u)) {
+					this.listeUtilisateur.add(u);
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void addMember(Utilisateur user) {
+		try {
+			if (!listeUtilisateur.contains(user)) {
+				this.listeUtilisateur.add(user);
+				db.addUserToGroup(user.getIdUser(), idGroupe);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// -------------------------------------------------------------------------------

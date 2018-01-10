@@ -150,6 +150,8 @@ public class PanelFirstMessage extends JPanel{
 	   this.panelSelectionGroupes = panelSelectionGroupes;
    }
    
-   
+   public JButton getOkButton() {
+	   return buttonEnvoyer;
+   }
 	
 }

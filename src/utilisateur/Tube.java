@@ -26,7 +26,7 @@ public class Tube implements Runnable {
 		try {
 			listening();
 		} catch (ClassNotFoundException | IOException e) {
-			JOptionPane.showMessageDialog(new JFrame(), "Déconnecté !");
+			JOptionPane.showMessageDialog(new JFrame(), "Deconnecte !");
 			frameInterface.getMenuBarInterface().setDisconnected();
 		}
 	}

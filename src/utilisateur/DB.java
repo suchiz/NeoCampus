@@ -401,9 +401,10 @@ public class DB {
 			connexion = DriverManager.getConnection(url, username, mdp);
 			Statement statement = connexion.createStatement();
 			statement.executeUpdate(
-					"INSERT INTO APPARTENIR (ID_Utilisateur,ID_Groupe) VALUES ('" + idUser + "','" + idGroup + "');");
+					"INSERT INTO APPARTENIR (ID_Utilisateur,ID_Groupe) VALUES (" + idUser + "," + idGroup + ");");
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			if (connexion != null)
 				try {
@@ -420,8 +421,8 @@ public class DB {
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
-			statement.executeUpdate("DELETE FROM APPARTENIR WHERE (ID_Utilisateur =" + idUser
-					+ " and  ID_GROUPE =" + idGroup + ");");
+			statement.executeUpdate(
+					"DELETE FROM APPARTENIR WHERE (ID_Utilisateur =" + idUser + " and  ID_GROUPE =" + idGroup + ");");
 
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -24,6 +24,7 @@ public class FrameLogin extends JFrame{
         mainPanel.setBackground(new java.awt.Color(182, 182, 182));
         setResizable(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        getRootPane().setDefaultButton(panelLogin.getOkButton());
         
         //Events
         addWindowListener(new java.awt.event.WindowAdapter() {

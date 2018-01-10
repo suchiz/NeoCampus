@@ -67,6 +67,11 @@ public class PanelMessageDisplay extends JScrollPane{
 		refresh();
 	}
 	
+	public void clear() {
+		this.removeAll();
+		refresh();
+	}
+	
 	public void refresh(){	
 		invalidate();
 		validate();

@@ -35,6 +35,7 @@ public class FrameFirstMessage extends JFrame{
     	panelFirstMessage.setPanelSelectionGroupes(panelSelectionGroupe);
 		setMinimumSize(new Dimension(450, 250));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		getRootPane().setDefaultButton(panelFirstMessage.getOkButton());
 		
 		//Events
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -102,4 +103,5 @@ public class FrameFirstMessage extends JFrame{
 	public void setArbreFilDiscussion(JTree arbreFilDiscussion) {
 		this.arbreFilDeDiscussion = arbreFilDiscussion;
 	}
+	
 }

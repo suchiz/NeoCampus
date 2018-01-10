@@ -191,5 +191,8 @@ public class PanelLogin extends JPanel {
 		}
 		return true;
 	}
-
+	
+	public JButton getOkButton() {
+		return loginButton;
+	}
 }

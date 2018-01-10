@@ -8,11 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import utilisateur.FilDeDiscussion;
 import utilisateur.Groupe;
 import utilisateur.Tube;
 import utilisateur.Utilisateur;
@@ -29,6 +31,7 @@ public class FrameInterface extends JFrame {
 	private Tube tube;
 
 	private ArrayList<Groupe> tousLesGroupes = new ArrayList<>();
+	private List<FilDeDiscussion> toutesLesDiscussions = new ArrayList<>();
 
 	// Constructor
 	public FrameInterface() {
