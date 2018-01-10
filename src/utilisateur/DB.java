@@ -283,7 +283,7 @@ public class DB {
 					System.out.println(res);
 					addUserToGroup(u.getIdUser(), 1);
 				}
-				
+
 				connexion.commit();
 
 			} catch (SQLException e) {
@@ -420,11 +420,11 @@ public class DB {
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
-			statement.executeUpdate("DELETE FROM APPARTENIR (ID_Utilisateur,ID_Groupe) WHERE (ID_Utilisateur ='"
-					+ idUser + "'and'" + idGroup + "';");
+			statement.executeUpdate("DELETE FROM APPARTENIR WHERE (ID_Utilisateur =" + idUser
+					+ " and  ID_GROUPE =" + idGroup + ");");
 
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			e.printStackTrace();
 		} finally {
 			if (connexion != null)
 				try {
@@ -471,14 +471,16 @@ public class DB {
 		return listeGroupe;
 	}
 
-	public List<Utilisateur> getUsersFromGroup(int idGroup) {
-		List<Utilisateur> listeUser = new ArrayList();
+	public List<Utilisateur> getAllUsers() {
+
+		System.out.println("get all users");
+		List<Utilisateur> listeUser = new ArrayList<Utilisateur>();
 		String nom;
 		String prenom;
 		int IdUser;
 		String login;
 		String mdpU;
-		TypeUtilisateur typeutilisateur;
+		String typeutilisateur;
 		Service service;
 
 		try {
@@ -487,33 +489,35 @@ public class DB {
 			/* Ici, nous placerons nos requ�tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
-			ResultSet resultat = statement.executeQuery(
-					"SELECT * FROM utilisateur as U WHERE U.ID_UTILISATEUR IN (SELECT ID_UTILISATEUR FROM appartenir WHERE ID_GROUPE ='"
-							+ idGroup + "';");
+			ResultSet resultat = statement.executeQuery("SELECT * FROM UTILISATEUR");
+
+			Utilisateur u = null;
 
 			while (resultat.next()) {
-				nom = resultat.getString("Nom_Utilisateur");
-				prenom = resultat.getString("Prenom_Utilisateur");
-				IdUser = resultat.getInt("ID_Utilisateur");
-				login = resultat.getString("Identifiant");
-				mdpU = resultat.getString("Mot_De_Passe");
-				typeutilisateur = (TypeUtilisateur) resultat.getObject("TypeUtilisateur");
+				System.out.println("alo");
+				try {
+					nom = resultat.getString("Nom_Utilisateur");
+					prenom = resultat.getString("Prenom_Utilisateur");
+					IdUser = resultat.getInt("ID_Utilisateur");
+					login = resultat.getString("Identifiant");
+					mdpU = resultat.getString("Mot_De_Passe");
+					typeutilisateur = resultat.getString("Type_Utilisateur");
 
-				if (typeutilisateur == TypeUtilisateur.ETUDIANT) {
-					Etudiant etudiant = new Etudiant(nom, prenom, mdpU, login, IdUser);
-					listeUser.add(etudiant);
-				} else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT) {
-					Enseignant enseignant = new Enseignant(nom, prenom, mdpU, login, IdUser);
-					listeUser.add(enseignant);
-				} else {
-					Agent agent = new Agent(nom, prenom, mdpU, login, IdUser, typeutilisateur);
-					listeUser.add(agent);
+					if (typeutilisateur == TypeUtilisateur.ETUDIANT.toString()) {
+						u = new Etudiant(nom, prenom, mdpU, login, IdUser);
+					} else if (typeutilisateur == TypeUtilisateur.ENSEIGNANT.toString()) {
+						u = new Enseignant(nom, prenom, mdpU, login, IdUser);
+					} else {
+						u = new Agent(nom, prenom, mdpU, login, IdUser, TypeUtilisateur.ADMINISTRATIF);
+					}
+					listeUser.add(u);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-
 			}
 
 		} catch (SQLException e) {
-			/* G�rer les �ventuelles erreurs ici */
+			e.printStackTrace();
 		} finally {
 			if (connexion != null)
 				try {
@@ -522,6 +526,78 @@ public class DB {
 				} catch (SQLException ignore) {
 					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
 				}
+		}
+
+		for (Utilisateur utilisateur : listeUser) {
+			System.out.println(utilisateur);
+		}
+
+		return listeUser;
+	}
+
+	public List<Utilisateur> getUsersFromGroup(int idGroup) {
+		System.out.println("GET USERS FROM GROUP");
+		List<Utilisateur> listeUser = new ArrayList<Utilisateur>();
+		String nom;
+		String prenom;
+		int IdUser;
+		String login;
+		String mdpU;
+		String typeutilisateur;
+
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			ResultSet resultat = statement.executeQuery(
+					"SELECT * FROM utilisateur as U WHERE U.ID_UTILISATEUR IN (SELECT ID_UTILISATEUR FROM appartenir WHERE ID_GROUPE ="
+							+ idGroup + ");");
+
+			while (resultat.next()) {
+				try {
+					nom = resultat.getString("Nom_Utilisateur");
+					prenom = resultat.getString("Prenom_Utilisateur");
+					IdUser = resultat.getInt("ID_Utilisateur");
+					login = resultat.getString("Identifiant");
+					mdpU = resultat.getString("Mot_De_Passe");
+					typeutilisateur = resultat.getString("Type_Utilisateur");
+
+					Utilisateur u = null;
+					if (typeutilisateur.equals(TypeUtilisateur.ETUDIANT.toString())) {
+						u = new Etudiant(nom, prenom, mdpU, login, IdUser);
+					} else if (typeutilisateur.equals(TypeUtilisateur.ENSEIGNANT.toString())) {
+						u = new Enseignant(nom, prenom, mdpU, login, IdUser);
+					} else if (typeutilisateur.equals(TypeUtilisateur.ADMINISTRATIF.toString())) {
+						u = new Agent(nom, prenom, mdpU, login, IdUser, TypeUtilisateur.ADMINISTRATIF);
+					} else if (typeutilisateur.equals(TypeUtilisateur.TECHNIQUE.toString())) {
+						u = new Agent(nom, prenom, mdpU, login, IdUser, TypeUtilisateur.TECHNIQUE);
+					}
+
+					listeUser.add(u);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e2) {
+			e2.printStackTrace();
+
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+				}
+		}
+
+		for (Utilisateur utilisateur : listeUser) {
+			System.out.println(utilisateur);
 		}
 
 		return listeUser;
