@@ -17,7 +17,7 @@ public class DB {
 	static String mdp = "root";
 	static Connection connexion = null;
 
-	public void creation_bd() {
+	public void creation_bd() throws DataBaseException {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			System.out.println("Driver O.K.");
@@ -36,9 +36,7 @@ public class DB {
 				System.out.println("=) " + s.executeUpdate(r + ";"));
 			}
 
-			req = "";
-			// TODO AJOUTER LE FIL DE GROUPE "TOUS LES UTILISATEURS" ET Y AJOUTER TOUS LES
-			// USERS PAR LA SUITE
+			addGroupBD(new Groupe("Tous les utilisateurs"));
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -107,9 +105,9 @@ public class DB {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
 			Statement statement = connexion.createStatement();
-			ResultSet gorupeBD = statement.executeQuery("SELECT * FROM GROUPE WHERE ID_GROUPE = " + idGroup + ")");
+			ResultSet groupeBD = statement.executeQuery("SELECT * FROM GROUPE WHERE ID_GROUPE = " + idGroup + ")");
 
-			String nomGroupe = gorupeBD.getString("NOM_GROUPE");
+			String nomGroupe = groupeBD.getString("NOM_GROUPE");
 
 			List<Utilisateur> listeUser = new ArrayList();
 			String nom;
@@ -147,15 +145,11 @@ public class DB {
 			g.setListeUtilisateur(listeUser);
 
 		} catch (SQLException e) {
-			/* G�rer les �ventuelles erreurs ici */
 		} finally {
 			if (connexion != null)
 				try {
-					/* Fermeture de la connexion */
 					connexion.close();
 				} catch (SQLException ignore) {
-					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -173,10 +167,8 @@ public class DB {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
-			/* Ici, nous placerons nos requ�tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
-			// RECUPERATION LOGIN VIA LA BDD
 			String req = "SELECT IDENTIFIANT,MOT_DE_PASSE,ID_UTILISATEUR FROM UTILISATEUR WHERE IDENTIFIANT='" + login
 					+ "';";
 			System.out.println(req);
@@ -189,21 +181,15 @@ public class DB {
 				System.out.println("IDENTIFIANT:" + logintomatch + ";MOT_DE_PASSE:" + motdepasstomatch
 						+ ";ID_UTILISATEUR:" + idUser);
 			}
-			// COMPARAISON
 			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals(""))
 				u = DB.UtilisateurFromID(idUser);
 
 		} catch (SQLException e) {
-			/* G�rer les �ventuelles erreurs ici */
 		} finally {
 			if (connexion != null)
 				try {
-					/* Fermeture de la connexion */
 					connexion.close();
 				} catch (SQLException ignore) {
-					/*
-					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
-					 */
 				}
 		}
 
@@ -215,6 +201,7 @@ public class DB {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
+			connexion.setAutoCommit(false);
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
@@ -227,13 +214,18 @@ public class DB {
 			statement.executeUpdate(
 					"DELETE ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE (ID_Utilisateur ='"
 							+ u.getIdUser() + "';");
-
+			connexion.commit();
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			if (connexion != null) {
+				try {
+					connexion.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
 		} finally {
 			if (connexion != null)
 				try {
-					/* Fermeture de la connexion */
 					connexion.close();
 				} catch (SQLException ignore) {
 					/*
@@ -243,7 +235,7 @@ public class DB {
 		}
 	}
 
-	public void addUserBD(Utilisateur u) {
+	public void addUserBD(Utilisateur u) throws DataBaseException {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -271,15 +263,17 @@ public class DB {
 			Connection connexion = null;
 			try {
 				connexion = DriverManager.getConnection(url, username, mdp);
-				System.out.println("SQL : "
-						+ "INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
-						+ login + "','" + mdpU + "','" + nomU + "','" + prenomU + "','" + typeU + "');");
+				connexion.setAutoCommit(false);
+				String req = "INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
+						+ login + "','" + mdpU + "','" + nomU + "','" + prenomU + "','" + typeU + "');";
+				System.out.println(req);
 				/* Ici, nous placerons nos requï¿½tes vers la BDD */
 				Statement statement = connexion.createStatement();
 
-				int statut = statement.executeUpdate(
-						"INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
-								+ login + "','" + mdpU + "','" + nomU + "','" + prenomU + "','" + typeU + "');");
+				int statut = statement.executeUpdate(req);
+				if (statut == 0) {
+					throw new DataBaseException("Error insert utilisateur");
+				}
 
 				ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
 
@@ -287,8 +281,15 @@ public class DB {
 					int res = indicedanslabasededonnee.getInt("ID");
 					u.setIdUser(res);
 					System.out.println(res);
+					addUserToGroup(u.getIdUser(), 1);
 				}
+				
+				connexion.commit();
+
 			} catch (SQLException e) {
+				if (connexion != null) {
+					connexion.rollback();
+				}
 				e.printStackTrace();
 			} finally {
 				if (connexion != null)
@@ -306,9 +307,10 @@ public class DB {
 
 	}
 
-	public void removeGroupBD(int idGroup) {
+	public void removeGroupBD(int idGroup) throws DataBaseException {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
+			connexion.setAutoCommit(false);
 
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
@@ -333,23 +335,28 @@ public class DB {
 			// DELETE LE GROUPE DE LA TABLE GROUPE
 			statement.executeUpdate(
 					"DELETE FROM GROUPE (ID_Utilisateur,ID_Groupe) WHERE (ID_Groupe ='" + idGroup + "';");
-
+			connexion.commit();
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			if (connexion != null) {
+				try {
+					connexion.rollback();
+					throw new DataBaseException();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
 		} finally {
 			if (connexion != null)
 				try {
-					/* Fermeture de la connexion */
 					connexion.close();
+
 				} catch (SQLException ignore) {
-					/*
-					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
-					 */
+
 				}
 		}
 	}
 
-	public void addGroupBD(Groupe g) {
+	public void addGroupBD(Groupe g) throws DataBaseException {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
@@ -366,12 +373,20 @@ public class DB {
 			}
 
 		} catch (SQLException e) {
+			if (connexion != null) {
+				try {
+					connexion.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				throw new DataBaseException();
+			}
 			e.printStackTrace();
 		} finally {
 			if (connexion != null)
 				try {
-					/* Fermeture de la connexion */
 					connexion.close();
+
 				} catch (SQLException ignore) {
 					/*
 					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
@@ -512,7 +527,7 @@ public class DB {
 		return listeUser;
 	}
 
-	public void addFilDeDiscussion(FilDeDiscussion f) {
+	public void addFilDeDiscussion(FilDeDiscussion f) throws DataBaseException {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
@@ -532,20 +547,23 @@ public class DB {
 
 			int a = statement.executeUpdate("INSERT INTO Creer (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR) VALUES ("
 					+ f.getIdFil() + "," + f.getCreateur().getIdUser() + ");");
-
-			int b = statement.executeUpdate(
-					"INSERT INTO destine (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) VALUES (" + f.getIdFil() + ","
-							+ f.getCreateur().getIdUser() + "," + f.getGroupe().getIdGroupe() + ");");
+			if (a == 0) {
+				throw new DataBaseException("Error insert CREER");
+			} else {
+				int b = statement.executeUpdate(
+						"INSERT INTO destine (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) VALUES (" + f.getIdFil()
+								+ "," + f.getCreateur().getIdUser() + "," + f.getGroupe().getIdGroupe() + ");");
+				if (b == 0) {
+					throw new DataBaseException("Error insert CREER");
+				}
+			}
 
 		} catch (SQLException e) {
-			/* Gérer les éventuelles erreurs ici */
 		} finally {
 			if (connexion != null)
 				try {
-					/* Fermeture de la connexion */
 					connexion.close();
 				} catch (SQLException ignore) {
-					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
 				}
 		}
 	}
@@ -651,34 +669,33 @@ public class DB {
 
 			while (messagesQuery.next()) {
 				try {
-				int idMessage = messagesQuery.getInt("ID_MESSAGE");
-				String contenu = messagesQuery.getString("CONTENU_MESSAGE");
-				String nomU = messagesQuery.getString("NOM_UTILISATEUR");
-				String prenomU = messagesQuery.getString("PRENOM_UTILISATEUR");
-				String type = messagesQuery.getString("TYPE_UTILISATEUR");
-				Date date = messagesQuery.getDate("DATE_ENVOI_MESSAGE");
-				Utilisateur u = null;
-				switch (type) {
-				case "ETUDIANT":
-					u = new Etudiant(nomU, prenomU);
-					break;
-				case "ENSEIGNANT":
-					u = new Enseignant(nomU, prenomU);
-					break;
-				case "ADMINISTRATIF":
-					u = new Agent(nomU, prenomU, TypeUtilisateur.ADMINISTRATIF);
-					break;
-				case "TECHNIQUE":
-					u = new Agent(nomU, prenomU, TypeUtilisateur.TECHNIQUE);
-					break;
+					int idMessage = messagesQuery.getInt("ID_MESSAGE");
+					String contenu = messagesQuery.getString("CONTENU_MESSAGE");
+					String nomU = messagesQuery.getString("NOM_UTILISATEUR");
+					String prenomU = messagesQuery.getString("PRENOM_UTILISATEUR");
+					String type = messagesQuery.getString("TYPE_UTILISATEUR");
+					Date date = messagesQuery.getDate("DATE_ENVOI_MESSAGE");
+					Utilisateur u = null;
+					switch (type) {
+					case "ETUDIANT":
+						u = new Etudiant(nomU, prenomU);
+						break;
+					case "ENSEIGNANT":
+						u = new Enseignant(nomU, prenomU);
+						break;
+					case "ADMINISTRATIF":
+						u = new Agent(nomU, prenomU, TypeUtilisateur.ADMINISTRATIF);
+						break;
+					case "TECHNIQUE":
+						u = new Agent(nomU, prenomU, TypeUtilisateur.TECHNIQUE);
+						break;
 
-				default:
-					break;
-				}
-				Message m = new Message(u, contenu, idMessage, date);
-				messages.add(m);
-				}
-				catch (Exception e) {
+					default:
+						break;
+					}
+					Message m = new Message(u, contenu, idMessage, date);
+					messages.add(m);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

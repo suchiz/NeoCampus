@@ -8,7 +8,11 @@ public class Test {
 	public static void main(String[] args) {
 		DB d = new DB();
 
-		d.creation_bd();
+		try {
+			d.creation_bd();
+		} catch (DataBaseException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 			Etudiant e = new Etudiant("Fablyat", "Mofolyat", "a", "a");
@@ -43,31 +47,29 @@ public class Test {
 
 			for (int i = 0; i < 5; i++) {
 				System.out.println("i : " + i);
-				Message m = new Message(e,"VOILA LE MESSAGE n� " + i);
+				Message m = new Message(e, "VOILA LE MESSAGE n� " + i);
 				f.addMessage(m);
 			}
-			
 
 			FilDeDiscussion f2 = new FilDeDiscussion("LA AUSSI YA UN PB", g2, e2);
 			d.addFilDeDiscussion(f2);
 
 			for (int i = 0; i < 5; i++) {
 				System.out.println("i : " + i);
-				Message m = new Message(e2,"VOILA LE MESSAGE n� " + i + " MAIS C''EST PAS LE MEME FIL DAKOR");
+				Message m = new Message(e2, "VOILA LE MESSAGE n� " + i + " MAIS C''EST PAS LE MEME FIL DAKOR");
 				f2.addMessage(m);
 			}
 
 			System.out.println("oui");
-			
+
 			List<FilDeDiscussion> ff = d.filsFromIdUser(e.getIdUser());
-			
-			
+
 			for (FilDeDiscussion filDeDiscussion : ff) {
-				System.out.println(filDeDiscussion.getTitre()+";");
-				
+				System.out.println(filDeDiscussion.getTitre() + ";");
+
 				for (Message message : filDeDiscussion.getConversation()) {
-					System.out.println(message.getMsg()+";"+message.getAuteur());
-					
+					System.out.println(message.getMsg() + ";" + message.getAuteur());
+
 				}
 			}
 
