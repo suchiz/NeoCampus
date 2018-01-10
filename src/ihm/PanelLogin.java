@@ -175,6 +175,7 @@ public class PanelLogin extends JPanel {
 			JOptionPane.showMessageDialog(frameInterface, "Donnees invalides");
 		} else {
 			frameInterface.setUser(temp);
+			frameInterface.initTousLesFils(temp.getIdUser());
 			Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
 			frameInterface.setTube(tube);
 			Thread t = new Thread(tube);

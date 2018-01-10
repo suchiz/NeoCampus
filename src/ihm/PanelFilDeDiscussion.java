@@ -63,10 +63,13 @@ public class PanelFilDeDiscussion extends JPanel {
 
 	private void displayFilDeDiscussion() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
-
-		if (node.getUserObject() instanceof FilDeDiscussion) {
-			FilDeDiscussion fdd = (FilDeDiscussion) node.getUserObject();
-			panelMessageDisplay.displayMessage(fdd);
+		if (node != null) {
+			if (node.getUserObject() != null) {
+				if (node.getUserObject() instanceof FilDeDiscussion) {
+					FilDeDiscussion fdd = (FilDeDiscussion) node.getUserObject();
+					panelMessageDisplay.displayMessage(fdd);
+				}
+			}
 		}
 	}
 
@@ -98,7 +101,6 @@ public class PanelFilDeDiscussion extends JPanel {
 		add(treePane);
 	}
 
-
 	public void ajouterFilDeDisussion(FilDeDiscussion fdd) {
 		DefaultTreeModel model = (DefaultTreeModel) arbreFilDeDiscussion.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
@@ -106,7 +108,6 @@ public class PanelFilDeDiscussion extends JPanel {
 		newGroupe.add(new DefaultMutableTreeNode(fdd));
 		root.add(newGroupe);
 		model.reload(root);
-
 	}
 
 	public void setArbreEmpty() {
@@ -122,10 +123,10 @@ public class PanelFilDeDiscussion extends JPanel {
 	}
 
 	public void clear() {
-		treePane.removeAll();
-		treePane.setViewportView(arbreFilDeDiscussion);
-		treePane.repaint();
-		
+		DefaultTreeModel model = (DefaultTreeModel) arbreFilDeDiscussion.getModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		root.removeAllChildren();
+		model.reload();
 	}
 
 	public JTree getFilsArbre() {

@@ -860,7 +860,7 @@ public class DB {
 			}
 
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			e.printStackTrace();
 		} finally {
 			if (connexion != null)
 				try {

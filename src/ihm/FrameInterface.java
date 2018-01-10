@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import utilisateur.DB;
 import utilisateur.FilDeDiscussion;
 import utilisateur.Groupe;
 import utilisateur.Tube;
@@ -29,7 +30,7 @@ public class FrameInterface extends JFrame {
 	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
 	private MenuBarInterface menuBar = new MenuBarInterface(this);
 	private Tube tube;
-
+	private DB database = new DB();
 	private ArrayList<Groupe> tousLesGroupes = new ArrayList<>();
 	private List<FilDeDiscussion> toutesLesDiscussions = new ArrayList<>();
 
@@ -59,9 +60,9 @@ public class FrameInterface extends JFrame {
 						tube.disconnect();
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(menuBar, "Disconnected !");
-				}finally{
+				} finally {
 					System.exit(0);
-				} 
+				}
 			}
 		});
 
@@ -93,6 +94,17 @@ public class FrameInterface extends JFrame {
 	// Events
 
 	// Others
+	public void initTousLesFils(int id) {
+		try {
+			toutesLesDiscussions = database.filsFromIdUser(id);
+			for (FilDeDiscussion filDeDiscussion : toutesLesDiscussions) {
+				panelFil.ajouterFilDeDisussion(filDeDiscussion);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void initTousLesgroupes() {
 		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 		String username = "root";
