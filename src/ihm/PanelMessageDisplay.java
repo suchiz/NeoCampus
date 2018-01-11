@@ -3,6 +3,7 @@ package ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -43,6 +44,12 @@ public class PanelMessageDisplay extends JScrollPane{
 		mainPanel.removeAll();
 		for (Message msg: fdd.getConversation()){
 			JPanel temp = new JPanel();
+			temp.addMouseListener(new MouseAdapter() {
+				private void mouseClicked(){
+					System.out.println("click on panel");
+					setBackground(Color.orange);
+				}
+			});
 			temp.setBackground(Color.orange);
 			temp.setLayout(new BorderLayout());
 			JLabel tp = new JLabel(msg.getAuteur().toString());
