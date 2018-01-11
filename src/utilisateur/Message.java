@@ -11,7 +11,10 @@ public class Message implements Serializable{
 	private String msg;
 	private int idMsg;
 	private int idFil;
+	private TypeMessage type;
 	
+
+
 	public Message(Utilisateur auteur, String msg) {
 		this.date = new Date();
 		this.msg = msg;
@@ -67,7 +70,14 @@ public class Message implements Serializable{
 	public int getIdFil() {
 		return idFil;
 	}
+	public TypeMessage getType() {
+		return type;
+	}
 
+	public void setType(TypeMessage type) {
+		this.type = type;
+	}
+	
 	public void setAuteur(Utilisateur auteur) {
 		this.auteur = auteur;
 	}
