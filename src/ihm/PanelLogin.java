@@ -14,8 +14,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import utilisateur.DB;
+import utilisateur.Authentification;
+import utilisateur.Message;
 import utilisateur.Tube;
+import utilisateur.TypeMessage;
 import utilisateur.Utilisateur;
 
 @SuppressWarnings("serial")
@@ -27,7 +29,8 @@ public class PanelLogin extends JPanel {
 	private JPasswordField textFieldPassword = new javax.swing.JPasswordField();
 	private JButton loginButton = new javax.swing.JButton("Login");
 	private FrameInterface frameInterface;
-
+	private Utilisateur user;
+	
 	// Constructor
 	public PanelLogin(FrameInterface frameInterface) {
 		this.frameInterface = frameInterface;
@@ -150,15 +153,13 @@ public class PanelLogin extends JPanel {
 	private void loginButtonActionPerformed(java.awt.event.ActionEvent evt)
 			throws UnknownHostException, IOException {
 		if (checkFields()) {
-			frameInterface.getMenuBarInterface().setConnected();
 			initUser();
-			closeWindow(evt);
 		}
 	}
 
 	// Others
 
-	private void closeWindow(java.awt.event.ActionEvent evt) {
+	public void closeWindow(java.awt.event.ActionEvent evt) {
 		JComponent comp = (JComponent) evt.getSource();
 		Window win = SwingUtilities.getWindowAncestor(comp);
 		win.dispose();
@@ -166,21 +167,9 @@ public class PanelLogin extends JPanel {
 	}
 
 	private void initUser() throws UnknownHostException, IOException {
-		DB database = new DB();
-		System.out.println("ID : " + textFieldUser.getText().trim() + "PASSWORD : " + textFieldPassword.getText());
-		@SuppressWarnings("deprecation")
-		Utilisateur temp = database.login(textFieldUser.getText().trim(),
-				textFieldPassword.getText());
-		if (temp == null) {
-			JOptionPane.showMessageDialog(frameInterface, "Donnees invalides");
-		} else {
-			frameInterface.setUser(temp);
-			frameInterface.initTousLesFils(temp.getIdUser());
-			Tube tube = new Tube(frameInterface, new Socket("127.0.0.1", 7777));
-			frameInterface.setTube(tube);
-			Thread t = new Thread(tube);
-			t.start();
-		}
+		Authentification login = new Authentification(frameInterface, this, new Socket("127.0.0.1", 7777));
+		Thread t = new Thread(login);
+		t.start();
 	}
 
 	private boolean checkFields() {
@@ -191,6 +180,10 @@ public class PanelLogin extends JPanel {
 			return false;
 		}
 		return true;
+	}
+	
+	public Message createRequestLogin() {
+		return new Message(textFieldUser.getText() +"#" + textFieldPassword.getText()+"#", TypeMessage.REQUETE_LOGIN);
 	}
 	
 	public JButton getOkButton() {

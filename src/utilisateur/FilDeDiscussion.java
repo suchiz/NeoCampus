@@ -8,8 +8,10 @@ public class FilDeDiscussion {
 	private Utilisateur createur;
 	private Groupe groupe;
 	private int idFil;
-
+	private List<Message> conversation = new ArrayList<>();
+	
 	private DB db = new DB();
+	
 
 	public int getIdFil() {
 		return idFil;
@@ -19,7 +21,6 @@ public class FilDeDiscussion {
 		this.idFil = idFil;
 	}
 
-	private List<Message> conversation = new ArrayList<>();
 
 	// ---------------------------------------------------------------------------
 	public FilDeDiscussion(String titre, Groupe groupe, Utilisateur createur) {

@@ -40,6 +40,7 @@ public class DB {
 
 		} catch (Exception e) {
 			System.out.println(e);
+			throw new DataBaseException();
 		}
 	}
 

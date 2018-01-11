@@ -22,6 +22,22 @@ public abstract class Utilisateur implements Serializable {
 		this.prenom = prenom;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Utilisateur) {
+			Utilisateur u = (Utilisateur) o;
+			return u.getIdUser() == this.idUser;
+		}
+		return false;
+	}
+
+	public int HashCode() {
+		int code = idUser * 17;
+
+		return code;
+
+	}
+
 	public Utilisateur(String nom, String prenom, String login, String mdp, int idUser, TypeUtilisateur type) {
 		this.nom = nom;
 		this.prenom = prenom;
@@ -85,9 +101,5 @@ public abstract class Utilisateur implements Serializable {
 	public void setIdUser(int idUser) {
 		this.idUser = idUser;
 	}
-
-
-
-
 
 }
