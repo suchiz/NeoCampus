@@ -30,7 +30,6 @@ public class GestionMessage {
 
 	public void liste(List<?> list) {
 		Object elem = list.get(0);
-		System.out.println(elem.getClass());
 		if (elem instanceof Groupe) {
 			List<Groupe> lg = (ArrayList<Groupe>) list;
 			frameInterface.setTousLesGroupes(lg);
