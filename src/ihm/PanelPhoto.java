@@ -22,7 +22,7 @@ public class PanelPhoto extends JPanel{
             panelPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPhotoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(icon, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addComponent(icon, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panelPhotoLayout.setVerticalGroup(
