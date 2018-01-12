@@ -100,8 +100,6 @@ public class MenuBarInterface extends JMenuBar {
 	}
 
 	private void deconnexionItemActionPerformed(java.awt.event.ActionEvent evt) throws IOException {
-		frameInterface.getPanelFil().clear();
-		frameInterface.getPanelMsg().clear();
 		if(frameInterface.getTube() != null)
 			frameInterface.getTube().disconnect();
 		setDisconnected();
@@ -149,6 +147,8 @@ public class MenuBarInterface extends JMenuBar {
 	}
 
 	public void setDisconnected() {
+		frameInterface.getPanelFil().clear();
+		frameInterface.getPanelMsg().clear();
 		connexionItem.setEnabled(true);
 		deconnexionItem.setEnabled(false);
 		nouveauItem.setEnabled(false);

@@ -33,7 +33,6 @@ public class Tube implements Runnable {
 		try {
 			
 			send(new Message("", TypeMessage.REQUETE_INIT_GROUP));
-			receive();
 			Integer temp = frameInterface.getUser().getIdUser();
 			send(new Message(temp.toString(), TypeMessage.REQUETE_INIT_FDD));
 			listening();
