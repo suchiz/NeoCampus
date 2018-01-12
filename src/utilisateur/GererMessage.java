@@ -1,5 +1,8 @@
 package utilisateur;
 
+import classes.Message;
+import classes.Utilisateur;
+
 public class GererMessage {
 	private Tube tube;
 	

@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import utilisateur.Groupe;
+import classes.Groupe;
 
 @SuppressWarnings("serial")
 public class PanelSelectionGroupes extends JPanel {

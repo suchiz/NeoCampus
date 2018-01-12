@@ -14,7 +14,7 @@ public class PanelPhoto extends JPanel{
 
 	public void initcomponent(){
 		//Layout
-        icon.setIcon(new javax.swing.ImageIcon("/home/suchiz/Images/login2.png")); // NOI18N
+        icon.setIcon(new javax.swing.ImageIcon("login-icon.png")); // NOI18N
 
         javax.swing.GroupLayout panelPhotoLayout = new javax.swing.GroupLayout(this);
         setLayout(panelPhotoLayout);
@@ -22,7 +22,7 @@ public class PanelPhoto extends JPanel{
             panelPhotoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPhotoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(icon, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(icon, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panelPhotoLayout.setVerticalGroup(

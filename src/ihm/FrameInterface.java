@@ -14,11 +14,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import utilisateur.DB;
-import utilisateur.FilDeDiscussion;
-import utilisateur.Groupe;
+import classes.DB;
+import classes.FilDeDiscussion;
+import classes.Groupe;
+import classes.Utilisateur;
 import utilisateur.Tube;
-import utilisateur.Utilisateur;
 
 @SuppressWarnings("serial")
 public class FrameInterface extends JFrame {

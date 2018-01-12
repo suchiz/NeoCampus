@@ -8,17 +8,19 @@ import java.net.Socket;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import classes.Utilisateur;
 import ihm.FrameInterface;
 import ihm.PanelLogin;
+import utilisateur.Tube;
 
-public class Authentification implements Runnable {
+public class Connexion implements Runnable {
 	private Socket socket;
 	private PanelLogin panelLogin;
 	private FrameInterface frameInterface;
 	private ObjectInputStream inputFromServer;
 	private ObjectOutputStream outputToServer;
 
-	public Authentification(FrameInterface frameInterface, PanelLogin panelLogin, Socket socket) {
+	public Connexion(FrameInterface frameInterface, PanelLogin panelLogin, Socket socket) {
 		this.frameInterface = frameInterface;
 		this.socket = socket;
 		this.panelLogin = panelLogin;
@@ -40,7 +42,6 @@ public class Authentification implements Runnable {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	public void receive() {
 		try {
 			inputFromServer = new ObjectInputStream(socket.getInputStream());
@@ -51,19 +52,19 @@ public class Authentification implements Runnable {
 			if (temp != null) {
 				if (temp instanceof Utilisateur) {
 					Utilisateur u = (Utilisateur) temp;
-					System.out.println("JE SUIS LA :" + temp);
-					if (u != null) {
-						frameInterface.setUser(u);
-						frameInterface.initTousLesFils(u.getIdUser());
-						frameInterface.getMenuBarInterface().setConnected();
-						Tube tube = new Tube(frameInterface, socket);
-						frameInterface.setTube(tube);
-						Thread t = new Thread(tube);
-						t.start();
-					} else {
-						JOptionPane.showMessageDialog(new JFrame(), "Donnees invalides");
-					}
+					frameInterface.setUser(u);
+					frameInterface.initTousLesFils(u.getIdUser());
+					frameInterface.getMenuBarInterface().setConnected();
+					Tube tube = new Tube(frameInterface, socket);
+					frameInterface.setTube(tube);
+					Thread t = new Thread(tube);
+					panelLogin.closeWindow(panelLogin.getAe());
+					t.start();
+
 				}
+			} else {
+
+				panelLogin.errorMessage();
 			}
 		} catch (IOException e) {
 			System.out.println("Erreur reception login");

@@ -10,6 +10,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import classes.Message;
+import classes.Utilisateur;
 import ihm.FrameInterface;
 
 public class Tube implements Runnable {

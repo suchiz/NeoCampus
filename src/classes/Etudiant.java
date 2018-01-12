@@ -1,4 +1,4 @@
-package utilisateur;
+package classes;
 
 public class Etudiant extends Utilisateur {
 	private static final long serialVersionUID = -3973319087851392544L;

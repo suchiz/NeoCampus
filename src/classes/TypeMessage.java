@@ -1,4 +1,4 @@
-package utilisateur;
+package classes;
 
 public enum TypeMessage {
 	REQUETE_INIT_GROUP,

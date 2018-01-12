@@ -13,8 +13,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import utilisateur.FilDeDiscussion;
-import utilisateur.Message;
+import classes.FilDeDiscussion;
+import classes.Message;
 
 @SuppressWarnings("serial")
 public class PanelFirstMessage extends JPanel{

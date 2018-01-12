@@ -8,9 +8,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import utilisateur.Etudiant;
-import utilisateur.FilDeDiscussion;
-import utilisateur.Groupe;
+import classes.Etudiant;
+import classes.FilDeDiscussion;
+import classes.Groupe;
 
 @SuppressWarnings("serial")
 public class PanelFilDeDiscussion extends JPanel {

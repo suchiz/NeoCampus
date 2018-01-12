@@ -1,6 +1,7 @@
 package ihm;
 
 import java.awt.Window;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -14,11 +15,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import utilisateur.Authentification;
-import utilisateur.Message;
-import utilisateur.Tube;
-import utilisateur.TypeMessage;
-import utilisateur.Utilisateur;
+import classes.Message;
+import classes.TypeMessage;
+import classes.Utilisateur;
+import utilisateur.Connexion;
 
 @SuppressWarnings("serial")
 public class PanelLogin extends JPanel {
@@ -30,6 +30,7 @@ public class PanelLogin extends JPanel {
 	private JButton loginButton = new javax.swing.JButton("Login");
 	private FrameInterface frameInterface;
 	private Utilisateur user;
+	private ActionEvent ae;
 	
 	// Constructor
 	public PanelLogin(FrameInterface frameInterface) {
@@ -154,6 +155,7 @@ public class PanelLogin extends JPanel {
 			throws UnknownHostException, IOException {
 		if (checkFields()) {
 			initUser();
+			ae = evt;
 		}
 	}
 
@@ -167,9 +169,13 @@ public class PanelLogin extends JPanel {
 	}
 
 	private void initUser() throws UnknownHostException, IOException {
-		Authentification login = new Authentification(frameInterface, this, new Socket("127.0.0.1", 7777));
+		Connexion login = new Connexion(frameInterface, this, new Socket("127.0.0.1", 7777));
 		Thread t = new Thread(login);
 		t.start();
+	}
+	
+	public void errorMessage() {
+		JOptionPane.showMessageDialog(frameInterface, "Donnees invalides");
 	}
 
 	private boolean checkFields() {
@@ -188,5 +194,9 @@ public class PanelLogin extends JPanel {
 	
 	public JButton getOkButton() {
 		return loginButton;
+	}
+	
+	public ActionEvent getAe () {
+		 return ae;
 	}
 }

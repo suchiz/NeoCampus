@@ -8,7 +8,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import utilisateur.Groupe;
+import classes.Groupe;
 
 @SuppressWarnings("serial")
 public class RenduJTree extends DefaultTreeCellRenderer {

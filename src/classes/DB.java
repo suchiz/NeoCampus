@@ -1,5 +1,5 @@
 
-package utilisateur;
+package classes;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

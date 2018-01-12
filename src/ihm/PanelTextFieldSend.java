@@ -10,8 +10,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import utilisateur.FilDeDiscussion;
-import utilisateur.Message;
+import classes.FilDeDiscussion;
+import classes.Message;
 
 @SuppressWarnings("serial")
 public class PanelTextFieldSend extends JPanel{	

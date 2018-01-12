@@ -1,4 +1,4 @@
-package utilisateur;
+package classes;
 
 public class DataBaseException extends Exception{
 

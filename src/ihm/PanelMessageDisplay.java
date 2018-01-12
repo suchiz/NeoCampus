@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import utilisateur.FilDeDiscussion;
-import utilisateur.Message;
+import classes.FilDeDiscussion;
+import classes.Message;
 
 @SuppressWarnings("serial")
 public class PanelMessageDisplay extends JScrollPane{
