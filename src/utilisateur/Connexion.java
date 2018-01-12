@@ -53,10 +53,10 @@ public class Connexion implements Runnable {
 				if (temp instanceof Utilisateur) {
 					Utilisateur u = (Utilisateur) temp;
 					frameInterface.setUser(u);
-					frameInterface.initTousLesFils(u.getIdUser());
 					frameInterface.getMenuBarInterface().setConnected();
 					Tube tube = new Tube(frameInterface, socket);
 					frameInterface.setTube(tube);
+					System.out.println("Connecte !");
 					Thread t = new Thread(tube);
 					panelLogin.closeWindow(panelLogin.getAe());
 					t.start();

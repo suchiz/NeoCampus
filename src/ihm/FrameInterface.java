@@ -41,7 +41,6 @@ public class FrameInterface extends JFrame {
 
 	public void initcomponent() {
 		// Inits
-		initTousLesgroupes();
 		getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 		setMinimumSize(new Dimension(500, 400));
 		setPreferredSize(new Dimension(1000, 700));
@@ -94,48 +93,15 @@ public class FrameInterface extends JFrame {
 	// Events
 
 	// Others
-	public void initTousLesFils(int id) {
-		try {
-			toutesLesDiscussions = database.filsFromIdUser(id);
+	public void initTousLesFils() {
+
 			for (FilDeDiscussion filDeDiscussion : toutesLesDiscussions) {
 				panelFil.ajouterFilDeDisussion(filDeDiscussion);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 	}
 
-	private void initTousLesgroupes() {
-		String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
-		String username = "root";
-		String mdp = "root";
-		Connection connexion = null;
 
-		try {
-			connexion = DriverManager.getConnection(url, username, mdp);
-
-			Statement statement = connexion.createStatement();
-			ResultSet resultat1 = statement.executeQuery("SELECT * FROM GROUPE");
-
-			while (resultat1.next()) {
-				int numGroupe = resultat1.getInt("ID_GROUPE");
-				String nomGroupe = resultat1.getString("NOM_GROUPE");
-				Groupe g = new Groupe(nomGroupe, numGroupe);
-				this.tousLesGroupes.add(g);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (connexion != null)
-				try {
-					/* Fermeture de la connexion */
-					connexion.close();
-				} catch (SQLException ignore) {
-					ignore.printStackTrace();
-				}
-		}
-	}
 
 	public MenuBarInterface getMenuBarInterface() {
 		return menuBar;
