@@ -1,6 +1,7 @@
 
 package classes;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,7 +12,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DB {
+public class DB implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6347298237211490750L;
 	static String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 	static String username = "root";
 	static String mdp = "root";
@@ -186,9 +191,7 @@ public class DB {
 			}
 			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals("")) {
 				u = DB.UtilisateurFromID(idUser);
-			} else {
-				u = new Etudiant("", "", "", "", -1);
-			}
+			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

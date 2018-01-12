@@ -1,6 +1,8 @@
 package classes;
 
-public enum TypeMessage {
+import java.io.Serializable;
+
+public enum TypeMessage implements Serializable{
 	REQUETE_INIT_GROUP,
 	REQUETE_INIT_FDD,
 	REQUETE_LOGIN,

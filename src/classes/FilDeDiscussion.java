@@ -1,9 +1,14 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FilDeDiscussion {
+public class FilDeDiscussion implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -424381409067590736L;
 	private String titre;
 	private Utilisateur createur;
 	private Groupe groupe;

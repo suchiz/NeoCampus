@@ -30,7 +30,6 @@ public class FrameInterface extends JFrame {
 	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
 	private MenuBarInterface menuBar = new MenuBarInterface(this);
 	private Tube tube;
-	private DB database = new DB();
 	private ArrayList<Groupe> tousLesGroupes = new ArrayList<>();
 	private List<FilDeDiscussion> toutesLesDiscussions = new ArrayList<>();
 
@@ -93,12 +92,10 @@ public class FrameInterface extends JFrame {
 	// Events
 
 	// Others
-	public void initTousLesFils() {
-
-			for (FilDeDiscussion filDeDiscussion : toutesLesDiscussions) {
+	public void initTousLesFils(List<FilDeDiscussion> list) {
+			for (FilDeDiscussion filDeDiscussion : list) {
 				panelFil.ajouterFilDeDisussion(filDeDiscussion);
 			}
-
 	}
 
 
@@ -138,5 +135,8 @@ public class FrameInterface extends JFrame {
 	public ArrayList<Groupe> getTousLesGroupes() {
 		return tousLesGroupes;
 	}
-
+	
+	public void setTousLesGroupes(List<Groupe> list) {
+		this.tousLesGroupes = (ArrayList<Groupe>) list;
+	}
 }

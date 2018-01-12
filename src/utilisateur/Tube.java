@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -30,14 +31,17 @@ public class Tube implements Runnable {
 	@Override
 	public void run() {
 		try {
-
 			
+			send(new Message("", TypeMessage.REQUETE_INIT_GROUP));
+			receive();
+			Integer temp = frameInterface.getUser().getIdUser();
+			send(new Message(temp.toString(), TypeMessage.REQUETE_INIT_FDD));
 			listening();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(new JFrame(), "Deconnecte !");
 			frameInterface.getMenuBarInterface().setDisconnected();
 		} catch (ClassNotFoundException e) {
-			System.out.println("Class not foud");
+			System.out.println("Class not found");
 		}
 	}
 
@@ -48,8 +52,9 @@ public class Tube implements Runnable {
 	}
 
 	public void receive() throws ClassNotFoundException, IOException {
-		System.out.println("Receive");
+		
 		inputFromServer = new ObjectInputStream(socket.getInputStream());
+		System.out.println("Receive in client");
 		Object temp = inputFromServer.readObject();
 		System.out.println("hey" +temp.getClass());
 		if (temp != null) {
@@ -59,9 +64,9 @@ public class Tube implements Runnable {
 			} else if (temp instanceof Utilisateur) {
 				Utilisateur u = (Utilisateur) temp;
 				gestionMessage.utilisateur(u);
-			}else if (temp instanceof List<?>) {
-
-				//gestionMessage.liste(temp);
+			}else if (temp instanceof ArrayList<?>) {
+				List <?> list = (ArrayList<?>) temp;
+				gestionMessage.liste(list);
 			}
 		}
 	}

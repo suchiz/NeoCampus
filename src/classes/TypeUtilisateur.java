@@ -1,6 +1,8 @@
 package classes;
 
-public enum TypeUtilisateur {
+import java.io.Serializable;
+
+public enum TypeUtilisateur implements Serializable{
 	
 	ENSEIGNANT,
 	ETUDIANT,

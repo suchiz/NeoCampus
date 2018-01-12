@@ -1,9 +1,14 @@
 package classes;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Groupe {
+public class Groupe implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5850291596533942198L;
 	private String nomGroupe;
 	private List<Utilisateur> listeUtilisateur = new ArrayList<>();
 	private int idGroupe;
