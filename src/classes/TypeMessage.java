@@ -9,6 +9,5 @@ public enum TypeMessage {
 	READ,
 	READ_BY_ALL,
 	PENDING,
-	RECIEVED
-	
+	RECIEVED;	
 }

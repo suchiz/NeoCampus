@@ -146,6 +146,8 @@ public class DB {
 			g.setListeUtilisateur(listeUser);
 
 		} catch (SQLException e) {
+			e.printStackTrace();
+
 		} finally {
 			if (connexion != null)
 				try {
@@ -182,10 +184,13 @@ public class DB {
 				System.out.println("IDENTIFIANT:" + logintomatch + ";MOT_DE_PASSE:" + motdepasstomatch
 						+ ";ID_UTILISATEUR:" + idUser);
 			}
-			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals(""))
+			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals("")) {
 				u = DB.UtilisateurFromID(idUser);
-
+			} else {
+				u = new Etudiant("", "", "", "", -1);
+			}
 		} catch (SQLException e) {
+			e.printStackTrace();
 		} finally {
 			if (connexion != null)
 				try {
@@ -292,6 +297,7 @@ public class DB {
 					connexion.rollback();
 				}
 				e.printStackTrace();
+				throw new DataBaseException();
 			} finally {
 				if (connexion != null)
 					try {
@@ -330,12 +336,12 @@ public class DB {
 
 			// DELETE LE GROUPE DE LA TABLE DESTINE
 			statement.executeUpdate(
-					"DELETE ID_GROUPE  FROM DESTINE (ID_Fil_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE)WHERE ID_GROUPE='"
-							+ idGroup + "';");
+					"DELETE ID_GROUPE  FROM DESTINE (ID_Fil_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE="
+							+ idGroup + ";");
 
 			// DELETE LE GROUPE DE LA TABLE GROUPE
-			statement.executeUpdate(
-					"DELETE FROM GROUPE (ID_Utilisateur,ID_Groupe) WHERE (ID_Groupe ='" + idGroup + "';");
+			statement
+					.executeUpdate("DELETE FROM GROUPE (ID_Utilisateur,ID_Groupe) WHERE (ID_Groupe =" + idGroup + ");");
 			connexion.commit();
 		} catch (SQLException e) {
 			if (connexion != null) {
@@ -397,7 +403,7 @@ public class DB {
 
 	}
 
-	public void addUserToGroup(int idUser, int idGroup) {
+	public void addUserToGroup(int idUser, int idGroup) throws DataBaseException {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 			Statement statement = connexion.createStatement();
@@ -406,6 +412,7 @@ public class DB {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -415,7 +422,7 @@ public class DB {
 		}
 	}
 
-	public void removeUserInGroup(int idUser, int idGroup) {
+	public void removeUserInGroup(int idUser, int idGroup) throws DataBaseException {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
@@ -427,6 +434,7 @@ public class DB {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -440,7 +448,7 @@ public class DB {
 		}
 	}
 
-	public List<Groupe> getAllGroupsBD() {
+	public List<Groupe> getAllGroupsBD() throws DataBaseException {
 		List<Groupe> listeGroupe = new ArrayList<Groupe>();
 		String nomgroupe;
 		int idgroupe;
@@ -460,7 +468,8 @@ public class DB {
 			}
 
 		} catch (SQLException e) {
-			/* G�rer les �ventuelles erreurs ici */
+			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -473,7 +482,7 @@ public class DB {
 		return listeGroupe;
 	}
 
-	public List<Utilisateur> getAllUsers() {
+	public List<Utilisateur> getAllUsers() throws DataBaseException {
 
 		System.out.println("get all users");
 		List<Utilisateur> listeUser = new ArrayList<Utilisateur>();
@@ -520,6 +529,7 @@ public class DB {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -537,7 +547,7 @@ public class DB {
 		return listeUser;
 	}
 
-	public List<Utilisateur> getUsersFromGroup(int idGroup) {
+	public List<Utilisateur> getUsersFromGroup(int idGroup) throws DataBaseException {
 		System.out.println("GET USERS FROM GROUP");
 		List<Utilisateur> listeUser = new ArrayList<Utilisateur>();
 		String nom;
@@ -585,8 +595,10 @@ public class DB {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DataBaseException();
 		} catch (Exception e2) {
 			e2.printStackTrace();
+			throw new DataBaseException();
 
 		} finally {
 			if (connexion != null)
@@ -637,6 +649,8 @@ public class DB {
 			}
 
 		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -701,7 +715,7 @@ public class DB {
 		}
 	}
 
-	public void removeFilBD(int idFil) {
+	public void removeFilBD(int idFil) throws DataBaseException {
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
@@ -719,7 +733,8 @@ public class DB {
 							+ idFil + "';");
 
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -733,7 +748,7 @@ public class DB {
 		}
 	}
 
-	public List<Message> messagesFromFil(int idFil) {
+	public List<Message> messagesFromFil(int idFil) throws DataBaseException {
 		List<Message> messages = new ArrayList<>();
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
@@ -779,7 +794,8 @@ public class DB {
 			}
 
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -795,7 +811,7 @@ public class DB {
 		return messages;
 	}
 
-	public FilDeDiscussion loadFil(int idFil) {
+	public FilDeDiscussion loadFil(int idFil) throws DataBaseException {
 		FilDeDiscussion f = null;
 		List<Message> messages = messagesFromFil(idFil);
 		try {
@@ -819,7 +835,8 @@ public class DB {
 			}
 
 		} catch (SQLException e) {
-			/* Gï¿½rer les ï¿½ventuelles erreurs ici */
+			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
@@ -834,7 +851,7 @@ public class DB {
 		return f;
 	}
 
-	public List<FilDeDiscussion> filsFromIdUser(int idUser) {
+	public List<FilDeDiscussion> filsFromIdUser(int idUser) throws DataBaseException {
 		List<FilDeDiscussion> fils = new ArrayList<>();
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
@@ -862,6 +879,7 @@ public class DB {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new DataBaseException();
 		} finally {
 			if (connexion != null)
 				try {
