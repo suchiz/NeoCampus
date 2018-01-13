@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DB implements Serializable{
+public class DB implements Serializable {
 	/**
 	 * 
 	 */
@@ -191,7 +191,7 @@ public class DB implements Serializable{
 			}
 			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals("")) {
 				u = DB.UtilisateurFromID(idUser);
-			} 
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -896,6 +896,14 @@ public class DB implements Serializable{
 		}
 
 		return fils;
+	}
+
+	public void changeUser(Utilisateur u) throws DataBaseException {
+		try {
+			String req = "UPDATE UTILISATEUR WHERE ID_UTILISATEUR ="+u.getIdUser()+"";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

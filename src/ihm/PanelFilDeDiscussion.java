@@ -73,14 +73,43 @@ public class PanelFilDeDiscussion extends JPanel {
 		}
 	}
 
-
 	public void ajouterFilDeDisussion(FilDeDiscussion fdd) {
+		boolean alreadyAdded = false;
+		int temp = fdd.getGroupe().getIdGroupe();
 		DefaultTreeModel model = (DefaultTreeModel) arbreFilDeDiscussion.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
-		DefaultMutableTreeNode newGroupe = new DefaultMutableTreeNode(fdd.getGroupe());
-		newGroupe.add(new DefaultMutableTreeNode(fdd));
-		root.add(newGroupe);
+		for (Groupe g : frameInterface.getTousLesGroupes()) {
+			DefaultMutableTreeNode nodeTemp = parcourirArbre(root, temp);
+			if (nodeTemp != null) {
+				nodeTemp.add(new DefaultMutableTreeNode(fdd));
+				alreadyAdded = true;
+				break;
+			}
+		}
+		if (!alreadyAdded) {
+			DefaultMutableTreeNode newGroupe = new DefaultMutableTreeNode(fdd.getGroupe());
+			newGroupe.add(new DefaultMutableTreeNode(fdd));
+			root.add(newGroupe);
+		}
 		model.reload(root);
+
+	}
+
+	private DefaultMutableTreeNode parcourirArbre(DefaultMutableTreeNode root, int idGroupRef) {
+		DefaultMutableTreeNode nodeToReturn = null;
+		for (int i = 0; i < root.getChildCount(); i++) {
+			DefaultMutableTreeNode temp = (DefaultMutableTreeNode) root.getChildAt(i);
+			if (temp.getUserObject() instanceof Groupe) {
+				Groupe groupeTemp = (Groupe) temp.getUserObject();
+				if (groupeTemp.getIdGroupe() == idGroupRef) {
+					nodeToReturn = temp;
+					break;
+				}
+			} else {
+				parcourirArbre((DefaultMutableTreeNode) root.getChildAt(i), idGroupRef);
+			}
+		}
+		return nodeToReturn;
 	}
 
 	public void setArbreEmpty() {
