@@ -129,8 +129,7 @@ public class PanelLogin extends JPanel {
 	}
 
 	private boolean checkFields() {
-		System.out.println();
-		if (textFieldPassword.getPassword().equals("") || textFieldUser.getText().equals("")) {
+		if (textFieldPassword.getText().equals("") || textFieldUser.getText().equals("")) {
 			JOptionPane.showMessageDialog(frameInterface, "Donnees invalides");
 			return false;
 		}
