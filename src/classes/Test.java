@@ -65,11 +65,10 @@ public class Test {
 			List<FilDeDiscussion> ff = d.filsFromIdUser(e.getIdUser());
 
 			for (FilDeDiscussion filDeDiscussion : ff) {
-				System.out.println(filDeDiscussion.getTitre() + ";");
+				System.out.println("FIL DE DISCUSSION : "+filDeDiscussion.getTitre() + ";"+filDeDiscussion.getIdFil());
 
 				for (Message message : filDeDiscussion.getConversation()) {
 					System.out.println(message.getMsg() + ";" + message.getAuteur());
-
 				}
 			}
 
@@ -77,5 +76,7 @@ public class Test {
 			e.printStackTrace();
 
 		}
+		
+		
 	}
 }

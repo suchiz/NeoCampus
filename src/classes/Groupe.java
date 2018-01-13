@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Groupe implements Serializable{
+public class Groupe implements Serializable {
 	/**
 	 * 
 	 */
@@ -22,6 +22,12 @@ public class Groupe implements Serializable{
 	public Groupe(String nomGroupe, int id) {
 		this.nomGroupe = nomGroupe;
 		this.idGroupe = id;
+	}
+
+	public Groupe(String nomGroupe, int id, List<Utilisateur> listeUtilisateur) {
+		this.nomGroupe = nomGroupe;
+		this.idGroupe = id;
+		this.listeUtilisateur = listeUtilisateur;
 	}
 
 	// -------------------------------------------------------------------------------

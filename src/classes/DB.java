@@ -198,7 +198,7 @@ public class DB implements Serializable {
 			if (connexion != null)
 				try {
 					connexion.close();
-				} catch (SQLException ignore) { 
+				} catch (SQLException ignore) {
 				}
 		}
 
@@ -831,9 +831,9 @@ public class DB implements Serializable {
 				int idGroupe = fil.getInt("ID_GROUPE");
 				int idUser = fil.getInt("ID_UTILISATEUR");
 
-				Groupe g = new Groupe(nomGroupe, idGroupe);
+				Groupe g = new Groupe(nomGroupe, idGroupe, getUsersFromGroup(idGroupe));
 
-				f = new FilDeDiscussion(titreFil, g, UtilisateurFromID(idUser), messages,idFil);
+				f = new FilDeDiscussion(titreFil, g, UtilisateurFromID(idUser), messages, idFil);
 
 			}
 
