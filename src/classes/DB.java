@@ -49,7 +49,7 @@ public class DB implements Serializable {
 		}
 	}
 
-	public static Utilisateur UtilisateurFromID(int idUtilisateur) {
+	public Utilisateur UtilisateurFromID(int idUtilisateur) {
 
 		Utilisateur u = null;
 
@@ -190,7 +190,7 @@ public class DB implements Serializable {
 						+ ";ID_UTILISATEUR:" + idUser);
 			}
 			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals("")) {
-				u = DB.UtilisateurFromID(idUser);
+				u = UtilisateurFromID(idUser);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -198,7 +198,7 @@ public class DB implements Serializable {
 			if (connexion != null)
 				try {
 					connexion.close();
-				} catch (SQLException ignore) {
+				} catch (SQLException ignore) { 
 				}
 		}
 
@@ -833,7 +833,7 @@ public class DB implements Serializable {
 
 				Groupe g = new Groupe(nomGroupe, idGroupe);
 
-				f = new FilDeDiscussion(titreFil, g, UtilisateurFromID(idUser), messages);
+				f = new FilDeDiscussion(titreFil, g, UtilisateurFromID(idUser), messages,idFil);
 
 			}
 
@@ -900,7 +900,7 @@ public class DB implements Serializable {
 
 	public void changeUser(Utilisateur u) throws DataBaseException {
 		try {
-			String req = "UPDATE UTILISATEUR WHERE ID_UTILISATEUR ="+u.getIdUser()+"";
+			String req = "UPDATE UTILISATEUR WHERE ID_UTILISATEUR =" + u.getIdUser() + "";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
