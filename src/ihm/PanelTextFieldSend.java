@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import classes.FilDeDiscussion;
 import classes.Message;
+import classes.TypeMessage;
 
 @SuppressWarnings("serial")
 public class PanelTextFieldSend extends JPanel{	
@@ -118,10 +119,8 @@ public class PanelTextFieldSend extends JPanel{
 			return;
 		if (node.getUserObject() instanceof FilDeDiscussion){
 			FilDeDiscussion f = (FilDeDiscussion) node.getUserObject();
-			Message temp = new Message(frameInterface.getUser(), messageTextField.getText());
+			Message temp = new Message(frameInterface.getUser(), messageTextField.getText(), f.getIdFil(),TypeMessage.MESSAGE);
 			frameInterface.getTube().send(temp);
-			f.getConversation().add(temp);
-			panelMessageDisplay.displayMessage(f);
 			panelMessageDisplay.refresh();
 			messageTextField.setText("");
 		}

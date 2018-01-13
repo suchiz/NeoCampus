@@ -42,12 +42,10 @@ public class FilDeDiscussion implements Serializable{
 
 	// ---------------------------------------------------------------------------
 	public void addMessage(Message msg) {
-		try {
-			db.addMessageToFil(this.idFil, msg);
+		
+			//db.addMessageToFil(this.idFil, msg);
 			conversation.add(msg);
-		} catch (DataBaseException e) {
-			System.out.println("PROBLEME BASE DE DONNEES");
-		}
+	
 	}
 
 	// ---------------------------------------------------------------------------

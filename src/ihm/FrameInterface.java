@@ -31,8 +31,7 @@ public class FrameInterface extends JFrame {
 	private MenuBarInterface menuBar = new MenuBarInterface(this);
 	private Tube tube;
 	private ArrayList<Groupe> tousLesGroupes = new ArrayList<>();
-	private List<FilDeDiscussion> toutesLesDiscussions = new ArrayList<>();
-
+	private ArrayList<FilDeDiscussion> tousLesFils = new ArrayList<>();
 	// Constructor
 	public FrameInterface() {
 		initcomponent();
@@ -93,6 +92,7 @@ public class FrameInterface extends JFrame {
 
 	// Others
 	public void initTousLesFils(List<FilDeDiscussion> list) {
+		tousLesFils = (ArrayList<FilDeDiscussion>) list;
 			for (FilDeDiscussion filDeDiscussion : list) {
 				panelFil.ajouterFilDeDisussion(filDeDiscussion);
 			}
@@ -130,6 +130,14 @@ public class FrameInterface extends JFrame {
 
 	public void setTube(Tube tube) {
 		this.tube = tube;
+	}
+
+	public ArrayList<FilDeDiscussion> getTousLesFils() {
+		return tousLesFils;
+	}
+
+	public void setTousLesFils(ArrayList<FilDeDiscussion> tousLesFils) {
+		this.tousLesFils = tousLesFils;
 	}
 
 	public ArrayList<Groupe> getTousLesGroupes() {

@@ -46,6 +46,21 @@ public class Message implements Serializable{
 		this.msg = msg;
 	}
 	
+	public Message(Utilisateur user, String text, TypeMessage message) {
+		this.date = new Date();
+		this.msg = text;
+		this.type = message;
+		this.setAuteur(user);
+	}
+
+	public Message(Utilisateur user, String text, int idFil2, TypeMessage message) {
+		this.date = new Date();
+		this.msg = text;
+		this.type = message;
+		this.setAuteur(user);
+		this.idFil = idFil2;
+	}
+
 	public String dateToString(){
 		SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
 		return sdf.format(date);

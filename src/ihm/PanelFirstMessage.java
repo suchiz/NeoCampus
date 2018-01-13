@@ -15,6 +15,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import classes.FilDeDiscussion;
 import classes.Message;
+import classes.TypeMessage;
 
 @SuppressWarnings("serial")
 public class PanelFirstMessage extends JPanel{
@@ -112,9 +113,9 @@ public class PanelFirstMessage extends JPanel{
    //Others
    private void envoieMessage() throws IOException{
    	FilDeDiscussion nouveauFil = new FilDeDiscussion(textFieldTitre.getText(), panelSelectionGroupes.getGroupeSelected(), frameInterface.getUser());
-   	Message temp = new Message(frameInterface.getUser(), textFieldFirstMessage.getText());
+   	Message temp = new Message(frameInterface.getUser(), textFieldFirstMessage.getText(), TypeMessage.MESSAGE);
    	frameInterface.getTube().send(temp);
-   	nouveauFil.getConversation().add(temp);
+   	frameInterface.getTousLesFils().add(nouveauFil);
    	frameInterface.getPanelFil().ajouterFilDeDisussion(nouveauFil);
    }
    
