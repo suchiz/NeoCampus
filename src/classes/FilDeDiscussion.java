@@ -50,7 +50,11 @@ public class FilDeDiscussion implements Serializable {
 	// ---------------------------------------------------------------------------
 	public void addMessage(Message msg) {
 
-		// db.addMessageToFil(this.idFil, msg);
+		 try {
+			db.addMessageToFil(this.idFil, msg);
+		} catch (DataBaseException e) {
+			e.printStackTrace();
+		}
 		conversation.add(msg);
 
 	}

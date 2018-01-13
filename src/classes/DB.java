@@ -692,16 +692,18 @@ public class DB implements Serializable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			int b = statement
-					.executeUpdate("INSERT INTO envoyer_message (ID_UTILISATEUR,ID_MESSAGE,DATE_ENVOI_MESSAGE) VALUES ("
-							+ msg.getAuteur().getIdUser() + "," + idmessage + ",'" + dateFormat.format(now) + "');");
+			String req = "INSERT INTO envoyer_message (ID_UTILISATEUR,ID_MESSAGE,DATE_ENVOI_MESSAGE) VALUES ("
+					+ msg.getAuteur().getIdUser() + "," + idmessage + ",'" + dateFormat.format(now) + "');";
+			int b = statement.executeUpdate(req);
 
 			if (b == 0) {
 				throw new DataBaseException("Error while adding message.");
 			} else {
 
-				int statut = statement.executeUpdate("INSERT INTO CONTIENT (ID_FIL_DE_DISCUSSION,ID_MESSAGE) VALUES ("
-						+ idFil + "," + idmessage + ");");
+				req = "INSERT INTO CONTIENT (ID_FIL_DE_DISCUSSION,ID_MESSAGE) VALUES (" + idFil + "," + idmessage
+						+ ");";
+
+				int statut = statement.executeUpdate(req);
 
 			}
 		} catch (SQLException e) {
@@ -752,6 +754,7 @@ public class DB implements Serializable {
 	}
 
 	public List<Message> messagesFromFil(int idFil) throws DataBaseException {
+		System.out.println("MESSAGE FROM FIL");
 		List<Message> messages = new ArrayList<>();
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
@@ -761,9 +764,12 @@ public class DB implements Serializable {
 
 			String req = "SELECT E.DATE_ENVOI_MESSAGE,M.ID_MESSAGE,M.CONTENU_MESSAGE,U.NOM_UTILISATEUR,U.PRENOM_UTILISATEUR,U.TYPE_UTILISATEUR FROM MESSAGE AS M, utilisateur AS U,envoyer_message AS E WHERE E.ID_MESSAGE=M.ID_MESSAGE AND E.ID_UTILISATEUR=U.ID_UTILISATEUR AND M.ID_MESSAGE IN (SELECT C.ID_MESSAGE FROM CONTIENT AS C WHERE C.ID_FIL_DE_DISCUSSION ="
 					+ idFil + ")";
+
+			System.out.println(req);
 			ResultSet messagesQuery = statement.executeQuery(req);
 
 			while (messagesQuery.next()) {
+				System.out.println("NEXT MESSAGE");
 				try {
 					int idMessage = messagesQuery.getInt("ID_MESSAGE");
 					String contenu = messagesQuery.getString("CONTENU_MESSAGE");
@@ -790,6 +796,7 @@ public class DB implements Serializable {
 						break;
 					}
 					Message m = new Message(u, contenu, idMessage, date);
+					System.out.println("UTILISATEUR" + u);
 					messages.add(m);
 				} catch (Exception e) {
 					e.printStackTrace();
