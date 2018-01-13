@@ -673,7 +673,7 @@ public class DB implements Serializable {
 			/* Ici, nous placerons nos requêtes vers la BDD */
 			Statement statement = connexion.createStatement();
 
-			int a = statement.executeUpdate("INSERT INTO MESSAGE (CONTENU_MESSAGE) VALUES ('" + msg.getMsg() + "');");
+			statement.executeUpdate("INSERT INTO MESSAGE (CONTENU_MESSAGE) VALUES ('" + msg.getMsg() + "');");
 
 			ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
 
@@ -776,7 +776,8 @@ public class DB implements Serializable {
 					String nomU = messagesQuery.getString("NOM_UTILISATEUR");
 					String prenomU = messagesQuery.getString("PRENOM_UTILISATEUR");
 					String type = messagesQuery.getString("TYPE_UTILISATEUR");
-					Date date = messagesQuery.getDate("DATE_ENVOI_MESSAGE");
+					Date date = messagesQuery.getTimestamp("DATE_ENVOI_MESSAGE");
+					System.out.println("DATE : " + date);
 					Utilisateur u = null;
 					switch (type) {
 					case "ETUDIANT":
