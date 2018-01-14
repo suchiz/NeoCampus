@@ -45,7 +45,7 @@ public class GestionMessage {
 		int idFilRef = message.getIdFil();
 		for (FilDeDiscussion fdd : frameInterface.getTousLesFils()) {
 			if (idFilRef == fdd.getIdFil()) {
-				fdd.addMessage(message);
+				fdd.getConversation().add(message);
 				panelMessageDisplay.displayMessage(fdd);
 				break;
 			}
