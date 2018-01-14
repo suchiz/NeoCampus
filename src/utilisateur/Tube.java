@@ -32,7 +32,7 @@ public class Tube implements Runnable {
 	@Override
 	public void run() {
 		try {
-			
+
 			send(new Message("", TypeMessage.REQUETE_INIT_GROUP));
 			Integer temp = frameInterface.getUser().getIdUser();
 			send(new Message(temp.toString(), TypeMessage.REQUETE_INIT_FDD));
@@ -52,7 +52,7 @@ public class Tube implements Runnable {
 	}
 
 	public void receive() throws ClassNotFoundException, IOException {
-		
+
 		inputFromServer = new ObjectInputStream(socket.getInputStream());
 		System.out.println("Receive in client");
 		Object temp = inputFromServer.readObject();
@@ -64,8 +64,8 @@ public class Tube implements Runnable {
 			} else if (temp instanceof FilDeDiscussion) {
 				FilDeDiscussion fdd = (FilDeDiscussion) temp;
 				gestionMessage.fildediscussion(fdd);
-			}else if (temp instanceof ArrayList<?>) {
-				List <?> list = (ArrayList<?>) temp;
+			} else if (temp instanceof ArrayList<?>) {
+				List<?> list = (ArrayList<?>) temp;
 				gestionMessage.liste(list);
 			}
 		}
@@ -75,10 +75,10 @@ public class Tube implements Runnable {
 		outputToServer = new ObjectOutputStream(socket.getOutputStream());
 		outputToServer.writeObject(object);
 		outputToServer.flush();
-		
+
 	}
-	
-	public void disconnect() throws IOException{
+
+	public void disconnect() throws IOException {
 		if (outputToServer != null)
 			outputToServer.flush();
 		socket.close();

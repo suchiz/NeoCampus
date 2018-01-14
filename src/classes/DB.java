@@ -688,7 +688,7 @@ public class DB implements Serializable {
 
 			Date now = new Date();
 			try {
-				System.out.println("Wait " +msg.getIdMsg());
+				System.out.println("Wait " + msg.getIdMsg());
 				System.out.println(msg.getAuteur());
 				System.out.println("VOILA :" + msg.getAuteur().getIdUser());
 				System.out.println(msg.getIdMsg());
@@ -761,7 +761,7 @@ public class DB implements Serializable {
 	}
 
 	public List<Message> messagesFromFil(int idFil) throws DataBaseException {
-		System.out.println("MESSAGE FROM FIL");
+		System.out.println("MESSAGES FROM FIL");
 		List<Message> messages = new ArrayList<>();
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
@@ -773,7 +773,9 @@ public class DB implements Serializable {
 					+ idFil + ")";
 
 			System.out.println(req);
+			System.out.println("AVANT");
 			ResultSet messagesQuery = statement.executeQuery(req);
+			System.out.println("APRTES");
 
 			while (messagesQuery.next()) {
 				System.out.println("NEXT MESSAGE");
@@ -831,7 +833,14 @@ public class DB implements Serializable {
 
 	public FilDeDiscussion loadFil(int idFil) throws DataBaseException {
 		FilDeDiscussion f = null;
-		List<Message> messages = messagesFromFil(idFil);
+		List<Message> messages = null;
+		System.out.println("LOAD FIL DEBUT");
+		try {
+			messages = messagesFromFil(idFil);
+		} catch (Exception e) {
+			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		}
+		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 			Statement statement = connexion.createStatement();
@@ -866,6 +875,7 @@ public class DB implements Serializable {
 					 */
 				}
 		}
+		System.out.println("LOAD FIL FINNNNNNNNNNNNNNNN");
 		return f;
 	}
 

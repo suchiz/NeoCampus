@@ -39,7 +39,7 @@ public class PanelFilDeDiscussion extends JPanel {
 			public void valueChanged(TreeSelectionEvent e) {
 				setTitle();
 				displayFilDeDiscussion();
-				//readMessages();
+				readMessages();
 			}
 		});
 
@@ -153,6 +153,7 @@ public class PanelFilDeDiscussion extends JPanel {
 						if (msg.getType() != TypeMessage.READ_BY_ALL || msg.getType() != TypeMessage.READ) {
 							msg.setType(TypeMessage.READ);
 							try {
+								msg.setAuteur(frameInterface.getUser());
 								frameInterface.getTube().send(msg);
 							} catch (IOException e) {
 								e.printStackTrace();
