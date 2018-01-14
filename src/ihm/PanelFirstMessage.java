@@ -115,12 +115,10 @@ public class PanelFirstMessage extends JPanel {
 	private void envoieMessage() throws IOException {
 		FilDeDiscussion nouveauFil = new FilDeDiscussion(textFieldTitre.getText(),
 				panelSelectionGroupes.getGroupeSelected(), frameInterface.getUser());
+		System.out.println(panelSelectionGroupes.getGroupeSelected().getListeUtilisateur());
 		Message temp = new Message(frameInterface.getUser(), textFieldFirstMessage.getText(), TypeMessage.MESSAGE);
 		nouveauFil.getConversation().add(temp);
 		frameInterface.getTube().send(nouveauFil);
-		nouveauFil.getConversation().remove(temp);
-		frameInterface.getTousLesFils().add(nouveauFil);
-		frameInterface.getPanelFil().ajouterFilDeDisussion(nouveauFil);
 	}
 
 	private boolean checkFields() {

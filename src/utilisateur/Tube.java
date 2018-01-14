@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import classes.FilDeDiscussion;
 import classes.Message;
 import classes.TypeMessage;
 import classes.Utilisateur;
@@ -60,9 +61,9 @@ public class Tube implements Runnable {
 			if (temp instanceof Message) {
 				Message message = (Message) temp;
 				gestionMessage.message(message);
-			} else if (temp instanceof Utilisateur) {
-				Utilisateur u = (Utilisateur) temp;
-				gestionMessage.utilisateur(u);
+			} else if (temp instanceof FilDeDiscussion) {
+				FilDeDiscussion fdd = (FilDeDiscussion) temp;
+				gestionMessage.fildediscussion(fdd);
 			}else if (temp instanceof ArrayList<?>) {
 				List <?> list = (ArrayList<?>) temp;
 				gestionMessage.liste(list);

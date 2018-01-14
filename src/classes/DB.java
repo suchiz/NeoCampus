@@ -467,6 +467,9 @@ public class DB implements Serializable {
 				idgroupe = resultat.getInt("ID_GROUPE");
 				nomgroupe = resultat.getString("Nom_Groupe");
 				Groupe groupetest = new Groupe(nomgroupe, idgroupe);
+
+				// String req = "SELECT * FROM UTILISATEUR WHERE ID_UTILISATEUR IN(";
+
 				listeGroupe.add(groupetest);
 			}
 
@@ -679,6 +682,7 @@ public class DB implements Serializable {
 
 			if (indicedanslabasededonnee.next()) {
 				idmessage = indicedanslabasededonnee.getInt("ID");
+				msg.setIdMsg(idmessage);
 			}
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -704,6 +708,9 @@ public class DB implements Serializable {
 						+ ");";
 
 				int statut = statement.executeUpdate(req);
+
+				if (statut == 0)
+					throw new DataBaseException("Error while adding message.");
 
 			}
 		} catch (SQLException e) {
@@ -796,7 +803,7 @@ public class DB implements Serializable {
 					default:
 						break;
 					}
-					Message m = new Message(u, contenu, idMessage, date);
+					Message m = new Message(u, contenu, idMessage, date, TypeMessage.READ_BY_ALL);
 					System.out.println("UTILISATEUR" + u);
 					messages.add(m);
 				} catch (Exception e) {

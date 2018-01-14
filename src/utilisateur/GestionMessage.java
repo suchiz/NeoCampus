@@ -6,6 +6,7 @@ import java.util.List;
 import classes.FilDeDiscussion;
 import classes.Groupe;
 import classes.Message;
+import classes.TypeMessage;
 import classes.Utilisateur;
 import ihm.FrameInterface;
 import ihm.PanelFilDeDiscussion;
@@ -14,20 +15,24 @@ import ihm.PanelMessageDisplay;
 public class GestionMessage {
 	private Tube tube;
 	FrameInterface frameInterface;
-	
-	
+
 	public GestionMessage(FrameInterface frameInterface, Tube tube) {
 		this.tube = tube;
 		this.frameInterface = frameInterface;
 	}
 
 	public void message(Message message) {
+		System.out.println(message.getType());
 		switch (message.getType()) {
-		case ACK_MESSAGE:
-
+		case RECEIVED:
+			gererReceived(message);
 			break;
 		case READ_BY_ALL:
 
+			break;
+
+		case READ:
+			gererRead(message);
 			break;
 		case MESSAGE:
 			gererMessage(message);
@@ -39,6 +44,43 @@ public class GestionMessage {
 
 	}
 
+	private void gererRead(Message message) {
+		int idFilRef = message.getIdFil();
+		int idMessageRef = message.getIdMsg();
+		for (FilDeDiscussion fdd : frameInterface.getTousLesFils()) {
+			if (idFilRef == fdd.getIdFil()) {
+				for (Message m : fdd.getConversation()) {
+					if (idMessageRef == m.getIdMsg()) {
+						m.setType(TypeMessage.READ);
+						frameInterface.getPanelMsg().displayMessage(fdd);
+						break;
+					}
+				}
+				break;
+			}
+		}
+
+	}
+
+	private void gererReceived(Message message) {
+		int idFilRef = message.getIdFil();
+		int idMessageRef = message.getIdMsg();
+		if (message.getAuteur().getIdUser() == frameInterface.getUser().getIdUser()) {
+			for (FilDeDiscussion fdd : frameInterface.getTousLesFils()) {
+				if (idFilRef == fdd.getIdFil()) {
+					for (Message m : fdd.getConversation()) {
+						if (idMessageRef == m.getIdMsg()) {
+							m.setType(TypeMessage.RECEIVED);
+							frameInterface.getPanelMsg().displayMessage(fdd);
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
+
 	private void gererMessage(Message message) {
 		System.out.println(message.getMsg());
 		PanelMessageDisplay panelMessageDisplay = frameInterface.getPanelMsg();
@@ -46,16 +88,11 @@ public class GestionMessage {
 		for (FilDeDiscussion fdd : frameInterface.getTousLesFils()) {
 			if (idFilRef == fdd.getIdFil()) {
 				fdd.getConversation().add(message);
+				fdd.incrementMessageNonLu();
 				panelMessageDisplay.displayMessage(fdd);
 				break;
 			}
 		}
-		
-		
-	}
-
-	public void utilisateur(Utilisateur u) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -70,6 +107,12 @@ public class GestionMessage {
 			frameInterface.initTousLesFils((ArrayList<FilDeDiscussion>) list);
 		}
 
+	}
+
+	public void fildediscussion(FilDeDiscussion fdd) {
+		System.out.println();
+		frameInterface.getTousLesFils().add(fdd);
+		frameInterface.getPanelFil().ajouterFilDeDisussion(fdd);
 	}
 
 }

@@ -49,6 +49,7 @@ public class Test {
 				System.out.println("i : " + i);
 				Message m = new Message(e, "VOILA LE MESSAGE n� " + i);
 				f.addMessage(m);
+				System.out.println("ID MESSAGE INIT :" + m.getIdMsg());
 			}
 
 			FilDeDiscussion f2 = new FilDeDiscussion("LA AUSSI YA UN PB", g2, e2);

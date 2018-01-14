@@ -1,5 +1,7 @@
 package ihm;
 
+import java.io.IOException;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -8,9 +10,10 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import classes.Etudiant;
 import classes.FilDeDiscussion;
 import classes.Groupe;
+import classes.Message;
+import classes.TypeMessage;
 
 @SuppressWarnings("serial")
 public class PanelFilDeDiscussion extends JPanel {
@@ -36,6 +39,7 @@ public class PanelFilDeDiscussion extends JPanel {
 			public void valueChanged(TreeSelectionEvent e) {
 				setTitle();
 				displayFilDeDiscussion();
+				//readMessages();
 			}
 		});
 
@@ -139,4 +143,24 @@ public class PanelFilDeDiscussion extends JPanel {
 		this.panelMessageDisplay = panelMessageDisplay;
 	}
 
+	public void readMessages() {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
+		if (node != null) {
+			if (node.getUserObject() != null) {
+				if (node.getUserObject() instanceof FilDeDiscussion) {
+					FilDeDiscussion fdd = (FilDeDiscussion) node.getUserObject();
+					for (Message msg : fdd.getConversation()) {
+						if (msg.getType() != TypeMessage.READ_BY_ALL || msg.getType() != TypeMessage.READ) {
+							msg.setType(TypeMessage.READ);
+							try {
+								frameInterface.getTube().send(msg);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

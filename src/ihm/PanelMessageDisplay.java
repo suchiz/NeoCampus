@@ -61,22 +61,27 @@ public class PanelMessageDisplay extends JScrollPane{
 					JOptionPane.showMessageDialog(new JFrame(), "Yes");
 				}
 			});
-			/*switch (msg.getType()) {
-			case RECIEVED:
+			switch (msg.getType()) {
+			case RECEIVED:
 				temp.setBackground(red);
+				tp2.setBackground(red);
 				break;
 			case READ:
 				temp.setBackground(orange);
+				tp2.setBackground(orange);
 				break;
 			case READ_BY_ALL:
 				temp.setBackground(green);
+				tp2.setBackground(green);
 				break;
 			default:
 				temp.setBackground(grey);
+				tp2.setBackground(grey);
 				break;
-			}*/
-			temp.setBackground(orange);
-			tp2.setBackground(orange);
+			}
+
+			
+			
 			JLabel tp = new JLabel(msg.getAuteur().toString());
 			tp.setHorizontalAlignment(SwingConstants.LEFT);
 			tp.setVerticalAlignment(SwingConstants.TOP);
