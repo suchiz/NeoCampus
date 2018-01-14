@@ -688,10 +688,10 @@ public class DB implements Serializable {
 
 			Date now = new Date();
 			try {
-				System.out.println(msg.getIdMsg());
+				System.out.println("Wait " +msg.getIdMsg());
 				System.out.println(msg.getAuteur());
 				System.out.println("VOILA :" + msg.getAuteur().getIdUser());
-				System.out.println(idmessage);
+				System.out.println(msg.getIdMsg());
 				System.out.println(dateFormat.format(now));
 			} catch (Exception e) {
 				e.printStackTrace();

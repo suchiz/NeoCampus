@@ -22,7 +22,6 @@ public class GestionMessage {
 	}
 
 	public void message(Message message) {
-		System.out.println(message.getType());
 		switch (message.getType()) {
 		case RECEIVED:
 			gererReceived(message);
@@ -30,7 +29,6 @@ public class GestionMessage {
 		case READ_BY_ALL:
 
 			break;
-
 		case READ:
 			gererRead(message);
 			break;
@@ -45,11 +43,14 @@ public class GestionMessage {
 	}
 
 	private void gererRead(Message message) {
+	
 		int idFilRef = message.getIdFil();
 		int idMessageRef = message.getIdMsg();
+		
 		for (FilDeDiscussion fdd : frameInterface.getTousLesFils()) {
 			if (idFilRef == fdd.getIdFil()) {
 				for (Message m : fdd.getConversation()) {
+					
 					if (idMessageRef == m.getIdMsg()) {
 						m.setType(TypeMessage.READ);
 						frameInterface.getPanelMsg().displayMessage(fdd);

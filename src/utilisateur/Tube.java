@@ -56,7 +56,7 @@ public class Tube implements Runnable {
 		inputFromServer = new ObjectInputStream(socket.getInputStream());
 		System.out.println("Receive in client");
 		Object temp = inputFromServer.readObject();
-		System.out.println("hey" +temp.getClass());
+		System.out.println(temp.getClass());
 		if (temp != null) {
 			if (temp instanceof Message) {
 				Message message = (Message) temp;
