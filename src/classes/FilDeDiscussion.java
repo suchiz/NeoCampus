@@ -15,7 +15,6 @@ public class FilDeDiscussion implements Serializable {
 	private Groupe groupe;
 	private int idFil;
 	private List<Message> conversation = new ArrayList<>();
-
 	private DB db = new DB();
 
 	public int getIdFil() {
@@ -58,6 +57,7 @@ public class FilDeDiscussion implements Serializable {
 			e.printStackTrace();
 		}
 		conversation.add(msg);
+		Collections.sort(conversation);
 
 	}
 

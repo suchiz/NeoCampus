@@ -19,7 +19,7 @@ public class DB implements Serializable {
 	private static final long serialVersionUID = -6347298237211490750L;
 	static String url = "jdbc:mysql://localhost:3306/base_de_donnees_neocampus?autoReconnect=true&useSSL=false";
 	static String username = "root";
-	static String mdp = "root";
+	static String mdp = "";
 	static Connection connexion = null;
 
 	public void init() {
@@ -37,32 +37,38 @@ public class DB implements Serializable {
 	}
 
 	public void creation_bd() throws DataBaseException {
-		//init();
+		// init();
 		try {
 
 			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Driver O.K.");
+			// System.out.println("Driver O.K.");
 
-			Connection conn = DriverManager.getConnection(url, username, mdp);
-			System.out.println("Connexion effective !");
+			try {
+				connexion = DriverManager.getConnection(url, username, mdp);
+			} catch (Exception e) {
+				connexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/", username, mdp);
+			}
 
-			Statement s = conn.createStatement();
+			// System.out.println("Connexion effective !");
 
-			String req = "DROP DATABASE base_de_donnees_neocampus;CREATE DATABASE base_de_donnees_neocampus;USE base_de_donnees_neocampus;CREATE TABLE UTILISATEUR( ID_UTILISATEUR INT NOT NULL AUTO_INCREMENT, IDENTIFIANT VARCHAR(255), MOT_DE_PASSE VARCHAR(255), NOM_UTILISATEUR VARCHAR(255), PRENOM_UTILISATEUR VARCHAR(255), TYPE_UTILISATEUR ENUM('ENSEIGNANT','ETUDIANT','TECHNIQUE','ADMINISTRATEUR'), PRIMARY KEY (ID_UTILISATEUR));CREATE TABLE MESSAGE( ID_MESSAGE INT NOT NULL AUTO_INCREMENT, CONTENU_MESSAGE VARCHAR(2048), PRIMARY KEY (ID_MESSAGE));CREATE TABLE FIL_DE_DISCUSSION( ID_FIL_DE_DISCUSSION INT NOT NULL AUTO_INCREMENT, TITRE_FIL_DE_DISCUSSION VARCHAR(1000), PRIMARY KEY (ID_FIL_DE_DISCUSSION));CREATE TABLE GROUPE( ID_GROUPE INT NOT NULL AUTO_INCREMENT, NOM_GROUPE VARCHAR(100), PRIMARY KEY (ID_GROUPE));CREATE TABLE APPARTENIR( ID_GROUPE INT NOT NULL, ID_UTILISATEUR INT NOT NULL, PRIMARY KEY (ID_GROUPE,ID_UTILISATEUR), FOREIGN KEY (ID_GROUPE) REFERENCES GROUPE(ID_GROUPE), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR));CREATE TABLE ENVOYER_MESSAGE( ID_UTILISATEUR INT NOT NULL, ID_MESSAGE INT NOT NULL, DATE_ENVOI_MESSAGE DATETIME, PRIMARY KEY (ID_UTILISATEUR,ID_MESSAGE), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR), FOREIGN KEY (ID_MESSAGE) REFERENCES MESSAGE(ID_MESSAGE));CREATE TABLE CONTIENT( ID_FIL_DE_DISCUSSION INT NOT NULL, ID_MESSAGE INT NOT NULL, PRIMARY KEY (ID_FIL_DE_DISCUSSION,ID_MESSAGE), FOREIGN KEY (ID_MESSAGE) REFERENCES MESSAGE(ID_MESSAGE), FOREIGN KEY (ID_FIL_DE_DISCUSSION) REFERENCES ID_FIL_DE_DISCUSSION(ID_FIL_DE_DISCUSSION));CREATE TABLE CREER( ID_FIL_DE_DISCUSSION INT NOT NULL, ID_UTILISATEUR INT NOT NULL, PRIMARY KEY (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR), FOREIGN KEY (ID_FIL_DE_DISCUSSION) REFERENCES ID_FIL_DE_DISCUSSION(ID_FIL_DE_DISCUSSION), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR));CREATE TABLE DESTINE( ID_FIL_DE_DISCUSSION INT NOT NULL, ID_UTILISATEUR INT NOT NULL, ID_GROUPE INT NOT NULL, PRIMARY KEY (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE), FOREIGN KEY (ID_FIL_DE_DISCUSSION) REFERENCES ID_FIL_DE_DISCUSSION(ID_FIL_DE_DISCUSSION), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR), FOREIGN KEY (ID_GROUPE) REFERENCES GROUPE(ID_GROUPE));";
+			Statement s = connexion.createStatement();
+
+			String req = "DROP DATABASE IF EXISTS base_de_donnees_neocampus;CREATE DATABASE base_de_donnees_neocampus;USE base_de_donnees_neocampus;CREATE TABLE UTILISATEUR( ID_UTILISATEUR INT NOT NULL AUTO_INCREMENT, IDENTIFIANT VARCHAR(255), MOT_DE_PASSE VARCHAR(255), NOM_UTILISATEUR VARCHAR(255), PRENOM_UTILISATEUR VARCHAR(255), TYPE_UTILISATEUR ENUM('ENSEIGNANT','ETUDIANT','TECHNIQUE','ADMINISTRATIF'), PRIMARY KEY (ID_UTILISATEUR));CREATE TABLE MESSAGE( ID_MESSAGE INT NOT NULL AUTO_INCREMENT, CONTENU_MESSAGE VARCHAR(2048), PRIMARY KEY (ID_MESSAGE));CREATE TABLE FIL_DE_DISCUSSION( ID_FIL_DE_DISCUSSION INT NOT NULL AUTO_INCREMENT, TITRE_FIL_DE_DISCUSSION VARCHAR(1000), PRIMARY KEY (ID_FIL_DE_DISCUSSION));CREATE TABLE GROUPE( ID_GROUPE INT NOT NULL AUTO_INCREMENT, NOM_GROUPE VARCHAR(100), PRIMARY KEY (ID_GROUPE));CREATE TABLE APPARTENIR( ID_GROUPE INT NOT NULL, ID_UTILISATEUR INT NOT NULL, PRIMARY KEY (ID_GROUPE,ID_UTILISATEUR), FOREIGN KEY (ID_GROUPE) REFERENCES GROUPE(ID_GROUPE), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR));CREATE TABLE ENVOYER_MESSAGE( ID_UTILISATEUR INT NOT NULL, ID_MESSAGE INT NOT NULL, DATE_ENVOI_MESSAGE DATETIME, PRIMARY KEY (ID_UTILISATEUR,ID_MESSAGE), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR), FOREIGN KEY (ID_MESSAGE) REFERENCES MESSAGE(ID_MESSAGE));CREATE TABLE CONTIENT( ID_FIL_DE_DISCUSSION INT NOT NULL, ID_MESSAGE INT NOT NULL, PRIMARY KEY (ID_FIL_DE_DISCUSSION,ID_MESSAGE), FOREIGN KEY (ID_MESSAGE) REFERENCES MESSAGE(ID_MESSAGE), FOREIGN KEY (ID_FIL_DE_DISCUSSION) REFERENCES ID_FIL_DE_DISCUSSION(ID_FIL_DE_DISCUSSION));CREATE TABLE CREER( ID_FIL_DE_DISCUSSION INT NOT NULL, ID_UTILISATEUR INT NOT NULL, PRIMARY KEY (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR), FOREIGN KEY (ID_FIL_DE_DISCUSSION) REFERENCES ID_FIL_DE_DISCUSSION(ID_FIL_DE_DISCUSSION), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR));CREATE TABLE DESTINE( ID_FIL_DE_DISCUSSION INT NOT NULL, ID_UTILISATEUR INT NOT NULL, ID_GROUPE INT NOT NULL, PRIMARY KEY (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE), FOREIGN KEY (ID_FIL_DE_DISCUSSION) REFERENCES ID_FIL_DE_DISCUSSION(ID_FIL_DE_DISCUSSION), FOREIGN KEY (ID_UTILISATEUR) REFERENCES UTILISATEUR(ID_UTILISATEUR), FOREIGN KEY (ID_GROUPE) REFERENCES GROUPE(ID_GROUPE));";
 
 			String[] reqs = req.split(";");
 
 			for (String r : reqs) {
-				System.out.println("Requete : " + r);
-				System.out.println("=) " + s.executeUpdate(r + ";"));
+				int res = s.executeUpdate(r + ";");
+				System.out.println(r + ": " + res);
 			}
 
 			addGroupBD(new Groupe("Tous les utilisateurs"));
 
-			conn.close();
-			
+			connexion.close();
+
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
+
 			throw new DataBaseException();
 		}
 	}
@@ -197,15 +203,15 @@ public class DB implements Serializable {
 
 			String req = "SELECT IDENTIFIANT,MOT_DE_PASSE,ID_UTILISATEUR FROM UTILISATEUR WHERE IDENTIFIANT='" + login
 					+ "';";
-			System.out.println(req);
+			// System.out.println(req);
 			ResultSet resultat1 = statement.executeQuery(req);
 			if (resultat1.next()) {
 				logintomatch = resultat1.getString("IDENTIFIANT");
 				motdepasstomatch = resultat1.getString("MOT_DE_PASSE");
 				idUser = resultat1.getInt("ID_UTILISATEUR");
 
-				System.out.println("IDENTIFIANT:" + logintomatch + ";MOT_DE_PASSE:" + motdepasstomatch
-						+ ";ID_UTILISATEUR:" + idUser);
+				// System.out.println("IDENTIFIANT:" + logintomatch + ";MOT_DE_PASSE:" +
+				// motdepasstomatch + ";ID_UTILISATEUR:" + idUser);
 			}
 			if (login.equals(logintomatch) && string.equals(motdepasstomatch) && !string.equals("")) {
 				u = UtilisateurFromID(idUser);
@@ -224,7 +230,7 @@ public class DB implements Serializable {
 	}
 
 	public void removeUserBD(Utilisateur u) throws DataBaseException {
-
+		int idUser = u.getIdUser();
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
@@ -233,16 +239,166 @@ public class DB implements Serializable {
 			Statement statement = connexion.createStatement();
 
 			// DISPARITION DE L'UTILISATEUR DE TOUT LES GROUPES DONT IL ETAIT MEMBRE
-			statement.executeUpdate(
-					"DELETE ID_UTILISATEUR FROM APPARTENIR (ID_Utilisateur,ID_Groupe) WHERE (ID_Utilisateur ='"
-							+ u.getIdUser() + "';");
+			String req = "DELETE FROM APPARTENIR WHERE ID_UTILISATEUR = " + idUser;
+			statement.executeUpdate(req);
 
-			// REMOVAL DE LA TABLE USER
-			statement.executeUpdate(
-					"DELETE ID_UTILISATEUR FROM UTILISATEUR (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) WHERE (ID_Utilisateur ='"
-							+ u.getIdUser() + "';");
+			req = "DELETE FROM CREER WHERE ID_UTILISATEUR = " + idUser + ";";
+			statement.executeUpdate(req);
+
+			req = "DELETE FROM DESTINE WHERE ID_UTILISATEUR = " + idUser + ";";
+			statement.executeUpdate(req);
+
+			req = "DELETE FROM ENVOYER_MESSAGE WHERE ID_UTILISATEUR = " + idUser + ";";
+			statement.executeUpdate(req);
+
+			req = "DELETE FROM UTILISATEUR WHERE ID_UTILISATEUR = " + idUser + ";";
+			statement.executeUpdate(req);
+
 			connexion.commit();
 		} catch (SQLException e) {
+			e.printStackTrace();
+			if (connexion != null) {
+				try {
+					connexion.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		} finally {
+			if (connexion != null)
+				try {
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+	}
+
+	public List<Message> getAllMessages() {
+		List<Message> messages = new ArrayList<Message>();
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			ResultSet messagesQuery = statement.executeQuery(
+					"SELECT M.ID_MESSAGE,M.CONTENU_MESSAGE,U.ID_UTILISATEUR,U.NOM_UTILISATEUR,U.PRENOM_UTILISATEUR,U.TYPE_UTILISATEUR,E.DATE_ENVOI_MESSAGE FROM MESSAGE AS M,UTILISATEUR AS U,ENVOYER_MESSAGE AS E WHERE E.ID_MESSAGE=M.ID_MESSAGE AND E.ID_UTILISATEUR=U.ID_UTILISATEUR ");
+
+			while (messagesQuery.next()) {
+				// System.out.println("alo");
+				try {
+					int idMessage = messagesQuery.getInt("ID_MESSAGE");
+					String contenu = messagesQuery.getString("CONTENU_MESSAGE");
+					String nomU = messagesQuery.getString("NOM_UTILISATEUR");
+					String prenomU = messagesQuery.getString("PRENOM_UTILISATEUR");
+					String type = messagesQuery.getString("TYPE_UTILISATEUR");
+					Date date = messagesQuery.getTimestamp("DATE_ENVOI_MESSAGE");
+					// System.out.println("DATE : " + date);
+					Utilisateur u = null;
+					switch (type) {
+					case "ETUDIANT":
+						u = new Etudiant(nomU, prenomU);
+						break;
+					case "ENSEIGNANT":
+						u = new Enseignant(nomU, prenomU);
+						break;
+					case "ADMINISTRATIF":
+						u = new Agent(nomU, prenomU, TypeUtilisateur.ADMINISTRATIF);
+						break;
+					case "TECHNIQUE":
+						u = new Agent(nomU, prenomU, TypeUtilisateur.TECHNIQUE);
+						break;
+
+					default:
+						break;
+					}
+					Message m = new Message(u, contenu, idMessage, date, TypeMessage.READ_BY_ALL);
+					// System.out.println("UTILISATEUR" + u);
+					messages.add(m);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (connexion != null)
+				try {
+					/* Fermeture de la connexion */
+					connexion.close();
+				} catch (SQLException ignore) {
+					/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+				}
+		}
+
+		return messages;
+
+	}
+
+	public List<FilDeDiscussion> getAllFilDeDiscussion() {
+		List<FilDeDiscussion> fils = new ArrayList<FilDeDiscussion>();
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			/* Ici, nous placerons nos requ�tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			ResultSet messagesQuery = statement.executeQuery("SELECT ID_FIL_DE_DISCUSSION FROM FIL_DE_DISCUSSION");
+			while (messagesQuery.next()) {
+				// System.out.println("alo");
+				try {
+					try {
+						int idFil = messagesQuery.getInt("ID_FIL_DE_DISCUSSION");
+						
+
+						FilDeDiscussion fdd = loadFil(idFil);
+						System.out.println(fdd);
+
+						fils.add(fdd);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				} finally {
+					if (connexion != null)
+						try {
+							/* Fermeture de la connexion */
+							connexion.close();
+						} catch (SQLException ignore) {
+							/* Si une erreur survient lors de la fermeture, il suffit de l'ignorer. */
+						}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return fils;
+	}
+
+	public void updateUser(Utilisateur u) throws DataBaseException {
+		int idUser = u.getIdUser();
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			connexion.setAutoCommit(false);
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// DISPARITION DE L'UTILISATEUR DE TOUT LES GROUPES DONT IL ETAIT MEMBRE
+			String req = "UPDATE UTILISATEUR SET IDENTIFIANT='" + u.getLogin() + "', MOT_DE_PASSE='" + u.getMdp()
+					+ "', NOM_UTILISATEUR = '" + u.getNom() + "', PRENOM_UTILISATEUR='" + u.getPrenom()
+					+ "' WHERE ID_UTILISATEUR = " + idUser + ";";
+			statement.executeUpdate(req);
+
+			connexion.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
 			if (connexion != null) {
 				try {
 					connexion.rollback();
@@ -263,10 +419,10 @@ public class DB implements Serializable {
 	}
 
 	public void addUserBD(Utilisateur u) throws DataBaseException {
-
+		// System.out.println("AD USER TOUT COURT");
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Driver O.K.");
+			// System.out.println("Driver O.K.");
 
 			String login = u.getLogin();
 			String mdpU = u.getMdp();
@@ -293,7 +449,7 @@ public class DB implements Serializable {
 				connexion.setAutoCommit(false);
 				String req = "INSERT INTO Utilisateur (Identifiant,Mot_De_Passe,Nom_Utilisateur,Prenom_Utilisateur,Type_Utilisateur) VALUES ('"
 						+ login + "','" + mdpU + "','" + nomU + "','" + prenomU + "','" + typeU + "');";
-				System.out.println(req);
+				// System.out.println(req);
 				/* Ici, nous placerons nos requï¿½tes vers la BDD */
 				Statement statement = connexion.createStatement();
 
@@ -307,8 +463,8 @@ public class DB implements Serializable {
 				if (indicedanslabasededonnee.next()) {
 					int res = indicedanslabasededonnee.getInt("ID");
 					u.setIdUser(res);
-					System.out.println(res);
-					addUserToGroup(u.getIdUser(), 1);
+					// System.out.println(res);
+					// addUserToGroup(u.getIdUser(), 1);
 				}
 
 				connexion.commit();
@@ -391,8 +547,6 @@ public class DB implements Serializable {
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
 
-			System.out.println();
-
 			statement.executeUpdate("INSERT INTO Groupe (NOM_GROUPE) VALUES ('" + g.getNomGroupe() + "');");
 			ResultSet indicedanslabasededonnee = statement.executeQuery("SELECT LAST_INSERT_ID() AS ID;");
 
@@ -425,11 +579,13 @@ public class DB implements Serializable {
 	}
 
 	public void addUserToGroup(int idUser, int idGroup) throws DataBaseException {
+		// System.out.println("ADD USER TO GROUP\n");
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 			Statement statement = connexion.createStatement();
-			statement.executeUpdate(
-					"INSERT INTO APPARTENIR (ID_Utilisateur,ID_Groupe) VALUES (" + idUser + "," + idGroup + ");");
+			String req = "INSERT INTO APPARTENIR (ID_Utilisateur,ID_Groupe) VALUES (" + idUser + "," + idGroup + ");";
+			// System.out.println(req);
+			statement.executeUpdate(req);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -505,7 +661,7 @@ public class DB implements Serializable {
 
 	public List<Utilisateur> getAllUsers() throws DataBaseException {
 
-		System.out.println("get all users");
+		// System.out.println("get all users");
 		List<Utilisateur> listeUser = new ArrayList<Utilisateur>();
 		String nom;
 		String prenom;
@@ -526,7 +682,7 @@ public class DB implements Serializable {
 			Utilisateur u = null;
 
 			while (resultat.next()) {
-				System.out.println("alo");
+				// System.out.println("alo");
 				try {
 					nom = resultat.getString("Nom_Utilisateur");
 					prenom = resultat.getString("Prenom_Utilisateur");
@@ -562,14 +718,14 @@ public class DB implements Serializable {
 		}
 
 		for (Utilisateur utilisateur : listeUser) {
-			System.out.println(utilisateur);
+			// System.out.println(utilisateur);
 		}
 
 		return listeUser;
 	}
 
 	public List<Utilisateur> getUsersFromGroup(int idGroup) throws DataBaseException {
-		System.out.println("GET USERS FROM GROUP");
+		// System.out.println("GET USERS FROM GROUP");
 		List<Utilisateur> listeUser = new ArrayList<Utilisateur>();
 		String nom;
 		String prenom;
@@ -632,7 +788,7 @@ public class DB implements Serializable {
 		}
 
 		for (Utilisateur utilisateur : listeUser) {
-			System.out.println(utilisateur);
+			// System.out.println(utilisateur);
 		}
 
 		return listeUser;
@@ -653,7 +809,7 @@ public class DB implements Serializable {
 			while (indicedanslabasededonnee.next()) {
 				int idFilDediscussion = indicedanslabasededonnee.getInt("ID");
 				f.setIdFil(idFilDediscussion);
-				System.out.println(idFilDediscussion);
+				// System.out.println(idFilDediscussion);
 			}
 
 			int a = statement.executeUpdate("INSERT INTO Creer (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR) VALUES ("
@@ -682,7 +838,7 @@ public class DB implements Serializable {
 	}
 
 	public void addMessageToFil(int idFil, Message msg) throws DataBaseException {
-		System.out.println("MESSAGE : +" + msg.getMsg());
+		// System.out.println("MESSAGE : +" + msg.getMsg());
 		int idmessage = 0;
 
 		try {
@@ -703,11 +859,11 @@ public class DB implements Serializable {
 
 			Date now = new Date();
 			try {
-				System.out.println("Wait " + msg.getIdMsg());
-				System.out.println(msg.getAuteur());
-				System.out.println("VOILA :" + msg.getAuteur().getIdUser());
-				System.out.println(msg.getIdMsg());
-				System.out.println(dateFormat.format(now));
+				// System.out.println("Wait " + msg.getIdMsg());
+				// System.out.println(msg.getAuteur());
+				// System.out.println("VOILA :" + msg.getAuteur().getIdUser());
+				// System.out.println(msg.getIdMsg());
+				// System.out.println(dateFormat.format(now));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -773,7 +929,7 @@ public class DB implements Serializable {
 	}
 
 	public List<Message> messagesFromFil(int idFil) throws DataBaseException {
-		System.out.println("MESSAGES FROM FIL");
+		// System.out.println("MESSAGES FROM FIL");
 		List<Message> messages = new ArrayList<>();
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
@@ -784,13 +940,13 @@ public class DB implements Serializable {
 			String req = "SELECT E.DATE_ENVOI_MESSAGE,M.ID_MESSAGE,M.CONTENU_MESSAGE,U.NOM_UTILISATEUR,U.PRENOM_UTILISATEUR,U.TYPE_UTILISATEUR FROM MESSAGE AS M, utilisateur AS U,envoyer_message AS E WHERE E.ID_MESSAGE=M.ID_MESSAGE AND E.ID_UTILISATEUR=U.ID_UTILISATEUR AND M.ID_MESSAGE IN (SELECT C.ID_MESSAGE FROM CONTIENT AS C WHERE C.ID_FIL_DE_DISCUSSION ="
 					+ idFil + ")";
 
-			System.out.println(req);
-			System.out.println("AVANT");
+			// System.out.println(req);
+			// System.out.println("AVANT");
 			ResultSet messagesQuery = statement.executeQuery(req);
-			System.out.println("APRTES");
+			// System.out.println("APRTES");
 
 			while (messagesQuery.next()) {
-				System.out.println("NEXT MESSAGE");
+				// System.out.println("NEXT MESSAGE");
 				try {
 					int idMessage = messagesQuery.getInt("ID_MESSAGE");
 					String contenu = messagesQuery.getString("CONTENU_MESSAGE");
@@ -798,7 +954,7 @@ public class DB implements Serializable {
 					String prenomU = messagesQuery.getString("PRENOM_UTILISATEUR");
 					String type = messagesQuery.getString("TYPE_UTILISATEUR");
 					Date date = messagesQuery.getTimestamp("DATE_ENVOI_MESSAGE");
-					System.out.println("DATE : " + date);
+					// System.out.println("DATE : " + date);
 					Utilisateur u = null;
 					switch (type) {
 					case "ETUDIANT":
@@ -818,7 +974,7 @@ public class DB implements Serializable {
 						break;
 					}
 					Message m = new Message(u, contenu, idMessage, date, TypeMessage.READ_BY_ALL);
-					System.out.println("UTILISATEUR" + u);
+					// System.out.println("UTILISATEUR" + u);
 					messages.add(m);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -846,13 +1002,13 @@ public class DB implements Serializable {
 	public FilDeDiscussion loadFil(int idFil) throws DataBaseException {
 		FilDeDiscussion f = null;
 		List<Message> messages = null;
-		System.out.println("LOAD FIL DEBUT");
+		// System.out.println("LOAD FIL DEBUT");
 		try {
 			messages = messagesFromFil(idFil);
 		} catch (Exception e) {
-			System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			// System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		}
-		System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+		// System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 			Statement statement = connexion.createStatement();
@@ -887,7 +1043,7 @@ public class DB implements Serializable {
 					 */
 				}
 		}
-		System.out.println("LOAD FIL FINNNNNNNNNNNNNNNN");
+		// System.out.println("LOAD FIL FINNNNNNNNNNNNNNNN");
 		return f;
 	}
 
@@ -906,13 +1062,13 @@ public class DB implements Serializable {
 					+ ")) UNION SELECT * FROM fil_de_discussion AS F2 WHERE F2.ID_FIL_DE_DISCUSSION IN ( SELECT D2.ID_Fil_DE_DISCUSSION FROM destine AS D2 WHERE D2.ID_UTILISATEUR = "
 					+ idUser + ")";
 
-			System.out.println(req);
+			// System.out.println(req);
 			ResultSet filsGroupes = statement.executeQuery(req);
 
 			while (filsGroupes.next()) {
 				int idFil = filsGroupes.getInt("ID_FIL_DE_DISCUSSION");
 				FilDeDiscussion f = (loadFil(idFil));
-				System.out.println(f.getTitre());
+				// System.out.println(f.getTitre());
 
 				fils.add(f);
 			}
@@ -945,24 +1101,26 @@ public class DB implements Serializable {
 
 	public void test() {
 
-		try {
-			creation_bd();
-		} catch (DataBaseException e1) {
-			e1.printStackTrace();
-		}
+		/*
+		 * try { creation_bd(); } catch (DataBaseException e1) { e1.printStackTrace(); }
+		 */
 
 		try {
 			Etudiant e = new Etudiant("Fablyat", "Mofolyat", "a", "a");
 			addUserBD(e);
+			addUserToGroup(e.getIdUser(), 1);
 
 			Etudiant e2 = new Etudiant("Qiu", "Jr", "b", "b");
 			addUserBD(e2);
+			addUserToGroup(e2.getIdUser(), 1);
 
 			Etudiant e3 = new Etudiant("Suchiz", "Kyuu", "C", "C");
 			addUserBD(e3);
+			addUserToGroup(e3.getIdUser(), 1);
 
 			Etudiant e4 = new Etudiant("Ruben", "Le connard", "d", "d");
 			addUserBD(e4);
+			addUserToGroup(e4.getIdUser(), 1);
 
 			Groupe g = new Groupe("TDA1");
 			addGroupBD(g);
@@ -983,7 +1141,7 @@ public class DB implements Serializable {
 			addFilDeDiscussion(f);
 
 			for (int i = 0; i < 5; i++) {
-				System.out.println("i : " + i);
+				// System.out.println("i : " + i);
 				Message m = new Message(e, "VOILA LE MESSAGE nï¿½ " + i);
 				f.addMessage(m);
 			}
@@ -992,21 +1150,22 @@ public class DB implements Serializable {
 			addFilDeDiscussion(f2);
 
 			for (int i = 0; i < 5; i++) {
-				System.out.println("i : " + i);
+				// System.out.println("i : " + i);
 				Message m = new Message(e2, "VOILA LE MESSAGE nï¿½ " + i + " MAIS C''EST PAS LE MEME FIL DAKOR");
 				f2.addMessage(m);
 			}
 
-			System.out.println("oui");
+			// System.out.println("oui");
 
 			List<FilDeDiscussion> ff = filsFromIdUser(e.getIdUser());
 
 			for (FilDeDiscussion filDeDiscussion : ff) {
-				System.out.println(
-						"FIL DE DISCUSSION : " + filDeDiscussion.getTitre() + ";" + filDeDiscussion.getIdFil());
+				// System.out.println( "FIL DE DISCUSSION : " + filDeDiscussion.getTitre() + ";"
+				// + filDeDiscussion.getIdFil());
 
 				for (Message message : filDeDiscussion.getConversation()) {
-					System.out.println(message.getMsg() + ";" + message.getAuteur() + ";" + message.getDate());
+					// System.out.println(message.getMsg() + ";" + message.getAuteur() + ";" +
+					// message.getDate());
 				}
 			}
 
