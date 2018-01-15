@@ -679,6 +679,7 @@ public class DB implements Serializable {
 
 			if (indicedanslabasededonnee.next()) {
 				idmessage = indicedanslabasededonnee.getInt("ID");
+				msg.setIdMsg(idmessage);
 			}
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -798,7 +799,7 @@ public class DB implements Serializable {
 					default:
 						break;
 					}
-					Message m = new Message(u, contenu, idMessage, date);
+					Message m = new Message(u, contenu, idMessage, date, TypeMessage.READ_BY_ALL);
 					System.out.println("UTILISATEUR" + u);
 					messages.add(m);
 				} catch (Exception e) {

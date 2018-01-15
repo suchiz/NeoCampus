@@ -1,5 +1,7 @@
 package ihm;
 
+import java.io.IOException;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -8,9 +10,10 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import classes.Etudiant;
 import classes.FilDeDiscussion;
 import classes.Groupe;
+import classes.Message;
+import classes.TypeMessage;
 
 @SuppressWarnings("serial")
 public class PanelFilDeDiscussion extends JPanel {
@@ -36,13 +39,8 @@ public class PanelFilDeDiscussion extends JPanel {
 			public void valueChanged(TreeSelectionEvent e) {
 				setTitle();
 				displayFilDeDiscussion();
-<<<<<<< HEAD
-<<<<<<< HEAD
-				readMessages();
-=======
->>>>>>> parent of 30f3f30... 4 yeux
-=======
->>>>>>> parent of 30f3f30... 4 yeux
+				//readMessages();
+
 			}
 		});
 
@@ -146,8 +144,7 @@ public class PanelFilDeDiscussion extends JPanel {
 		this.panelMessageDisplay = panelMessageDisplay;
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 	public void readMessages() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
 		if (node != null) {
@@ -169,8 +166,5 @@ public class PanelFilDeDiscussion extends JPanel {
 			}
 		}
 	}
-=======
->>>>>>> parent of 30f3f30... 4 yeux
-=======
->>>>>>> parent of 30f3f30... 4 yeux
+
 }

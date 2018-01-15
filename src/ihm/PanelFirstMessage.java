@@ -118,9 +118,8 @@ public class PanelFirstMessage extends JPanel {
 		Message temp = new Message(frameInterface.getUser(), textFieldFirstMessage.getText(), TypeMessage.MESSAGE);
 		nouveauFil.getConversation().add(temp);
 		frameInterface.getTube().send(nouveauFil);
-		nouveauFil.getConversation().remove(temp);
-		frameInterface.getTousLesFils().add(nouveauFil);
-		frameInterface.getPanelFil().ajouterFilDeDisussion(nouveauFil);
+		
+	
 	}
 
 	private boolean checkFields() {

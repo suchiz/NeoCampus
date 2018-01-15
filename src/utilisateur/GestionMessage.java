@@ -6,9 +6,8 @@ import java.util.List;
 import classes.FilDeDiscussion;
 import classes.Groupe;
 import classes.Message;
-import classes.Utilisateur;
+import classes.TypeMessage;
 import ihm.FrameInterface;
-import ihm.PanelFilDeDiscussion;
 import ihm.PanelMessageDisplay;
 
 public class GestionMessage {
@@ -22,22 +21,17 @@ public class GestionMessage {
 	}
 
 	public void message(Message message) {
+		System.out.println(message.getType());
 		switch (message.getType()) {
-		case ACK_MESSAGE:
-
+		case RECEIVED:
+			gererReceived(message);
 			break;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 		case READ:
 			gererRead(message);
-=======
+
 		case READ_BY_ALL:
 
->>>>>>> parent of 30f3f30... 4 yeux
-=======
-		case READ_BY_ALL:
-
->>>>>>> parent of 30f3f30... 4 yeux
 			break;
 		case MESSAGE:
 			gererMessage(message);
@@ -49,8 +43,6 @@ public class GestionMessage {
 
 	}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 	private void gererRead(Message message) {
 	
 		int idFilRef = message.getIdFil();
@@ -91,10 +83,6 @@ public class GestionMessage {
 		}
 	}
 
-=======
->>>>>>> parent of 30f3f30... 4 yeux
-=======
->>>>>>> parent of 30f3f30... 4 yeux
 	private void gererMessage(Message message) {
 		System.out.println(message.getMsg());
 		PanelMessageDisplay panelMessageDisplay = frameInterface.getPanelMsg();
@@ -110,10 +98,6 @@ public class GestionMessage {
 		
 	}
 
-	public void utilisateur(Utilisateur u) {
-		// TODO Auto-generated method stub
-
-	}
 
 	public void liste(List<?> list) {
 		Object elem = list.get(0);
@@ -126,6 +110,11 @@ public class GestionMessage {
 			frameInterface.initTousLesFils((ArrayList<FilDeDiscussion>) list);
 		}
 
+	}
+
+	public void fildediscussion(FilDeDiscussion fdd) {
+		frameInterface.getTousLesFils().add(fdd);
+		frameInterface.getPanelFil().ajouterFilDeDisussion(fdd);
 	}
 
 }
