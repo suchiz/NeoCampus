@@ -59,7 +59,7 @@ public class DB implements Serializable {
 
 			for (String r : reqs) {
 				int res = s.executeUpdate(r + ";");
-				System.out.println(r + ": " + res);
+				//System.out.println(r + ": " + res);
 			}
 
 			addGroupBD(new Groupe("Tous les utilisateurs"));
@@ -534,31 +534,63 @@ public class DB implements Serializable {
 
 			/* Ici, nous placerons nos requï¿½tes vers la BDD */
 			Statement statement = connexion.createStatement();
+			Statement statement2 = connexion.createStatement();
+			Statement statement3 = connexion.createStatement();
+
+			int i;
 
 			// RECUPERATION DES FILS DE DISCUSSIONS D'UN GROUPE AFIN DE LES SUPPRIMER
-			ResultSet resultat = statement.executeQuery(
-					"SELECT ID_FIL_DE_DISCUSSION FROM DESTINE (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE ="
-							+ idGroup + ";");
+			String req = "SELECT ID_FIL_DE_DISCUSSION FROM DESTINE WHERE ID_GROUPE =" + idGroup + ";";
+			ResultSet resultat = statement.executeQuery(req);
 
 			while (resultat.next()) {
+				int idFil = resultat.getInt("ID_FIL_DE_DISCUSSION");
 				// DELETE LES FDD DU GROUPE CIBLE
-				statement.executeUpdate(
-						"DELETE ID_FIL_DE_DISCUSSION FROM FilDeDiscussion(ID_Fil_DE_DISCUSSION,Titre) WHERE ID_FIL_DE_DISCUSSION="
-								+ resultat.getInt("ID_FIL_DE_DISCUSSION") + ";");
+
+				req = "SELECT ID_MESSAGE FROM CONTIENT WHERE ID_FIL_DE_DISCUSSION=" + idFil;
+
+				ResultSet idsMessage = statement2.executeQuery(req);
+
+				while (idsMessage.next()) {
+					int idMessage = idsMessage.getInt("ID_MESSAGE");
+					req = "DELETE FROM ENVOYER_MESSAGE WHERE ID_MESSAGE=" + idMessage;
+					i = statement3.executeUpdate(req);
+					//System.out.println(req + ":" + i);
+
+					req = "DELETE FROM CONTIENT WHERE ID_MESSAGE=" + idMessage;
+					i = statement3.executeUpdate(req);
+					//System.out.println(req + ":" + i);
+
+					req = "DELETE FROM MESSAGE WHERE ID_MESSAGE=" + idMessage;
+					i = statement3.executeUpdate(req);
+					//System.out.println(req + ":" + i);
+				}
+
+				req = "DELETE FROM CREER WHERE ID_FIL_DE_DISCUSSION=" + idFil;
+				i = statement2.executeUpdate(req);
+				//System.out.println(req + ":" + i);
+
+				req = "DELETE FROM FIL_DE_DISCUSSION WHERE ID_FIL_DE_DISCUSSION=" + idFil + ";";
+				i = statement2.executeUpdate(req);
+				//System.out.println(req + ":" + i);
 			}
 
 			// DELETE LE GROUPE DE LA TABLE DESTINE
-			statement.executeUpdate(
-					"DELETE ID_GROUPE  FROM DESTINE (ID_Fil_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE="
-							+ idGroup + ";");
+			req = "DELETE FROM DESTINE WHERE ID_GROUPE=" + idGroup + ";";
+			i = statement.executeUpdate(req);
+
+			//System.out.println(req + ":" + i);
 
 			// DELETE LE GROUPE DE LA TABLE GROUPE
-			statement
-					.executeUpdate("DELETE FROM GROUPE (ID_Utilisateur,ID_Groupe) WHERE (ID_Groupe =" + idGroup + ");");
+			req = "DELETE FROM GROUPE WHERE ID_Groupe =" + idGroup + ";";
+			i = statement.executeUpdate(req);
+
+			//System.out.println(req + ":" + i);
 			connexion.commit();
 		} catch (SQLException e) {
 			if (connexion != null) {
 				try {
+					e.printStackTrace();
 					connexion.rollback();
 					throw new DataBaseException();
 				} catch (SQLException e1) {

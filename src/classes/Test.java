@@ -22,7 +22,19 @@ public class Test {
 		List<FilDeDiscussion> fdd = d.getAllFilDeDiscussion();
 
 		for (FilDeDiscussion filDeDiscussion : fdd) {
-			System.out.println(filDeDiscussion + ";" + filDeDiscussion.getIdFil());
+			System.out.println(filDeDiscussion + ";" + filDeDiscussion.getIdFil()+";"+filDeDiscussion.getGroupe()+";"+filDeDiscussion.getGroupe().getIdGroupe());
+		}
+		
+		Utilisateur u = d.UtilisateurFromID(1);
+		System.out.println(u);
+		
+		u.setNom("OLALA UN NOUVEAU NOM");
+		
+		try {
+			d.updateUser(u);
+			System.out.println(u);
+		} catch (DataBaseException e) {
+			e.printStackTrace();
 		}
 	}
 }
