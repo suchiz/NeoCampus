@@ -285,12 +285,13 @@ public class DB implements Serializable {
 			Statement statement = connexion.createStatement();
 
 			ResultSet messagesQuery = statement.executeQuery(
-					"SELECT M.ID_MESSAGE,M.CONTENU_MESSAGE,U.ID_UTILISATEUR,U.NOM_UTILISATEUR,U.PRENOM_UTILISATEUR,U.TYPE_UTILISATEUR,E.DATE_ENVOI_MESSAGE FROM MESSAGE AS M,UTILISATEUR AS U,ENVOYER_MESSAGE AS E WHERE E.ID_MESSAGE=M.ID_MESSAGE AND E.ID_UTILISATEUR=U.ID_UTILISATEUR ");
+					"SELECT M.ID_MESSAGE,M.CONTENU_MESSAGE,U.ID_UTILISATEUR,U.NOM_UTILISATEUR,U.PRENOM_UTILISATEUR,U.TYPE_UTILISATEUR,E.DATE_ENVOI_MESSAGE,F.ID_FIL_DE_DISCUSSION FROM CONTIENT AS C, FIL_DE_DISCUSSION AS F,MESSAGE AS M,UTILISATEUR AS U,ENVOYER_MESSAGE AS E WHERE E.ID_MESSAGE=M.ID_MESSAGE AND E.ID_UTILISATEUR=U.ID_UTILISATEUR AND F.ID_FIL_DE_DISCUSSION=C.ID_FIL_DE_DISCUSSION AND C.ID_MESSAGE=M.ID_MESSAGE ");
 
 			while (messagesQuery.next()) {
 				// System.out.println("alo");
 				try {
 					int idMessage = messagesQuery.getInt("ID_MESSAGE");
+					int idFil = messagesQuery.getInt("ID_FIL_DE_DISCUSSION");
 					String contenu = messagesQuery.getString("CONTENU_MESSAGE");
 					String nomU = messagesQuery.getString("NOM_UTILISATEUR");
 					String prenomU = messagesQuery.getString("PRENOM_UTILISATEUR");
@@ -315,7 +316,7 @@ public class DB implements Serializable {
 					default:
 						break;
 					}
-					Message m = new Message(u, contenu, idMessage, date, TypeMessage.READ_BY_ALL);
+					Message m = new Message(u, contenu, idMessage, idFil, date, TypeMessage.READ_BY_ALL);
 					// System.out.println("UTILISATEUR" + u);
 					messages.add(m);
 				} catch (Exception e) {
@@ -354,7 +355,6 @@ public class DB implements Serializable {
 				try {
 					try {
 						int idFil = messagesQuery.getInt("ID_FIL_DE_DISCUSSION");
-						
 
 						FilDeDiscussion fdd = loadFil(idFil);
 						System.out.println(fdd);
@@ -416,6 +416,42 @@ public class DB implements Serializable {
 					 */
 				}
 		}
+	}
+
+	public void updateGroupe(Groupe g) {
+		int idGroupe = g.getIdGroupe();
+		try {
+			connexion = DriverManager.getConnection(url, username, mdp);
+
+			connexion.setAutoCommit(false);
+			/* Ici, nous placerons nos requï¿½tes vers la BDD */
+			Statement statement = connexion.createStatement();
+
+			// DISPARITION DE L'UTILISATEUR DE TOUT LES GROUPES DONT IL ETAIT MEMBRE
+			String req = "UPDATE GROUPE SET NOM_GROUPE='" + g.getNomGroupe() + "'ID_GROUPE = " + idGroupe + ";";
+			statement.executeUpdate(req);
+
+			connexion.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			if (connexion != null) {
+				try {
+					connexion.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		} finally {
+			if (connexion != null)
+				try {
+					connexion.close();
+				} catch (SQLException ignore) {
+					/*
+					 * Si une erreur survient lors de la fermeture, il suffit de l'ignorer.
+					 */
+				}
+		}
+
 	}
 
 	public void addUserBD(Utilisateur u) throws DataBaseException {
@@ -501,14 +537,14 @@ public class DB implements Serializable {
 
 			// RECUPERATION DES FILS DE DISCUSSIONS D'UN GROUPE AFIN DE LES SUPPRIMER
 			ResultSet resultat = statement.executeQuery(
-					"SELECT ID_FIL_DE_DISCUSSION FROM DESTINE (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE ='"
-							+ idGroup + "';");
+					"SELECT ID_FIL_DE_DISCUSSION FROM DESTINE (ID_FIL_DE_DISCUSSION,ID_UTILISATEUR,ID_GROUPE) WHERE ID_GROUPE ="
+							+ idGroup + ";");
 
 			while (resultat.next()) {
 				// DELETE LES FDD DU GROUPE CIBLE
 				statement.executeUpdate(
-						"DELETE ID_FIL_DE_DISCUSSION FROM FilDeDiscussion(ID_Fil_DE_DISCUSSION,Titre) WHERE ID_FIL_DE_DISCUSSION='"
-								+ resultat.getInt("ID_FIL_DE_DISCUSSION") + "';");
+						"DELETE ID_FIL_DE_DISCUSSION FROM FilDeDiscussion(ID_Fil_DE_DISCUSSION,Titre) WHERE ID_FIL_DE_DISCUSSION="
+								+ resultat.getInt("ID_FIL_DE_DISCUSSION") + ";");
 			}
 
 			// DELETE LE GROUPE DE LA TABLE DESTINE

@@ -48,6 +48,16 @@ public class Message implements Serializable, Comparable<Message> {
 		this.setType(type);
 	}
 
+	public Message(Utilisateur auteur, String msg, int idMsg, int idFil, Date date, TypeMessage type) {
+		this.date = new Date();
+		this.msg = msg;
+		this.auteur = auteur;
+		this.idMsg = idMsg;
+		this.date = date;
+		this.idFil = idFil;
+		this.setType(type);
+	}
+
 	public Message(String msg) {
 		this.date = new Date();
 		this.msg = msg;
