@@ -37,7 +37,10 @@ public class PanelFilDeDiscussion extends JPanel {
 				setTitle();
 				displayFilDeDiscussion();
 <<<<<<< HEAD
+<<<<<<< HEAD
 				readMessages();
+=======
+>>>>>>> parent of 30f3f30... 4 yeux
 =======
 >>>>>>> parent of 30f3f30... 4 yeux
 			}
@@ -144,6 +147,7 @@ public class PanelFilDeDiscussion extends JPanel {
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	public void readMessages() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
 		if (node != null) {
@@ -165,6 +169,8 @@ public class PanelFilDeDiscussion extends JPanel {
 			}
 		}
 	}
+=======
+>>>>>>> parent of 30f3f30... 4 yeux
 =======
 >>>>>>> parent of 30f3f30... 4 yeux
 }

@@ -61,12 +61,15 @@ public class Tube implements Runnable {
 				Message message = (Message) temp;
 				gestionMessage.message(message);
 <<<<<<< HEAD
+<<<<<<< HEAD
 			} else if (temp instanceof FilDeDiscussion) {
 				FilDeDiscussion fdd = (FilDeDiscussion) temp;
 				gestionMessage.fildediscussion(fdd);
 			} else if (temp instanceof ArrayList<?>) {
 				List<?> list = (ArrayList<?>) temp;
 =======
+=======
+>>>>>>> parent of 30f3f30... 4 yeux
 			} else if (temp instanceof Utilisateur) {
 				Utilisateur u = (Utilisateur) temp;
 				gestionMessage.utilisateur(u);

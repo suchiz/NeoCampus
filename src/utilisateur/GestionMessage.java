@@ -27,8 +27,13 @@ public class GestionMessage {
 
 			break;
 <<<<<<< HEAD
+<<<<<<< HEAD
 		case READ:
 			gererRead(message);
+=======
+		case READ_BY_ALL:
+
+>>>>>>> parent of 30f3f30... 4 yeux
 =======
 		case READ_BY_ALL:
 
@@ -44,6 +49,7 @@ public class GestionMessage {
 
 	}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	private void gererRead(Message message) {
 	
@@ -85,6 +91,8 @@ public class GestionMessage {
 		}
 	}
 
+=======
+>>>>>>> parent of 30f3f30... 4 yeux
 =======
 >>>>>>> parent of 30f3f30... 4 yeux
 	private void gererMessage(Message message) {
