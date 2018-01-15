@@ -71,10 +71,16 @@ public class Tube implements Runnable {
 		}
 	}
 
-	public void send(Object object) throws IOException {
-		outputToServer = new ObjectOutputStream(socket.getOutputStream());
-		outputToServer.writeObject(object);
-		outputToServer.flush();
+	public void send(Object object) {
+		System.out.println("sending");
+		try {
+			outputToServer = new ObjectOutputStream(socket.getOutputStream());
+			outputToServer.writeObject(object);
+			outputToServer.flush();
+		} catch (IOException e) {
+			System.out.println("Erreur sending message in client");
+		}
+		
 
 	}
 

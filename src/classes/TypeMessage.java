@@ -7,7 +7,7 @@ public enum TypeMessage implements Serializable{
 	REQUETE_INIT_GROUP,
 	REQUETE_INIT_FDD,
 	REQUETE_LOGIN,
-	REQUETE_FDD,
+	REQUETE_STATUS_MESSAGE,
 	MESSAGE,
 	READ,
 	READ_BY_ALL,

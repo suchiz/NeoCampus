@@ -38,7 +38,7 @@ public class PanelFilDeDiscussion extends JPanel {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				displayFilDeDiscussion();
-				//readMessages();
+				readMessages();
 
 			}
 		});
@@ -58,7 +58,6 @@ public class PanelFilDeDiscussion extends JPanel {
 	// Events
 
 	// Others
-
 
 	private void displayFilDeDiscussion() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
@@ -91,6 +90,7 @@ public class PanelFilDeDiscussion extends JPanel {
 			root.add(newGroupe);
 		}
 		model.reload(root);
+		expandAllNodes(arbreFilDeDiscussion, 0, arbreFilDeDiscussion.getRowCount());
 
 	}
 
@@ -129,6 +129,12 @@ public class PanelFilDeDiscussion extends JPanel {
 		root.removeAllChildren();
 		model.reload();
 	}
+	
+	public void reloadTree() {
+		DefaultTreeModel model = (DefaultTreeModel) arbreFilDeDiscussion.getModel();
+		model.reload();
+		expandAllNodes(arbreFilDeDiscussion, 0, arbreFilDeDiscussion.getRowCount());
+	}
 
 	public JTree getFilsArbre() {
 		return arbreFilDeDiscussion;
@@ -137,8 +143,15 @@ public class PanelFilDeDiscussion extends JPanel {
 	public void setPanelMessageDisplay(PanelMessageDisplay panelMessageDisplay) {
 		this.panelMessageDisplay = panelMessageDisplay;
 	}
+	private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
+	    for(int i=startingIndex;i<rowCount;++i){
+	        tree.expandRow(i);
+	    }
 
-
+	    if(tree.getRowCount()!=rowCount){
+	        expandAllNodes(tree, rowCount, tree.getRowCount());
+	    }
+	}
 	public void readMessages() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
 		if (node != null) {
@@ -146,16 +159,16 @@ public class PanelFilDeDiscussion extends JPanel {
 				if (node.getUserObject() instanceof FilDeDiscussion) {
 					FilDeDiscussion fdd = (FilDeDiscussion) node.getUserObject();
 					for (Message msg : fdd.getConversation()) {
-						if (msg.getType() != TypeMessage.READ_BY_ALL || msg.getType() != TypeMessage.READ) {
-							msg.setType(TypeMessage.READ);
-							try {
-								msg.setAuteur(frameInterface.getUser());
-								frameInterface.getTube().send(msg);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+						if ( msg.getType() != TypeMessage.READ_BY_ALL) {
+							fdd.setMessageNonLu(0);
+							Message temp = new Message(frameInterface.getUser(),"",TypeMessage.READ );
+							temp.setIdMsg(msg.getIdMsg());
+							temp.setIdFil(fdd.getIdFil());
+							frameInterface.getTube().send(temp);
+							
 						}
 					}
+					
 				}
 			}
 		}

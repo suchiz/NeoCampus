@@ -16,6 +16,7 @@ public class FilDeDiscussion implements Serializable {
 	private int idFil;
 	private List<Message> conversation = new ArrayList<>();
 	private DB db = new DB();
+	private int messageNonLu = 0;
 
 	public int getIdFil() {
 		return idFil;
@@ -64,7 +65,14 @@ public class FilDeDiscussion implements Serializable {
 	// ---------------------------------------------------------------------------
 	@Override
 	public String toString() {
-		return titre;
+		if(messageNonLu == 0)
+			return titre;
+		else 
+			return titre + " (" + messageNonLu +")";
+		
+	}
+	public void increment() {
+		messageNonLu++;
 	}
 
 	public Groupe getGroupe() {
@@ -85,5 +93,13 @@ public class FilDeDiscussion implements Serializable {
 
 	public void setCreateur(Utilisateur createur) {
 		this.createur = createur;
+	}
+
+	public int getMessageNonLu() {
+		return messageNonLu;
+	}
+
+	public void setMessageNonLu(int messageNonLu) {
+		this.messageNonLu = messageNonLu;
 	}
 }
