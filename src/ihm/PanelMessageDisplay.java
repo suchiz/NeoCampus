@@ -50,7 +50,7 @@ public class PanelMessageDisplay extends JScrollPane{
 	//Events
 	
 	//Others
-	public void displayMessage(FilDeDiscussion fdd){
+	public void displayMessage(final FilDeDiscussion fdd){
 		mainPanel.removeAll();
 		for (Message msg: fdd.getConversation()){
 			JPanel temp = new JPanel();
@@ -58,7 +58,10 @@ public class PanelMessageDisplay extends JScrollPane{
 			temp.setLayout(new BorderLayout());
 			temp.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(java.awt.event.MouseEvent evt) {
-					JOptionPane.showMessageDialog(new JFrame(), "Yes");
+					FrameAfficherUtilisateur frameAfficherUtilisateur = new FrameAfficherUtilisateur();
+					frameAfficherUtilisateur.initModel(fdd.getGroupe());
+					frameAfficherUtilisateur.addUserInModel(fdd.getCreateur());
+					frameAfficherUtilisateur.setVisible(true);
 				}
 			});
 			switch (msg.getType()) {

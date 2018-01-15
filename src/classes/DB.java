@@ -22,8 +22,24 @@ public class DB implements Serializable {
 	static String mdp = "root";
 	static Connection connexion = null;
 
-	public void creation_bd() throws DataBaseException {
+	public void init() {
 		try {
+
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", username, mdp);
+			System.out.println("Connexion effective !");
+
+			Statement s = conn.createStatement();
+			s.executeUpdate("CREATE DATABASE base_de_donnees_neocampus");
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void creation_bd() throws DataBaseException {
+		//init();
+		try {
+
 			Class.forName("com.mysql.jdbc.Driver");
 			System.out.println("Driver O.K.");
 
@@ -43,6 +59,8 @@ public class DB implements Serializable {
 
 			addGroupBD(new Groupe("Tous les utilisateurs"));
 
+			conn.close();
+			
 		} catch (Exception e) {
 			System.out.println(e);
 			throw new DataBaseException();
@@ -923,6 +941,80 @@ public class DB implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void test() {
+
+		try {
+			creation_bd();
+		} catch (DataBaseException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			Etudiant e = new Etudiant("Fablyat", "Mofolyat", "a", "a");
+			addUserBD(e);
+
+			Etudiant e2 = new Etudiant("Qiu", "Jr", "b", "b");
+			addUserBD(e2);
+
+			Etudiant e3 = new Etudiant("Suchiz", "Kyuu", "C", "C");
+			addUserBD(e3);
+
+			Etudiant e4 = new Etudiant("Ruben", "Le connard", "d", "d");
+			addUserBD(e4);
+
+			Groupe g = new Groupe("TDA1");
+			addGroupBD(g);
+
+			Groupe g2 = new Groupe("TDA2");
+			addGroupBD(g2);
+
+			g.addMember(e);
+			g.addMember(e2);
+			g.addMember(e3);
+			g.addMember(e4);
+
+			g2.addMember(e);
+			g2.addMember(e4);
+			g2.addMember(e3);
+
+			FilDeDiscussion f = new FilDeDiscussion("BONJOUR YA UN PB ICI", g, e);
+			addFilDeDiscussion(f);
+
+			for (int i = 0; i < 5; i++) {
+				System.out.println("i : " + i);
+				Message m = new Message(e, "VOILA LE MESSAGE nï¿½ " + i);
+				f.addMessage(m);
+			}
+
+			FilDeDiscussion f2 = new FilDeDiscussion("LA AUSSI YA UN PB", g2, e2);
+			addFilDeDiscussion(f2);
+
+			for (int i = 0; i < 5; i++) {
+				System.out.println("i : " + i);
+				Message m = new Message(e2, "VOILA LE MESSAGE nï¿½ " + i + " MAIS C''EST PAS LE MEME FIL DAKOR");
+				f2.addMessage(m);
+			}
+
+			System.out.println("oui");
+
+			List<FilDeDiscussion> ff = filsFromIdUser(e.getIdUser());
+
+			for (FilDeDiscussion filDeDiscussion : ff) {
+				System.out.println(
+						"FIL DE DISCUSSION : " + filDeDiscussion.getTitre() + ";" + filDeDiscussion.getIdFil());
+
+				for (Message message : filDeDiscussion.getConversation()) {
+					System.out.println(message.getMsg() + ";" + message.getAuteur() + ";" + message.getDate());
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
 	}
 
 }
