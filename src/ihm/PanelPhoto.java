@@ -1,11 +1,14 @@
 package ihm;
 
+import java.net.URL;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class PanelPhoto extends JPanel{
 	//Attributs
+	URL url = PanelPhoto.class.getResource("/imgs/login-icon.png");
 	private JLabel icon = new JLabel();
 	
 	public PanelPhoto(){
@@ -14,7 +17,7 @@ public class PanelPhoto extends JPanel{
 
 	public void initcomponent(){
 		//Layout
-        icon.setIcon(new javax.swing.ImageIcon("login-icon.png")); // NOI18N
+        icon.setIcon(new javax.swing.ImageIcon(url)); // NOI18N
 
         javax.swing.GroupLayout panelPhotoLayout = new javax.swing.GroupLayout(this);
         setLayout(panelPhotoLayout);

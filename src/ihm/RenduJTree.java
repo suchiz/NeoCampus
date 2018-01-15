@@ -12,8 +12,8 @@ import classes.Groupe;
 
 @SuppressWarnings("serial")
 public class RenduJTree extends DefaultTreeCellRenderer {
-	ImageIcon groupeIcon = new ImageIcon ("groupIcon.png");
-	ImageIcon discussionIcon = new ImageIcon ("mailIcon.jpg");
+	ImageIcon groupeIcon = new ImageIcon (RenduJTree.class.getResource("/imgs/groupIcon.png"));
+	ImageIcon discussionIcon = new ImageIcon (RenduJTree.class.getResource("/imgs/mailIcon.jpg"));
 	
 	public Component getTreeCellRendererComponent(JTree tree,
 	    Object value, boolean selected, boolean expanded,
