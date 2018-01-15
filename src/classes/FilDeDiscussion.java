@@ -2,6 +2,7 @@ package classes;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FilDeDiscussion implements Serializable {
@@ -24,7 +25,7 @@ public class FilDeDiscussion implements Serializable {
 	public void setIdFil(int idFil) {
 		this.idFil = idFil;
 	}
-
+	
 	// ---------------------------------------------------------------------------
 	public FilDeDiscussion(String titre, Groupe groupe, Utilisateur createur) {
 		this.titre = titre;

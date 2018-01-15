@@ -58,6 +58,7 @@ public class Connexion implements Runnable {
 					frameInterface.setTube(tube);
 					System.out.println("Connecte !");
 					Thread t = new Thread(tube);
+					frameInterface.setTitle(u.toString());
 					panelLogin.closeWindow(panelLogin.getAe());
 					t.start();
 

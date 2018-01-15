@@ -37,7 +37,6 @@ public class PanelFilDeDiscussion extends JPanel {
 		arbreFilDeDiscussion.addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
-				setTitle();
 				displayFilDeDiscussion();
 				//readMessages();
 
@@ -59,12 +58,7 @@ public class PanelFilDeDiscussion extends JPanel {
 	// Events
 
 	// Others
-	private void setTitle() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();
-		if (node == null)
-			return;
-		frameInterface.setTitle(node.toString());
-	}
+
 
 	private void displayFilDeDiscussion() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) arbreFilDeDiscussion.getLastSelectedPathComponent();

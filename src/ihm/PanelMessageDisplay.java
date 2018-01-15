@@ -29,7 +29,7 @@ public class PanelMessageDisplay extends JScrollPane{
 	private Color red = new Color (255,153,153);
 	private Color orange = new Color (255,194,102);
 	private Color green = new Color (152,230,152);
-	
+	private FrameAfficherUtilisateur frameAfficherUtilisateur = new FrameAfficherUtilisateur();
 	//Constructor
 	public PanelMessageDisplay(){
 		initcomponent();
@@ -58,9 +58,9 @@ public class PanelMessageDisplay extends JScrollPane{
 			temp.setLayout(new BorderLayout());
 			temp.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(java.awt.event.MouseEvent evt) {
-					FrameAfficherUtilisateur frameAfficherUtilisateur = new FrameAfficherUtilisateur();
+					frameAfficherUtilisateur.setVisible(true);
 					frameAfficherUtilisateur.initModel(fdd.getGroupe());
-					frameAfficherUtilisateur.addUserInModel(fdd.getCreateur());
+					frameAfficherUtilisateur.addUserInModel(fdd.getGroupe(), fdd.getCreateur());
 					frameAfficherUtilisateur.setVisible(true);
 				}
 			});
