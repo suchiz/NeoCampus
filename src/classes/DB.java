@@ -59,7 +59,7 @@ public class DB implements Serializable {
 
 			for (String r : reqs) {
 				int res = s.executeUpdate(r + ";");
-				//System.out.println(r + ": " + res);
+				// System.out.println(r + ": " + res);
 			}
 
 			addGroupBD(new Groupe("Tous les utilisateurs"));
@@ -383,6 +383,7 @@ public class DB implements Serializable {
 
 	public void updateUser(Utilisateur u) throws DataBaseException {
 		int idUser = u.getIdUser();
+		System.out.println("UPDATE :" + u + ";" + u.getIdUser());
 		try {
 			connexion = DriverManager.getConnection(url, username, mdp);
 
@@ -555,37 +556,37 @@ public class DB implements Serializable {
 					int idMessage = idsMessage.getInt("ID_MESSAGE");
 					req = "DELETE FROM ENVOYER_MESSAGE WHERE ID_MESSAGE=" + idMessage;
 					i = statement3.executeUpdate(req);
-					//System.out.println(req + ":" + i);
+					// System.out.println(req + ":" + i);
 
 					req = "DELETE FROM CONTIENT WHERE ID_MESSAGE=" + idMessage;
 					i = statement3.executeUpdate(req);
-					//System.out.println(req + ":" + i);
+					// System.out.println(req + ":" + i);
 
 					req = "DELETE FROM MESSAGE WHERE ID_MESSAGE=" + idMessage;
 					i = statement3.executeUpdate(req);
-					//System.out.println(req + ":" + i);
+					// System.out.println(req + ":" + i);
 				}
 
 				req = "DELETE FROM CREER WHERE ID_FIL_DE_DISCUSSION=" + idFil;
 				i = statement2.executeUpdate(req);
-				//System.out.println(req + ":" + i);
+				// System.out.println(req + ":" + i);
 
 				req = "DELETE FROM FIL_DE_DISCUSSION WHERE ID_FIL_DE_DISCUSSION=" + idFil + ";";
 				i = statement2.executeUpdate(req);
-				//System.out.println(req + ":" + i);
+				// System.out.println(req + ":" + i);
 			}
 
 			// DELETE LE GROUPE DE LA TABLE DESTINE
 			req = "DELETE FROM DESTINE WHERE ID_GROUPE=" + idGroup + ";";
 			i = statement.executeUpdate(req);
 
-			//System.out.println(req + ":" + i);
+			// System.out.println(req + ":" + i);
 
 			// DELETE LE GROUPE DE LA TABLE GROUPE
 			req = "DELETE FROM GROUPE WHERE ID_Groupe =" + idGroup + ";";
 			i = statement.executeUpdate(req);
 
-			//System.out.println(req + ":" + i);
+			// System.out.println(req + ":" + i);
 			connexion.commit();
 		} catch (SQLException e) {
 			if (connexion != null) {
