@@ -8,8 +8,9 @@ public enum TypeMessage implements Serializable{
 	REQUETE_LOGIN,
 	REQUETE_FDD,
 	MESSAGE,
+	ACK_MESSAGE,
 	READ,
 	READ_BY_ALL,
 	PENDING,
-	RECEIVED;	
+	RECIEVED;	
 }

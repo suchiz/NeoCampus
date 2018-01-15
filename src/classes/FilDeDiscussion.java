@@ -14,19 +14,6 @@ public class FilDeDiscussion implements Serializable {
 	private Groupe groupe;
 	private int idFil;
 	private List<Message> conversation = new ArrayList<>();
-	private int messagesNonLus = 0;
-
-	public int getMessagesNonLus() {
-		return messagesNonLus;
-	}
-
-	public void setMessagesNonLus(int messagesNonLus) {
-		this.messagesNonLus = messagesNonLus;
-	}
-
-	public void incrementMessageNonLu() {
-		messagesNonLus++;
-	}
 
 	private DB db = new DB();
 
@@ -63,8 +50,8 @@ public class FilDeDiscussion implements Serializable {
 	// ---------------------------------------------------------------------------
 	public void addMessage(Message msg) {
 
-		try {
-			System.out.println("Bonjouterztze");
+		 try {
+			 System.out.println("Bonjouterztze");
 			db.addMessageToFil(this.idFil, msg);
 		} catch (DataBaseException e) {
 			e.printStackTrace();
@@ -76,10 +63,7 @@ public class FilDeDiscussion implements Serializable {
 	// ---------------------------------------------------------------------------
 	@Override
 	public String toString() {
-		if (messagesNonLus > 0)
-			return titre + "(" + messagesNonLus + ")";
-		else
-			return titre;
+		return titre;
 	}
 
 	public Groupe getGroupe() {

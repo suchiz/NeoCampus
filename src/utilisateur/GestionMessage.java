@@ -6,7 +6,6 @@ import java.util.List;
 import classes.FilDeDiscussion;
 import classes.Groupe;
 import classes.Message;
-import classes.TypeMessage;
 import classes.Utilisateur;
 import ihm.FrameInterface;
 import ihm.PanelFilDeDiscussion;
@@ -15,7 +14,8 @@ import ihm.PanelMessageDisplay;
 public class GestionMessage {
 	private Tube tube;
 	FrameInterface frameInterface;
-
+	
+	
 	public GestionMessage(FrameInterface frameInterface, Tube tube) {
 		this.tube = tube;
 		this.frameInterface = frameInterface;
@@ -23,14 +23,16 @@ public class GestionMessage {
 
 	public void message(Message message) {
 		switch (message.getType()) {
-		case RECEIVED:
-			gererReceived(message);
-			break;
-		case READ_BY_ALL:
+		case ACK_MESSAGE:
 
 			break;
+<<<<<<< HEAD
 		case READ:
 			gererRead(message);
+=======
+		case READ_BY_ALL:
+
+>>>>>>> parent of 30f3f30... 4 yeux
 			break;
 		case MESSAGE:
 			gererMessage(message);
@@ -42,6 +44,7 @@ public class GestionMessage {
 
 	}
 
+<<<<<<< HEAD
 	private void gererRead(Message message) {
 	
 		int idFilRef = message.getIdFil();
@@ -82,6 +85,8 @@ public class GestionMessage {
 		}
 	}
 
+=======
+>>>>>>> parent of 30f3f30... 4 yeux
 	private void gererMessage(Message message) {
 		System.out.println(message.getMsg());
 		PanelMessageDisplay panelMessageDisplay = frameInterface.getPanelMsg();
@@ -89,11 +94,16 @@ public class GestionMessage {
 		for (FilDeDiscussion fdd : frameInterface.getTousLesFils()) {
 			if (idFilRef == fdd.getIdFil()) {
 				fdd.getConversation().add(message);
-				fdd.incrementMessageNonLu();
 				panelMessageDisplay.displayMessage(fdd);
 				break;
 			}
 		}
+		
+		
+	}
+
+	public void utilisateur(Utilisateur u) {
+		// TODO Auto-generated method stub
 
 	}
 
@@ -108,12 +118,6 @@ public class GestionMessage {
 			frameInterface.initTousLesFils((ArrayList<FilDeDiscussion>) list);
 		}
 
-	}
-
-	public void fildediscussion(FilDeDiscussion fdd) {
-		System.out.println();
-		frameInterface.getTousLesFils().add(fdd);
-		frameInterface.getPanelFil().ajouterFilDeDisussion(fdd);
 	}
 
 }
