@@ -2,11 +2,6 @@ package ihm;
 
 import java.awt.Dimension;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import classes.DB;
 import classes.FilDeDiscussion;
 import classes.Groupe;
 import classes.Utilisateur;
@@ -25,13 +19,14 @@ public class FrameInterface extends JFrame {
 	// Attributs
 	private Utilisateur user;
 	private JPanel mainPanel = new JPanel();
-	private PanelFilDeDiscussion panelFil = new PanelFilDeDiscussion(this);
-	private PanelTextFieldSend panelText = new PanelTextFieldSend(this);
-	private PanelMessageDisplay panelMsg = new PanelMessageDisplay();
-	private MenuBarInterface menuBar = new MenuBarInterface(this);
+	private PanelFilDeDiscussion panelFil;
+	private PanelTextFieldSend panelText;
+	private PanelMessageDisplay panelMsg;
+	private MenuBarInterface menuBar;
 	private Tube tube;
 	private ArrayList<Groupe> tousLesGroupes = new ArrayList<>();
 	private ArrayList<FilDeDiscussion> tousLesFils = new ArrayList<>();
+
 	// Constructor
 	public FrameInterface() {
 		initcomponent();
@@ -42,10 +37,15 @@ public class FrameInterface extends JFrame {
 		getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 		setMinimumSize(new Dimension(500, 400));
 		setPreferredSize(new Dimension(1000, 700));
+		panelFil = new PanelFilDeDiscussion(this);
+		panelText = new PanelTextFieldSend(this);
+		panelMsg = new PanelMessageDisplay(this);
+		menuBar = new MenuBarInterface(this);
 		menuBar.setArbreFilDeDiscussion(panelFil.getFilsArbre());
 		panelText.setArbreFilDeDiscussion(panelFil.getFilsArbre());
 		panelText.setPanelMessageDisplay(panelMsg);
 		panelFil.setPanelMessageDisplay(panelMsg);
+
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		// Events
@@ -93,12 +93,10 @@ public class FrameInterface extends JFrame {
 	// Others
 	public void initTousLesFils(List<FilDeDiscussion> list) {
 		tousLesFils = (ArrayList<FilDeDiscussion>) list;
-			for (FilDeDiscussion filDeDiscussion : list) {
-				panelFil.ajouterFilDeDisussion(filDeDiscussion);
-			}
+		for (FilDeDiscussion filDeDiscussion : list) {
+			panelFil.ajouterFilDeDisussion(filDeDiscussion);
+		}
 	}
-
-
 
 	public MenuBarInterface getMenuBarInterface() {
 		return menuBar;
@@ -143,7 +141,7 @@ public class FrameInterface extends JFrame {
 	public ArrayList<Groupe> getTousLesGroupes() {
 		return tousLesGroupes;
 	}
-	
+
 	public void setTousLesGroupes(List<Groupe> list) {
 		this.tousLesGroupes = (ArrayList<Groupe>) list;
 	}

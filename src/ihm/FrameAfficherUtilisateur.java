@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -33,6 +34,7 @@ public class FrameAfficherUtilisateur extends javax.swing.JFrame {
 	private ImageIcon userBleu = new ImageIcon(RenduUtilisateurCell.class.getResource("/imgs/userBleu.png"));
 	private ImageIcon userVert = new ImageIcon(RenduUtilisateurCell.class.getResource("/imgs/userVert.png"));
 	
+	private List<Utilisateur> listUserRef = null;
 	// End of variables declaration
 	public FrameAfficherUtilisateur() {
 		initComponents();
@@ -107,7 +109,7 @@ public class FrameAfficherUtilisateur extends javax.swing.JFrame {
 
 	public void addUserInModel(Groupe g, Utilisateur user) {
 		if(!g.getListeUtilisateur().contains(user)) 
-			createPanel(user, false);
+			createPanel(user, true);
 	}
 	public void initPanel() {
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -116,15 +118,25 @@ public class FrameAfficherUtilisateur extends javax.swing.JFrame {
 		gbc.weighty = 1;
 		mainList.add(new JPanel(), gbc);
 	}
+	
 	public void initModel(Groupe g) {
 		mainList.removeAll();
 		initPanel();
 		if (g != null) {
 			for (Utilisateur u : g.getListeUtilisateur()) {
-				createPanel(u, true);
+				createPanel(u, listUserRef.contains(u));
 			}
 			validate();
 			repaint();
 		}
 	}
+	
+	public List<Utilisateur> getListUserRef() {
+		return listUserRef;
+	}
+
+	public void setListUserRef(List<Utilisateur> listUserRef) {
+		this.listUserRef = listUserRef;
+	}
+
 }
