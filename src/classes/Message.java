@@ -71,7 +71,7 @@ public class Message implements Serializable{
 	}
 
 	public String dateToString(){
-		SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy h:mm a");
 		return sdf.format(date);
 	}
 	
